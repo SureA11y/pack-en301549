@@ -82,9 +82,9 @@ module.exports = definePack({
   name,
   version,
   namespace: NAMESPACE,
-  // A core with EN 301 549 built in (1.12 and earlier) already registers the
-  // en301549 key, so a scan there skips the pack.
-  core: '>=1.12.1',
+  // Core 1.12 and earlier refuse a second en301549 key; from 1.13 the pack
+  // replaces core's deprecated built-in.
+  core: '>=1.13.0',
   description:
     'EN 301 549 chapter 9 (Web), V3.2.1 and V4.1.1: a profile per version and a result per clause.',
   standard: {

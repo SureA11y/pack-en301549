@@ -1,7 +1,6 @@
 {
   "name": "@surea11y/pack-en301549",
   "version": "0.1.0",
-  "private": true,
   "description": "EN 301 549, the European accessibility standard, as a pack for @surea11y/core",
   "keywords": [
     "accessibility",
@@ -41,20 +40,22 @@
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "format": "prettier --write \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
     "format:check": "prettier --check \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
     "lint": "eslint .",
     "docs": "surea11y-pack docs",
     "docs:check": "surea11y-pack docs --check",
-    "pretest": "playwright install chromium",
     "test": "npm run format:check && npm run lint && npm run docs:check && node scripts/run-tests.js"
   },
   "peerDependencies": {
-    "@surea11y/core": ">=1.12.1"
+    "@surea11y/core": ">=1.13.0"
   },
   "devDependencies": {
-    "@surea11y/core": "github:SureA11y/core#en301549-pack",
+    "@surea11y/core": "^1.13.0",
     "core-1.12": "npm:@surea11y/core@1.12.1",
     "eslint": "^10.12.0",
     "jsdom": "^29.1.1",

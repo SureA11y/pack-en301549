@@ -2,19 +2,19 @@
 
 EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`](https://github.com/SureA11y/core#readme): chapter 9 (Web) in V3.2.1 and V4.1.1, the clause that restates each WCAG Level A and AA criterion, one result per clause, a profile per version, and `mappings: ['en301549']` to name the clauses on any scan's results.
 
-Core had EN 301 549 built in up to 1.12. It moved here, as RGAA moved to [`@surea11y/pack-rgaa`](https://github.com/SureA11y/pack-rgaa), so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
+Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, as RGAA moved to [`@surea11y/pack-rgaa`](https://github.com/SureA11y/pack-rgaa), so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
 It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (27 of V4.1.1's 55 and 26 of V3.2.1's 50, with core 1.12's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. Chapters 10 (non-web documents) and 11 (software) are out of scope.
 
-It needs a `@surea11y/core` without EN 301 549 built in: core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack. Until that core is released, the pack is developed against core's `en301549-pack` branch.
-
-It isn't on npm: install it from this repository:
+It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack.
 
 ```sh
-npm install github:SureA11y/core#en301549-pack github:SureA11y/pack-en301549
+npm install @surea11y/core @surea11y/pack-en301549
 ```
 
-npm installs it as `@surea11y/pack-en301549`, so the examples below, and the CLI's `--pack @surea11y/pack-en301549`, name it as they would a published package.
+### Switching from core's built-in
+
+Add the pack to `engineOptions.packs` (in a page, with `packScript()`) and keep the profile and mapping names. `mappings: ['en301549']` gives every result the entries core gave. The profiles report one result per clause in place of WCAG rollups; `profile: 'wcag22-aa', mappings: ['en301549:V4.1.1']` keeps the WCAG rollups with their clauses. Read the clause table from `@surea11y/pack-en301549/public` instead of `@surea11y/core/en301549`.
 
 ## Using it
 
@@ -104,7 +104,7 @@ The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't.
 
 ## Tests
 
-`npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript`, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
+Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript`, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
 
 ## Licence
 

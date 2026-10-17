@@ -21,4 +21,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # core's scenario pages, for tests/core-1.12.test.js
+      - run: git clone --depth 1 https://github.com/SureA11y/core.git ../core
       - run: npm test
