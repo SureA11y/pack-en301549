@@ -1,0 +1,64 @@
+{
+  "name": "@surea11y/pack-en301549",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EN 301 549, the European accessibility standard, as a pack for @surea11y/core",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "en301549",
+    "wcag",
+    "surea11y",
+    "surea11y-pack"
+  ],
+  "license": "MPL-2.0",
+  "author": "Jorge Rumoroso",
+  "homepage": "https://github.com/SureA11y/pack-en301549#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SureA11y/pack-en301549.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SureA11y/pack-en301549/issues"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./public": "./public.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "clauses.js",
+    "public.js",
+    "requirements.js",
+    "rule-map.js",
+    "i18n/*.json",
+    "docs/*.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
+  "scripts": {
+    "format": "prettier --write \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "lint": "eslint .",
+    "docs": "surea11y-pack docs",
+    "docs:check": "surea11y-pack docs --check",
+    "pretest": "playwright install chromium",
+    "test": "npm run format:check && npm run lint && npm run docs:check && node scripts/run-tests.js"
+  },
+  "peerDependencies": {
+    "@surea11y/core": ">=1.12.1"
+  },
+  "devDependencies": {
+    "@surea11y/core": "github:SureA11y/core#en301549-pack",
+    "core-1.12": "npm:@surea11y/core@1.12.1",
+    "eslint": "^10.12.0",
+    "jsdom": "^29.1.1",
+    "playwright": "^1.62.1",
+    "prettier": "^3.9.6"
+  }
+}

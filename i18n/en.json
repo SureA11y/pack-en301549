@@ -1,0 +1,3 @@
+{
+  "en301549_report_note": "One row per EN 301 549 chapter 9 clause that a rule checks, grouping those rules. Each clause restates a WCAG criterion, and a passing row never means the clause is met: most criteria also need a person to check them."
+}
