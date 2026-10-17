@@ -1,6 +1,6 @@
 {
   "name": "@surea11y/pack-en301549",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "EN 301 549, the European accessibility standard, as a pack for @surea11y/core",
   "keywords": [
     "accessibility",
