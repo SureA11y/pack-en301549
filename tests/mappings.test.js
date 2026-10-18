@@ -78,19 +78,31 @@ test('a WCAG rollup names the clause of its own criterion, in the versions that 
   );
 });
 
+// From core 1.14.0, a criterion whose rules don't see every case it applies
+// to is cantTell where they all found nothing (partialCoverage), as 1.2.2 is
+// on a page with no <video>: a captioned player can be an embed.
 test('a WCAG rollup names its clause whichever rules decided, or when none applied', () => {
   for (const [html, sc, outcome] of [
     [HTML, '1.1.1', 'fail'],
-    [HTML, '1.2.2', 'notApplicable']
+    [HTML, '1.2.2', 'cantTell']
   ]) {
     const c = composite(scan({ mappings: 'en301549' }, html), sc);
-    // From core 1.14, a criterion whose rules don't find every case it
-    // applies to is cantTell where they all are notApplicable.
-    if (c.data.details.reasonCode === 'composite.rollup.cantTell.partialCoverage') {
-      assert.equal(c.outcome, 'cantTell', sc);
-    } else assert.equal(c.outcome, outcome, sc);
+    assert.equal(c.outcome, outcome, sc);
     assert.equal(clausesOf(c).length, 2, sc);
   }
+});
+
+test("a clause is notApplicable only where its criterion's WCAG rollup is", () => {
+  const page =
+    '<!doctype html><html lang="en"><head><title>t</title></head><body><main><p>Text.</p></main></body></html>';
+  const r = scan({ profile: 'en301549-v4.1.1' }, page);
+  const clause = (id) => r.rulesResults.find((c) => c.ruleId === `en301549-V4.1.1-${id}`);
+  assert.equal(clause('9.1.2.2').outcome, 'cantTell');
+  assert.equal(
+    clause('9.1.2.2').data.details.reasonCode,
+    'composite.rollup.cantTell.partialCoverage'
+  );
+  assert.equal(clause('9.2.4.4').outcome, 'notApplicable');
 });
 
 test('an unknown version is ignored with a warning', () => {
