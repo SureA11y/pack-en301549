@@ -4,13 +4,16 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+Needs `@surea11y/core` 1.14.0 for the changes below; with 1.13 the pack behaves as 1.0.1 does, as 1.13 ignores the options it now gives.
+
 ### Fixed
 
-- Under the `en301549-v3.2.1` profile, a duplicate id keeps failing 9.4.1.1 with core 1.14. Core 1.14 follows the 2023 errata to WCAG 2.0 and 2.1, which count 4.1.1 Parsing as satisfied, unless the profile says its standard keeps the criterion's text; V3.2.1 does, and its profile now says so (`keepsParsing: true`). Without it, core 1.14 asks about a duplicate id there instead of failing it, and warns once that the profile loses 4.1.1. Core 1.13 and earlier ignore the key, so nothing changes with them.
+- Under the `en301549-v3.2.1` profile, a duplicate id keeps failing 9.4.1.1 with core 1.14. Core 1.14 follows the 2023 errata to WCAG 2.0 and 2.1, which count 4.1.1 Parsing as satisfied, unless the profile says its standard keeps the criterion's text; V3.2.1 does, and its profile now says so (`keepsParsing: true`). Without it, core 1.14 asks about a duplicate id there instead of failing it, and warns once that the profile loses 4.1.1.
 
 ### Changed
 
-- Developed and tested against core 1.14.0. `docs/RULE_CATALOG.md` lists the rules core 1.14 adds under the clauses of their criteria, such as `image-of-text` under 9.1.4.5 and `live-region-announcements` under 9.4.1.3. Under 1.14, a WCAG rollup whose rules are all `notApplicable` can be `cantTell` instead (`composite.rollup.cantTell.partialCoverage`), and the clauses it names are the same.
+- A clause's result is `notApplicable` only where the WCAG rollup of the criterion it restates is, as core 1.14.0 judges WCAG's (`applicability: 'wcag'`): where core's rules don't see every case the criterion applies to and all of them found nothing, the clause is `cantTell` (`composite.rollup.cantTell.partialCoverage`), so 9.1.2.2 agrees with WCAG 1.2.2 in the same report. Clauses about links, form fields, focusable elements, labelled components, pointer targets and markup stay `notApplicable` when there is nothing to check. Under `mappings: ['en301549']`, the WCAG rollups name the same clauses as before.
+- Developed and tested against core 1.14.0. Its new rules check their clauses with no change here, as the map is derived from core's catalog, and `docs/RULE_CATALOG.md` lists them: 9.1.4.5, 9.3.3.1 and 9.4.1.3 get their first rules (`image-of-text`, `invalid-field-error-message`, `live-region-announcements`), and `click-handler-keyboard-operable`, `widget-keyboard-focusable`, `focus-not-removed-by-script`, `moving-content-pausable`, `aria-owns-valid` and `aria-expanded-state-mismatch` join the clauses of their criteria.
 
 ## [1.0.1] - 2026-10-20
 
