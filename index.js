@@ -36,13 +36,16 @@ const STANDARD = 'EN 301 549';
 const wcagVersionOf = (v) => VERSIONS.find((x) => x.version === v).wcagVersion;
 
 // A rollup per clause, grouping the rules that check it, and the checks of
-// the two tables, from core's kit.
+// the two tables, from core's kit. Each clause restates its WCAG criterion,
+// so it is notApplicable only where the criterion's WCAG rollup is (core
+// 1.14.0 and later; an older core ignores the option).
 const { composites, validate } = ruleMappedStandard({
   standard: STANDARD,
   tag: NAMESPACE,
   versions: VERSIONS,
   requirements: REQUIREMENTS,
-  ruleMap: RULE_REQUIREMENTS
+  ruleMap: RULE_REQUIREMENTS,
+  applicability: 'wcag'
 });
 
 // The entries for a rule or a WCAG rollup: the clause that restates each of

@@ -30,10 +30,18 @@ const skip =
   (!before && 'core-1.12 is not installed') ||
   (!fs.existsSync(FIXTURES) && 'no core checkout beside this one');
 
+// Rules whose WCAG entries core has changed since 1.12.1, on purpose: their
+// EN 301 549 entries are still compared.
+const WCAG_CHANGED = {
+  'mouse-only-event-handlers': 'core 1.14.0 maps it to WCAG 2.1.3 (AAA) too, which has no clause'
+};
+
 const entries = (r) =>
   JSON.stringify(
     ((r.meta && r.meta.normativeMappings) || [])
-      .filter((m) => m.standard === 'WCAG' || m.standard === 'EN 301 549')
+      .filter(
+        (m) => m.standard === 'EN 301 549' || (m.standard === 'WCAG' && !WCAG_CHANGED[r.ruleId])
+      )
       .map((m) => [m.standard, m.version || null, m.requirement, m.title || null, m.wcagSc || []])
   );
 
