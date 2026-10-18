@@ -1,8 +1,8 @@
 # @surea11y/pack-en301549
 
-EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`](https://github.com/SureA11y/core#readme): chapter 9 (Web) in V3.2.1 and V4.1.1, the clause that restates each WCAG Level A and AA criterion, one result per clause, a profile per version, and `mappings: ['en301549']` to name the clauses on any scan's results.
+EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`](https://www.npmjs.com/package/@surea11y/core): chapter 9 (Web) in V3.2.1 and V4.1.1, the clause that restates each WCAG Level A and AA criterion, one result per clause, a profile per version, and `mappings: ['en301549']` to name the clauses on any scan's results.
 
-Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, as RGAA moved to [`@surea11y/pack-rgaa`](https://github.com/SureA11y/pack-rgaa), so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
+Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
 It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (27 of V4.1.1's 55 and 26 of V3.2.1's 50, with core 1.12's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. Chapters 10 (non-web documents) and 11 (software) are out of scope.
 
