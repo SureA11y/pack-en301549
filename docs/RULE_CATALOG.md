@@ -10,7 +10,7 @@ The tables below are an index; [rule reference](#rule-reference) carries each ru
 
 A rule with a **Margin** line measures a value against a threshold, and its check result's `margin` says how close the closest element came while still meeting it (see [`OUTPUT_SCHEMA.md`](https://github.com/SureA11y/core/blob/main/docs/OUTPUT_SCHEMA.md#a-check-result-checksresultsi)). Unlike the fields below, it is a stable contract.
 
-Under **What a finding reports**, a rule lists the fields its findings carry in `data.details` besides `reasonCode`, and what each one means. They help to read and reproduce a finding, but apart from `reasonCode` they are not a stable contract (see [`OUTPUT_SCHEMA.md`](https://github.com/SureA11y/core/blob/main/docs/OUTPUT_SCHEMA.md#an-occurrence-occurrencesi)): a field may be renamed or dropped in a minor release, so do not build on them.
+Under **What a finding reports**, a rule lists the fields its findings carry in `data.details` besides `reasonCode`, and what each one means. They help to read and reproduce a finding, but apart from `reasonCode` (and the contrast size fields [`API_STABILITY.md`](https://github.com/SureA11y/core/blob/main/docs/API_STABILITY.md) names) they are not a stable contract (see [`OUTPUT_SCHEMA.md`](https://github.com/SureA11y/core/blob/main/docs/OUTPUT_SCHEMA.md#an-occurrence-occurrencesi)): a field may be renamed or dropped in a minor release, so do not build on them.
 
 See [`OUTPUT_SCHEMA.md`](https://github.com/SureA11y/core/blob/main/docs/OUTPUT_SCHEMA.md) for what `type`/`confidence`/`severity` mean on a scan result, and [`WCAG_CONFORMANCE.md`](https://github.com/SureA11y/core/blob/main/docs/WCAG_CONFORMANCE.md) for how these roll up to an SC-level conformance claim.
 
@@ -50,9 +50,9 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V3.2.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V3.2.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
 | `en301549-V3.2.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled` |
-| `en301549-V3.2.1-9.2.1.1` | Keyboard | `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent` |
+| `en301549-V3.2.1-9.2.1.1` | Keyboard | `click-handler-keyboard-operable`, `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent` |
 | `en301549-V3.2.1-9.2.2.1` | Timing adjustable | `meta-refresh-timing-absent` |
-| `en301549-V3.2.1-9.2.2.2` | Pause, stop, hide | `deprecated-elements-not-used` |
+| `en301549-V3.2.1-9.2.2.2` | Pause, stop, hide | `deprecated-elements-not-used`, `moving-content-pausable` |
 | `en301549-V3.2.1-9.2.4.1` | Bypass blocks | `bypass-blocks-present` |
 | `en301549-V3.2.1-9.2.4.2` | Page titled | `page-title-patterns`, `page-title-present` |
 | `en301549-V3.2.1-9.2.4.3` | Focus Order | `manual-review` |
@@ -76,9 +76,9 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V4.1.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V4.1.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
 | `en301549-V4.1.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled` |
-| `en301549-V4.1.1-9.2.1.1` | Keyboard | `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent` |
+| `en301549-V4.1.1-9.2.1.1` | Keyboard | `click-handler-keyboard-operable`, `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent` |
 | `en301549-V4.1.1-9.2.2.1` | Timing adjustable | `meta-refresh-timing-absent` |
-| `en301549-V4.1.1-9.2.2.2` | Pause, stop, hide | `deprecated-elements-not-used` |
+| `en301549-V4.1.1-9.2.2.2` | Pause, stop, hide | `deprecated-elements-not-used`, `moving-content-pausable` |
 | `en301549-V4.1.1-9.2.4.1` | Bypass blocks | `bypass-blocks-present` |
 | `en301549-V4.1.1-9.2.4.2` | Page titled | `page-title-patterns`, `page-title-present` |
 | `en301549-V4.1.1-9.2.4.3` | Focus order | `manual-review` |

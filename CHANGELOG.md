@@ -2,6 +2,15 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Needs `@surea11y/core` 1.14.0; with 1.13 nothing changes.
+
+### Changed
+
+- A clause's result is `notApplicable` only where the WCAG rollup of the criterion it restates is, as core 1.14.0 judges WCAG's: where core's rules don't see every case the criterion applies to and all of them found nothing, the clause is `cantTell` (`composite.rollup.cantTell.partialCoverage`), so 9.1.2.2 agrees with WCAG 1.2.2 in the same report. Clauses about links, form fields, focusable elements, labelled components, pointer targets and markup stay `notApplicable` when there is nothing to check.
+- Core 1.14.0's new rules check their clauses with no change here, as the map is derived from core's catalog: `click-handler-keyboard-operable` 9.2.1.1 and `moving-content-pausable` 9.2.2.2.
+
 ## [1.0.0] - 2026-10-17
 
 ### Added
