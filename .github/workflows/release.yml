@@ -37,9 +37,11 @@ jobs:
       - run: git clone --depth 1 https://github.com/SureA11y/core.git ../core
       - run: npm test
 
-      - name: Publish to npm with provenance
+      # Staged, not published: the version goes live once a maintainer
+      # approves it with 2FA (npm stage approve, or on npmjs.com).
+      - name: Stage on npm
         if: startsWith(github.ref, 'refs/tags/')
-        run: npm publish --provenance
+        run: npm stage publish
 
       - name: Manual run summary
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
