@@ -1,6 +1,6 @@
 {
   "name": "@surea11y/pack-en301549",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "EN 301 549, the European accessibility standard, as a pack for @surea11y/core: chapter 9 (Web) in V3.2.1 and V4.1.1, one result per clause, a profile per version and clause mappings on any WCAG scan.",
   "keywords": [
     "accessibility",
