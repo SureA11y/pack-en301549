@@ -121,15 +121,14 @@ Install the pack in the project beside `@surea11y/cli`. The CLI scans the HTML a
 
 ### In a page of your own: a script tag, an extension
 
-A page with no driver, such as a manual check, a bookmarklet or a browser extension's content script, loads the pack as it loads core: as a file. Write it once in Node with the core you will ship:
+A page with no driver, such as a manual check, a bookmarklet or a browser extension's content script, loads the pack as it loads core: as a file. Build one file in Node, core's browser bundle with the pack registered after it, from the core you will ship:
 
 ```sh
-node -e "const fs = require('node:fs'); const { packScript } = require('@surea11y/core/pack'); fs.writeFileSync('en301549.pack.js', packScript([require('@surea11y/pack-en301549')]))"
+node -e "const fs = require('node:fs'); const { buildBrowserBundle } = require('@surea11y/core/pack'); fs.writeFileSync('surea11y-en301549.js', buildBrowserBundle({ packs: [require('@surea11y/pack-en301549')] }))"
 ```
 
 ```html
-<script src="node_modules/@surea11y/core/surea11y.browser.js"></script>
-<script src="en301549.pack.js"></script>
+<script src="surea11y-en301549.js"></script>
 <script>
   const result = a11ycore.runa11yCoreInPage(location.href, null, {
     packs: ['@surea11y/pack-en301549@1.0.1'],
@@ -138,9 +137,9 @@ node -e "const fs = require('node:fs'); const { packScript } = require('@surea11
 </script>
 ```
 
-Or ship one file, core's bundle with the pack registered after it: `buildBrowserBundle({ packs: [en301549] })` from `@surea11y/core/pack`. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
+The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every one from 1.13.0.
 
-The script runs only with the core it was written with: a page with another core's bundle runs the scan without the pack and lists it in `skippedPacks`, naming the two versions. So the pack ships no prebuilt file (it would fit one core release, and the pack supports every one from 1.13.0); write it again when you update core or the pack, and update the `name@version` the page names with it.
+Where core's bundle is already on the page (a tool that loads it for its own scans, a language side file after it), load `packScript([en301549])` from `@surea11y/core/pack` after the bundle instead, written to a file with the same core. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
 
 ### Building a tool on it
 
