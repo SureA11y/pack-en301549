@@ -18,7 +18,17 @@ Add the pack to `engineOptions.packs` (in a page, with `packScript()`) and keep 
 
 ## Using it
 
-The pack runs wherever core runs: in Node on a jsdom page, in a real browser driven by Playwright or Puppeteer, from the command line, and in core's browser bindings. In each, give the scan the pack, and either choose a profile or ask for the clauses with `mappings`.
+The pack runs wherever core runs. In each place, give the scan the pack, and either choose a profile or ask for the clauses with `mappings`:
+
+| Where | How the scan gets the pack | Rendered page |
+|---|---|---|
+| Node, on a jsdom page (or `runa11yCoreOnHtml` from `@surea11y/core/testing`) | `packs: [en301549]` | no: the HTML as parsed, without layout |
+| A browser driven by Playwright or Puppeteer, yours | `packScript([en301549])` injected after core's browser bundle | yes |
+| Core's bindings (Playwright, Puppeteer, Selenium, WebdriverIO, Cypress) | `.withPacks(en301549)` | yes |
+| Core's CLI, `@surea11y/cli` | `--pack @surea11y/pack-en301549` | no: static HTML, its scripts not run |
+| A page with no driver: a `<script>` tag, a bookmarklet, a browser extension | a script file written once in Node, loaded after core's bundle | yes |
+
+Where the page is rendered, the rules that measure the layout decide (9.2.5.8 Target size (minimum), the geometry of 9.1.4.3 Contrast); on jsdom they answer `notApplicable` or `cantTell`, and `engine.environment.layout` says which kind of scan it was. A clause can so pass in Node and fail in a browser, or the reverse. See core's [`LIMITATIONS.md`](https://github.com/SureA11y/core/blob/main/docs/LIMITATIONS.md).
 
 ### A scan against EN 301 549
 
@@ -62,22 +72,86 @@ runDomRulesInPage(url, null, { packs: [en301549], profile: 'wcag22-aa', mappings
 
 A rule names the clause of each of its criteria; a WCAG rollup names the clause of its own criterion, whichever of its rules decided it. SARIF tags each rule `en301549-9.1.1.1`, JUnit adds an `en301549` property per clause, and the HTML report shows the clause beside each criterion.
 
-### In a browser
+### In a browser you drive
 
-A pack is prepared in Node, so it reaches the page as a script: inject `packScript()` after core's browser bundle, and name the pack in `engineOptions.packs` as `name@version` (see [Packs in a page](https://github.com/SureA11y/core/blob/main/docs/INTEGRATION.md#packs-in-a-page)):
+A pack is prepared in Node, where `@surea11y/core/pack` reads core's rules, so it reaches the page as a script: inject core's browser bundle, then `packScript()`, and name the pack in `engineOptions.packs` as `name@version` (see core's [Packs in a page](https://github.com/SureA11y/core/blob/main/docs/INTEGRATION.md#packs-in-a-page)). In Playwright or Puppeteer:
 
 ```js
-const { runa11yCoreInPage } = require('@surea11y/core');
+const fs = require('node:fs');
 const { packScript } = require('@surea11y/core/pack');
 const en301549 = require('@surea11y/pack-en301549');
 
 const engineOptions = { packs: [`${en301549.name}@${en301549.version}`], profile: 'en301549-v4.1.1' };
 
+await page.goto(url);
+await page.evaluate(fs.readFileSync(require.resolve('@surea11y/core/browser'), 'utf8'));
 await page.evaluate(packScript([en301549]));
-const result = await page.evaluate(runa11yCoreInPage, page.url(), null, engineOptions, null);
+const result = await page.evaluate(
+  (options) => window.a11ycore.runa11yCoreInPage(location.href, null, options, null),
+  engineOptions
+);
+result.skippedPacks; // undefined: the page ran the pack
 ```
 
-Core's bindings register it with `.withPacks(en301549)`, and the CLI takes `--pack @surea11y/pack-en301549 --profile en301549-v4.1.1`, as for any pack.
+Inject both into every frame you scan. The scan gives the clauses a scan in Node gives (`tests/browser.test.js`).
+
+### With core's bindings
+
+The bindings register the pack in the page, and in every frame with `.frames(true)`:
+
+```js
+const { A11yCoreBuilder } = require('@surea11y/playwright'); // or puppeteer, selenium, webdriverio
+const en301549 = require('@surea11y/pack-en301549');
+
+const results = await new A11yCoreBuilder({ page })
+  .withPacks(en301549)
+  .options({ profile: 'en301549-v4.1.1' })
+  .analyze();
+```
+
+In Cypress, `.withPacks('@surea11y/pack-en301549')` takes the package name, and the binding's plugin prepares the pack in Node. A pack the page didn't run is a `'pack-skipped'` gap in `getScanGaps(results)`.
+
+### From the CLI
+
+```sh
+npx surea11y scan ./dist/index.html --pack @surea11y/pack-en301549 --profile en301549-v4.1.1
+```
+
+Install the pack in the project beside `@surea11y/cli`. The CLI scans the HTML as it is, without running its scripts: a page its scripts build needs a browser.
+
+### In a page of your own: a script tag, an extension
+
+A page with no driver, such as a manual check, a bookmarklet or a browser extension's content script, loads the pack as it loads core: as a file. Write it once in Node with the core you will ship:
+
+```sh
+node -e "const fs = require('node:fs'); const { packScript } = require('@surea11y/core/pack'); fs.writeFileSync('en301549.pack.js', packScript([require('@surea11y/pack-en301549')]))"
+```
+
+```html
+<script src="node_modules/@surea11y/core/surea11y.browser.js"></script>
+<script src="en301549.pack.js"></script>
+<script>
+  const result = a11ycore.runa11yCoreInPage(location.href, null, {
+    packs: ['@surea11y/pack-en301549@1.0.1'],
+    profile: 'en301549-v4.1.1'
+  }, null);
+</script>
+```
+
+Or ship one file, core's bundle with the pack registered after it: `buildBrowserBundle({ packs: [en301549] })` from `@surea11y/core/pack`. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
+
+The script runs only with the core it was written with: a page with another core's bundle runs the scan without the pack and lists it in `skippedPacks`, naming the two versions. So the pack ships no prebuilt file (it would fit one core release, and the pack supports every one from 1.13.0); write it again when you update core or the pack, and update the `name@version` the page names with it.
+
+### Building a tool on it
+
+An extension, an online validator, a dashboard or a CI step runs the pack in one of the places above. A validator that loads a URL in a headless browser on the server is the browser case; one that checks the HTML it is given, without its scripts, is the jsdom case. For any of them:
+
+- Check `skippedPacks` before treating a scan as complete: a scan that skips the pack still finishes, without the clauses. `engine.packs` names the pack that ran, as `@surea11y/pack-en301549@1.0.1`.
+- Read the clauses from `rulesResults` (`meta.standard === 'EN 301 549'`) under the profiles, or from `meta.normativeMappings` with `mappings`. `result.standards` names EN 301 549, so core's HTML, SARIF and JUnit reporters render a stored result the same wherever they run, with or without the pack installed.
+- Say what the scan was: a result is automated checks on one page in one state, not an audit, and many clauses come back `cantTell` or are not checked at all. The clause table (below) lists the clauses a scan didn't cover.
+- Say which kind of page it scanned (`engine.environment.layout`), since the layout rules decide only in a rendered page.
+
+Core's [`BUILDING_ON_CORE.md`](https://github.com/SureA11y/core/blob/main/docs/BUILDING_ON_CORE.md) covers the rest: which runner, when to scan, presenting results, comparing runs.
 
 ### The clause table
 
