@@ -6,7 +6,7 @@ All notable changes to this package are documented here. This project adheres to
 
 ### Changed
 
-- Node 20, which reached end of life in April 2026, is no longer supported: `engines` now asks for Node 22.13.0 or later, and CI tests on Node 22 and 24.
+- Node 20, which reached end of life in April 2026, is no longer supported: `engines` now asks for Node 22.13.0 or later, and CI tests on Node 22, 24 and 26.
 
 ## [1.0.0] - 2026-10-19
 
