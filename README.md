@@ -131,13 +131,13 @@ node -e "const fs = require('node:fs'); const { buildBrowserBundle } = require('
 <script src="surea11y-en301549.js"></script>
 <script>
   const result = a11ycore.runa11yCoreInPage(location.href, null, {
-    packs: ['@surea11y/pack-en301549@1.0.1'],
+    packs: ['@surea11y/pack-en301549@<version>'], // the version the file was built with
     profile: 'en301549-v4.1.1'
   }, null);
 </script>
 ```
 
-The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every one from 1.13.0.
+The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it: `require('@surea11y/pack-en301549').version` gives the installed version. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every one from 1.13.0.
 
 Where core's bundle is already on the page (a tool that loads it for its own scans, a language side file after it), load `packScript([en301549])` from `@surea11y/core/pack` after the bundle instead, written to a file with the same core. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
 
@@ -145,7 +145,7 @@ Where core's bundle is already on the page (a tool that loads it for its own sca
 
 An extension, an online validator, a dashboard or a CI step runs the pack in one of the places above. A validator that loads a URL in a headless browser on the server is the browser case; one that checks the HTML it is given, without its scripts, is the jsdom case. For any of them:
 
-- Check `skippedPacks` before treating a scan as complete: a scan that skips the pack still finishes, without the clauses. `engine.packs` names the pack that ran, as `@surea11y/pack-en301549@1.0.1`.
+- Check `skippedPacks` before treating a scan as complete: a scan that skips the pack still finishes, without the clauses. `engine.packs` names the pack that ran with its installed version, such as `@surea11y/pack-en301549@1.0.1`.
 - Read the clauses from `rulesResults` (`meta.standard === 'EN 301 549'`) under the profiles, or from `meta.normativeMappings` with `mappings`. `result.standards` names EN 301 549, so core's HTML, SARIF and JUnit reporters render a stored result the same wherever they run, with or without the pack installed.
 - Say what the scan was: a result is automated checks on one page in one state, not an audit, and many clauses come back `cantTell` or are not checked at all. The clause table (below) lists the clauses a scan didn't cover.
 - Say which kind of page it scanned (`engine.environment.layout`), since the layout rules decide only in a rendered page.
