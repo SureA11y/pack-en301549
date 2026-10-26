@@ -4,9 +4,9 @@ EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`
 
 Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
-It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. Chapters 10 (non-web documents) and 11 (software) are out of scope.
+It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. Chapters 10 (non-web documents) and 11 (software) are out of scope.
 
-It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack.
+It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack. With core 1.14.0 or later, a clause is judged as core judges the criterion it restates, and V3.2.1 keeps 4.1.1 Parsing; with 1.13, the pack behaves as its 1.0 releases do (see the [changelog](./CHANGELOG.md)).
 
 ```sh
 npm install @surea11y/core @surea11y/pack-en301549
@@ -25,10 +25,10 @@ The pack runs wherever core runs. In each place, give the scan the pack, and eit
 | Node, on a jsdom page (or `runa11yCoreOnHtml` from `@surea11y/core/testing`) | `packs: [en301549]` | no: the HTML as parsed, without layout |
 | A browser driven by Playwright or Puppeteer, yours | `packScript([en301549])` injected after core's browser bundle | yes |
 | Core's bindings (Playwright, Puppeteer, Selenium, WebdriverIO, Cypress) | `.withPacks(en301549)` | yes |
-| Core's CLI, `@surea11y/cli` | `--pack @surea11y/pack-en301549` | no: static HTML, its scripts not run |
+| Core's CLI, `@surea11y/cli` | `--pack @surea11y/pack-en301549` | no: static HTML, its scripts not run; yes with `--browser` (`@surea11y/cli` 1.4.0) |
 | A page with no driver: a `<script>` tag, a bookmarklet, a browser extension | a script file written once in Node, loaded after core's bundle | yes |
 
-Where the page is rendered, the rules that measure the layout decide (9.2.5.8 Target size (minimum), the geometry of 9.1.4.3 Contrast); on jsdom they answer `notApplicable` or `cantTell`, and `engine.environment.layout` says which kind of scan it was. A clause can so pass in Node and fail in a browser, or the reverse. See core's [`LIMITATIONS.md`](https://github.com/SureA11y/core/blob/main/docs/LIMITATIONS.md).
+Where the page is rendered, the rules that measure the layout decide (9.2.5.8 Target size (minimum), the geometry of 9.1.4.3 Contrast); on jsdom they answer `notApplicable` or `cantTell`, and `engine.environment.layout` says which kind of scan it was. A clause can so be `cantTell` in Node and fail in a browser, or the reverse. See core's [`LIMITATIONS.md`](https://github.com/SureA11y/core/blob/main/docs/LIMITATIONS.md).
 
 ### A scan against EN 301 549
 
@@ -53,7 +53,7 @@ dom.window.close();
 | Profile | Runs | Judged by | Reports |
 |---|---|---|---|
 | `en301549-v4.1.1` | every core rule mapped to a WCAG 2.2 A or AA criterion | WCAG 2.2 | one result per V4.1.1 clause, `en301549-V4.1.1-9.1.1.1` and so on |
-| `en301549-v3.2.1` | every core rule mapped to a WCAG 2.1 A or AA criterion | WCAG 2.1, so 4.1.1 Parsing counts | one result per V3.2.1 clause, 9.4.1.1 included |
+| `en301549-v3.2.1` | every core rule mapped to a WCAG 2.1 A or AA criterion | WCAG 2.1, with 4.1.1 Parsing, which the 2023 errata count as satisfied and V3.2.1 keeps (`keepsParsing`) | one result per V3.2.1 clause, 9.4.1.1 included |
 
 Under either profile, `rulesResults` holds EN 301 549's clauses and nothing of WCAG. A rule's result in `checksResults` still names its WCAG criterion, followed by its clause, in `meta.normativeMappings`, and the clauses it counts towards in `rollupIds`. A best-practice rule, or one mapped only to AAA criteria, doesn't run: no clause restates its criteria.
 
@@ -154,7 +154,7 @@ Where core's bundle is already on the page (a tool that loads it for its own sca
 
 An extension, an online validator, a dashboard or a CI step runs the pack in one of the places above. A validator that loads a URL in a headless browser on the server is the browser case; one that checks the HTML it is given, without its scripts, is the jsdom case. For any of them:
 
-- Check `skippedPacks` before treating a scan as complete: a scan that skips the pack still finishes, without the clauses. `engine.packs` names the pack that ran with its installed version, such as `@surea11y/pack-en301549@1.0.1`.
+- Check `skippedPacks` before treating a scan as complete: a scan that skips the pack still finishes, without the clauses. `engine.packs` names the pack that ran with its installed version, such as `@surea11y/pack-en301549@1.1.0`.
 - Read the clauses from `rulesResults` (`meta.standard === 'EN 301 549'`) under the profiles, or from `meta.normativeMappings` with `mappings`. `result.standards` names EN 301 549, so core's HTML, SARIF and JUnit reporters render a stored result the same wherever they run, with or without the pack installed.
 - Say what the scan was: a result is automated checks on one page in one state, not an audit, and many clauses come back `cantTell` or are not checked at all. The clause table (below) lists the clauses a scan didn't cover.
 - Say which kind of page it scanned (`engine.environment.layout`), since the layout rules decide only in a rendered page.
@@ -186,7 +186,7 @@ The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't.
 
 ## Tests
 
-Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript`, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
+Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript` and with core's listener hook, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
 
 ## Licence
 
