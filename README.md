@@ -4,7 +4,7 @@ EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`
 
 Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
-It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (27 of V4.1.1's 55 and 26 of V3.2.1's 50, with core 1.12's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. Chapters 10 (non-web documents) and 11 (software) are out of scope.
+It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. Chapters 10 (non-web documents) and 11 (software) are out of scope.
 
 It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack.
 
