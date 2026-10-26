@@ -2,6 +2,16 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Under the `en301549-v3.2.1` profile, a duplicate id keeps failing 9.4.1.1 with core 1.14. Core 1.14 follows the 2023 errata to WCAG 2.0 and 2.1, which count 4.1.1 Parsing as satisfied, unless the profile says its standard keeps the criterion's text; V3.2.1 does, and its profile now says so (`keepsParsing: true`). Without it, core 1.14 asks about a duplicate id there instead of failing it, and warns once that the profile loses 4.1.1. Core 1.13 and earlier ignore the key, so nothing changes with them.
+
+### Changed
+
+- Developed and tested against core 1.14.0. `docs/RULE_CATALOG.md` lists the rules core 1.14 adds under the clauses of their criteria, such as `image-of-text` under 9.1.4.5 and `live-region-announcements` under 9.4.1.3. Under 1.14, a WCAG rollup whose rules are all `notApplicable` can be `cantTell` instead (`composite.rollup.cantTell.partialCoverage`), and the clauses it names are the same.
+
 ## [1.0.1] - 2026-10-20
 
 ### Changed
