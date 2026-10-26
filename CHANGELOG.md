@@ -13,6 +13,7 @@ Needs `@surea11y/core` 1.14.0 for the changes below; with 1.13 the pack behaves 
 ### Changed
 
 - A clause's result is `notApplicable` only where the WCAG rollup of the criterion it restates is, as core 1.14.0 judges WCAG's (`applicability: 'wcag'`): where core's rules don't see every case the criterion applies to and all of them found nothing, the clause is `cantTell` (`composite.rollup.cantTell.partialCoverage`), so 9.1.2.2 agrees with WCAG 1.2.2 in the same report. Clauses about links, form fields, focusable elements, labelled components, pointer targets and markup stay `notApplicable` when there is nothing to check. Under `mappings: ['en301549']`, the WCAG rollups name the same clauses as before.
+- No clause passes with core 1.14, as no WCAG criterion does: core's rules check only part of what each criterion asks, so a clause whose rules all pass is `cantTell` (`composite.rollup.cantTell.partialCheck`), for a person to check the rest.
 - Developed and tested against core 1.14.0. Its new rules check their clauses with no change here, as the map is derived from core's catalog, and `docs/RULE_CATALOG.md` lists them: 9.1.4.5, 9.3.3.1 and 9.4.1.3 get their first rules (`image-of-text`, `invalid-field-error-message`, `live-region-announcements`), and `click-handler-keyboard-operable`, `widget-keyboard-focusable`, `focus-not-removed-by-script`, `moving-content-pausable`, `aria-owns-valid` and `aria-expanded-state-mismatch` join the clauses of their criteria.
 
 ## [1.0.1] - 2026-10-20
