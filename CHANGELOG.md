@@ -2,7 +2,7 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-10-26
 
 Needs `@surea11y/core` 1.14.0 for the changes below; with 1.13 the pack behaves as 1.0.1 does, as 1.13 ignores the options it now gives.
 
