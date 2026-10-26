@@ -13,6 +13,7 @@ const fs = require('node:fs');
 
 const { chromium } = require('playwright');
 const { packScript } = require('@surea11y/core/pack');
+const { listenerHookScript, addHowToCheck, occurrenceOutcome } = require('@surea11y/core');
 const { runa11yCoreOnHtml, pack } = require('./helpers/run.js');
 
 const BUNDLE = fs.readFileSync(require.resolve('@surea11y/core/browser'), 'utf8');
@@ -58,6 +59,59 @@ test('a scan in Chromium with packScript reports the clauses the scan in Node do
       assert.deepEqual(summary(inPage).clauses, summary(inNode).clauses, JSON.stringify(options));
       assert.deepEqual(summary(inPage).rollups, summary(inNode).rollups, JSON.stringify(options));
     }
+  } finally {
+    await browser.close();
+  }
+});
+
+// A role="button" with a click listener added from script and nothing to
+// focus it fails 9.2.1.1 only where core's listener hook, installed before
+// the page's scripts, saw the listener. The engine in the page leaves out
+// the steps to answer a question; addHowToCheck adds them in Node.
+const SCRIPTED =
+  '<!doctype html><html lang="en"><head><title>Home</title></head><body><main>' +
+  '<h1>Library</h1><div role="button" id="save">Save</div>' +
+  '<script>document.getElementById("save").addEventListener("click", () => {})</script>' +
+  '</main></body></html>';
+
+test('with the listener hook, a script-added click handler fails 9.2.1.1', async () => {
+  const browser = await chromium.launch();
+  try {
+    const outcomes = [];
+    for (const hook of [false, true]) {
+      const page = await browser.newPage();
+      if (hook) await page.addInitScript({ content: listenerHookScript() });
+      await page.route('http://pack.test/', (r) =>
+        r.fulfill({ contentType: 'text/html', body: SCRIPTED })
+      );
+      await page.goto('http://pack.test/');
+      await page.evaluate(BUNDLE);
+      await page.evaluate(packScript([pack]));
+      const result = await page.evaluate(
+        (name) =>
+          window.a11ycore.runa11yCoreInPage(
+            location.href,
+            null,
+            { packs: [name], profile: 'en301549-v4.1.1' },
+            null
+          ),
+        NAME
+      );
+      await page.close();
+      assert.equal(result.engine.environment.listenerHook, hook ? 'early' : undefined);
+      outcomes.push(
+        result.rulesResults.find((r) => r.ruleId === 'en301549-V4.1.1-9.2.1.1').outcome
+      );
+
+      const questions = (r) =>
+        r.checksResults.flatMap((c) =>
+          (c.occurrences || []).filter((o) => occurrenceOutcome(c, o) === 'cantTell')
+        );
+      assert.ok(questions(result).length > 0);
+      assert.ok(questions(result).every((o) => !o.howToCheck));
+      assert.ok(questions(addHowToCheck(result, { packs: [pack] })).every((o) => o.howToCheck));
+    }
+    assert.deepEqual(outcomes, ['cantTell', 'fail']);
   } finally {
     await browser.close();
   }
