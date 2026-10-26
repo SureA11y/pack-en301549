@@ -13,6 +13,9 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # A run takes about two minutes; a step that hangs fails it instead of
+    # holding it for GitHub's six-hour default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,6 +37,7 @@ jobs:
           fi
 
       - run: npx playwright install --with-deps chromium
+        timeout-minutes: 5
       - run: git clone --depth 1 https://github.com/SureA11y/core.git ../core
       - run: npm test
 
