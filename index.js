@@ -70,12 +70,16 @@ function mappingsFor({ wcagSc }) {
 // (mappedRules), and nothing else, so results hold its clauses and no WCAG
 // criteria. With no WCAG tag to imply it, the profile names the WCAG version
 // the standard's version is built on, so 4.1.1 Parsing counts under V3.2.1
-// and not under V4.1.1.
+// and not under V4.1.1. V3.2.1 keeps 4.1.1's text (clause 9.4.1.1), which
+// the 2023 errata to WCAG 2.1 don't amend, so it says keepsParsing: from core
+// 1.14 a duplicate id under it then still fails, where it would be asked
+// about. Core 1.13 and earlier ignore the key.
 const profile = (v) => ({
   version: v,
   tags: [NAMESPACE],
   mappedRules: true,
-  wcagVersion: wcagVersionOf(v)
+  wcagVersion: wcagVersionOf(v),
+  ...(wcagVersionOf(v) === '2.2' ? {} : { keepsParsing: true })
 });
 
 module.exports = definePack({
