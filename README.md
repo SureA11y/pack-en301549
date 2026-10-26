@@ -79,25 +79,30 @@ A pack is prepared in Node, where `@surea11y/core/pack` reads core's rules, so i
 ```js
 const fs = require('node:fs');
 const { packScript } = require('@surea11y/core/pack');
+const { listenerHookScript, addHowToCheck } = require('@surea11y/core');
 const en301549 = require('@surea11y/pack-en301549');
 
 const engineOptions = { packs: [`${en301549.name}@${en301549.version}`], profile: 'en301549-v4.1.1' };
 
+await page.addInitScript({ content: listenerHookScript() }); // Puppeteer: evaluateOnNewDocument
 await page.goto(url);
 await page.evaluate(fs.readFileSync(require.resolve('@surea11y/core/browser'), 'utf8'));
 await page.evaluate(packScript([en301549]));
-const result = await page.evaluate(
+const inPage = await page.evaluate(
   (options) => window.a11ycore.runa11yCoreInPage(location.href, null, options, null),
   engineOptions
 );
-result.skippedPacks; // undefined: the page ran the pack
+inPage.skippedPacks; // undefined: the page ran the pack
+const result = addHowToCheck(inPage, { packs: [en301549] });
 ```
 
 Inject both into every frame you scan. The scan gives the clauses a scan in Node gives (`tests/browser.test.js`).
 
+The two lines around the scan are optional, and need core 1.14. Core's hooks run before the page's own scripts, so some rules see what those scripts do. With the listener hook, a `role="button"` given a click handler from script that nothing can focus fails 9.2.1.1, where without it the clause asks. `internalsHookScript()` and `liveRegionHookScript()` do the same for `ElementInternals` and status messages (9.4.1.3); see core's [`BINDING_AUTHORS_GUIDE.md`](https://github.com/SureA11y/core/blob/main/docs/BINDING_AUTHORS_GUIDE.md). The engine in the page leaves out the steps to answer each question (`howToCheck`), and `addHowToCheck` adds them in Node, as a scan in Node has them.
+
 ### With core's bindings
 
-The bindings register the pack in the page, and in every frame with `.frames(true)`:
+The bindings register the pack in the page, and in every frame with `.frames(true)`, and those built on core 1.14 install its hooks and add the steps to each question for you:
 
 ```js
 const { A11yCoreBuilder } = require('@surea11y/playwright'); // or puppeteer, selenium, webdriverio
@@ -117,7 +122,11 @@ In Cypress, `.withPacks('@surea11y/pack-en301549')` takes the package name, and 
 npx surea11y scan ./dist/index.html --pack @surea11y/pack-en301549 --profile en301549-v4.1.1
 ```
 
-Install the pack in the project beside `@surea11y/cli`. The CLI scans the HTML as it is, without running its scripts: a page its scripts build needs a browser.
+Install the pack in the project beside `@surea11y/cli`. The CLI scans the HTML as it is, without running its scripts. From `@surea11y/cli` 1.4.0, `--browser` scans the page in headless Chromium through Playwright, with its scripts run and core's hooks installed, and the pack runs there too:
+
+```sh
+npx surea11y scan https://example.com/ --browser --pack @surea11y/pack-en301549 --profile en301549-v4.1.1
+```
 
 ### In a page of your own: a script tag, an extension
 
