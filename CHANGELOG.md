@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- How a person checks each clause by hand: with core 1.15 and later, `proceduresFor('9.1.4.3', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' })` gives the procedures of the WCAG criterion the clause restates, in both versions and every language core has them. The pack gives them from its clause table through core's kit, with no text of its own; an older core gives none and ignores them.
+
 ## [1.1.0] - 2026-10-26
 
 Needs `@surea11y/core` 1.14.0 for the changes below; with 1.13 the pack behaves as 1.0.1 does, as 1.13 ignores the options it now gives.

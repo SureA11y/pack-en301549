@@ -35,11 +35,11 @@ const STANDARD = 'EN 301 549';
 
 const wcagVersionOf = (v) => VERSIONS.find((x) => x.version === v).wcagVersion;
 
-// A rollup per clause, grouping the rules that check it, and the checks of
-// the two tables, from core's kit. Each clause restates its WCAG criterion,
+// A rollup per clause, grouping the rules that check it, the checks of the
+// two tables and, from core 1.15, the clauses' procedures, from core's kit. Each clause restates its WCAG criterion,
 // so it is notApplicable only where the criterion's WCAG rollup is (core
 // 1.14.0 and later; an older core ignores the option).
-const { composites, validate } = ruleMappedStandard({
+const { composites, validate, procedures } = ruleMappedStandard({
   standard: STANDARD,
   tag: NAMESPACE,
   versions: VERSIONS,
@@ -106,6 +106,10 @@ module.exports = definePack({
     mappingsFor,
     composites,
     validate,
+    // How a person assesses each clause by hand: the procedures of the WCAG
+    // criterion it restates, from core 1.15 on (an older core gives none,
+    // and ignores the field).
+    ...(procedures ? { procedures } : {}),
     report: { noteKey: 'en301549_report_note' }
   },
   // The note above the standard's results in the HTML report, per locale.
