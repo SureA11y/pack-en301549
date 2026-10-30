@@ -161,6 +161,19 @@ An extension, an online validator, a dashboard or a CI step runs the pack in one
 
 Core's [`BUILDING_ON_CORE.md`](https://github.com/SureA11y/core/blob/main/docs/BUILDING_ON_CORE.md) covers the rest: which runner, when to scan, presenting results, comparing runs.
 
+### Checking a clause by hand
+
+Most clauses come back `cantTell` or are not checked at all, for a person to finish. With a core that has test procedures (1.15 and later), each clause gives the steps for that, the procedures of the WCAG criterion it restates, in every language core has them:
+
+```js
+const { proceduresFor } = require('@surea11y/core');
+
+proceduresFor('9.1.4.3', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
+// { standard: 'EN 301 549', id: '9.1.4.3', version: 'V4.1.1', title: 'Contrast (minimum)', wcag: '1.4.3', facets: [...] }
+```
+
+Each facet has what a person checks, the steps, what passes and what fails, the tools it needs and the core rules that cover it (core's [`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md)). `version` defaults to the latest that has the clause. In code that runs in a browser, `proceduresFrom` from `@surea11y/core/procedures` does the same with the dictionaries it imports. An older core gives none.
+
 ### The clause table
 
 `@surea11y/pack-en301549/public` publishes the table, with the exports `@surea11y/core/en301549` had up to core 1.12, for tools that ask the reverse question, such as which criteria a version requires that a scan did not cover:
@@ -180,6 +193,7 @@ A clause on a result is a correspondence between two published documents, not a 
 - **The mapping** (`rule-map.js`): each core rule checks the clause of each WCAG criterion it maps to, in every version that has it. It is derived from the installed core's rule catalog, so a rule core adds is checked under the profiles with no change here.
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
+- **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
 The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't.
