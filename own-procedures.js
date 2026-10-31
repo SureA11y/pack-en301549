@@ -57,8 +57,8 @@ const authoring = (v) => (v === V3 ? '11.8' : '5.10');
 // relates to the criteria they restate from the same list (relating).
 const NAMED = new WeakMap();
 
-// Chapter 4: the chapter 9 clauses Table B.2 marks as the primary support of
-// a statement, in its column, with a few of them named.
+// Chapter 4: the chapter 9 clauses Table B.2 marks as the primary or
+// secondary support of a statement, in its column, with a few of them named.
 //
 // V4.1.1 makes each statement a criterion whose test (Annex C) has two
 // routes: every clause Annex B relates to it, primary or secondary, is met,
@@ -71,7 +71,7 @@ function relatedClauses(v, id, column, need, clauses, example) {
           label: `The chapter 9 clauses that serve ${need} are met`,
           automation: 'manual',
           steps: [
-            `Open Table B.2 in Annex B of the standard and list the chapter 9 clauses it marks P (primary) in column ${column}, for ${id}.`,
+            `Open Table B.2 in Annex B of the standard and list the chapter 9 clauses it marks P (primary) or S (secondary) in column ${column}, for ${id}.`,
             `Assess each with its own procedure, or take its result from a review already done: among them are ${clauses.join(', ')}.`,
             'Note each clause that fails, and the task it gets in the way of.'
           ],
