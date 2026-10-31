@@ -203,7 +203,7 @@ const statements = (v) => ({
         steps: [
           'List the main tasks the product offers.',
           'Complete each with the browser zoomed to 200%, then with the window 320 CSS pixels wide (400% on a 1280 pixel screen).',
-          'Complete them again with the system’s screen magnifier at a high magnification, following the focus as you move.',
+          "Complete them again with the system's screen magnifier at a high magnification, following the focus as you move.",
           'Complete them again with a high-contrast theme on in the system.',
           'Note each point where content was cut off, overlapped, disappeared, needed scrolling in two directions to read, or could not be found within the magnified area, such as a message shown far from where you were.'
         ],
@@ -231,7 +231,7 @@ const statements = (v) => ({
         automation: 'manual',
         tools: ['devtools'],
         steps: [
-          'Turn the screen to greyscale, with the system’s colour filters or the developer tools’ emulation of vision deficiencies (achromatopsia).',
+          "Turn the screen to greyscale, with the system's colour filters or the developer tools' emulation of vision deficiencies (achromatopsia).",
           'Complete each main task the product offers.',
           'Look in particular at status, errors, required fields, selected items, links in text, charts and maps.',
           'Repeat with the emulation of red-green (deuteranopia, protanopia) and blue-yellow (tritanopia) deficiencies, where colour still carries meaning.'
@@ -290,12 +290,12 @@ const statements = (v) => ({
         steps: [
           'List where the product plays sound: videos, audio, calls, spoken messages, alerts.',
           'If it plays none, record that 4.2.5 does not apply.',
-          'For each, check that its volume can be raised with the product’s controls or the system’s, well above the default.',
+          "For each, check that its volume can be raised with the product's controls or the system's, well above the default.",
           'Check that speech can be heard over background music or noise, or that the background can be turned down or off.',
           'Check that the sound can be sent to headphones or a hearing device, as the system offers, and is not locked to one output.'
         ],
         passWhen:
-          'The product plays no sound, or its sound can be made louder, clearer and sent to the user’s own listening device.',
+          "The product plays no sound, or its sound can be made louder, clearer and sent to the user's own listening device.",
         failWhen:
           'Sound a task needs can not be made loud or clear enough, such as speech under music that can not be turned down, which fails EN 301 549 4.2.5.'
       }
@@ -310,7 +310,7 @@ const statements = (v) => ({
         automation: 'manual',
         tools: ['keyboard'],
         steps: [
-          'List every place the product asks for the user’s voice: voice search, a voice assistant, voice commands, a spoken password or voice check, a call to an automated phone line, a recording to send.',
+          "List every place the product asks for the user's voice: voice search, a voice assistant, voice commands, a spoken password or voice check, a call to an automated phone line, a recording to send.",
           'If there is none, record that 4.2.6 does not apply.',
           'For each, check that the same can be done without speaking, with the keyboard, a pointer or by text, in the product itself.',
           'Check that the way without speaking is as easy to find and as complete as the spoken one.'
@@ -361,10 +361,10 @@ const statements = (v) => ({
           'Where the product is stationary, free-standing or installed, everything it needs is within reach',
         automation: 'manual',
         steps: [
-          'Check whether the product includes something stationary, free-standing or installed, such as a kiosk, a terminal or a ticket machine. A website or an app on the user’s own device is not.',
+          "Check whether the product includes something stationary, free-standing or installed, such as a kiosk, a terminal or a ticket machine. A website or an app on the user's own device is not.",
           'If it does not, record that 4.2.8 does not apply.',
           'If it does, check that every control, screen, slot and reader it needs can be reached from a wheelchair and by short and tall users, as chapter 8 (8.3) measures it.',
-          'Check that a task can be completed from a seated position, or from the user’s own device where the product offers that.'
+          "Check that a task can be completed from a seated position, or from the user's own device where the product offers that."
         ],
         passWhen:
           'The product includes nothing stationary, or everything a task needs at it is within reach of every user.',
@@ -389,7 +389,7 @@ const statements = (v) => ({
         label:
           v === V3
             ? 'The product offers a mode with no flashing that could trigger a seizure'
-            : 'The product’s default mode has no flashing that could trigger a seizure, or audiovisual material warns first',
+            : "The product's default mode has no flashing that could trigger a seizure, or audiovisual material warns first",
         automation: 'manual',
         steps: [
           'Go through the product looking for anything that flashes, flickers or changes brightness quickly: animations, videos, games, backgrounds, transitions, banners.',
@@ -447,7 +447,7 @@ const statements = (v) => ({
       {
         id: 'privacy-with-features',
         label:
-          'Using the accessibility features keeps the user’s privacy as well as not using them',
+          "Using the accessibility features keeps the user's privacy as well as not using them",
         automation: 'manual',
         tools: ['screen-reader'],
         steps: [
@@ -482,7 +482,7 @@ const docsSteps = (what) => [
 
 const featuresSteps = (where) => [
   `Find ${where}.`,
-  'List the product’s accessibility features: its own, such as a text size setting, a high-contrast mode, keyboard shortcuts, captions or audio description, and the assistive technology it is made to work with, such as screen readers, magnifiers and voice control.',
+  "List the product's accessibility features: its own, such as a text size setting, a high-contrast mode, keyboard shortcuts, captions or audio description, and the assistive technology it is made to work with, such as screen readers, magnifiers and voice control.",
   'Check that the documentation lists them, and says how to turn on and use each one.',
   'Follow the instructions for a few of them and check that they work as described.'
 ];
@@ -640,7 +640,7 @@ const chapter12 = (v) =>
               automation: 'manual',
               steps: [
                 ...featuresSteps(
-                  'the documentation about using the product, in the product or on the supplier’s own web pages'
+                  "the documentation about using the product, in the product or on the supplier's own web pages"
                 ),
                 'Check that it says how to get support for the accessibility features, or links to a page that does.'
               ],
@@ -731,14 +731,14 @@ const chapter5 = (v) => ({
       tools: ['screen-reader'],
       steps: [
         'Check whether any part of the product keeps the user from using their own assistive technology: a kiosk, a locked-down device, a player or app that blocks screen readers or magnifiers.',
-        'A website used in the user’s own browser is not closed: if nothing else is, record clause 5.1 as not applicable.',
+        "A website used in the user's own browser is not closed: if nothing else is, record clause 5.1 as not applicable.",
         ...(v === V3
           ? [
               'For each closed part, check that it offers speech output for what it shows, enlarged text, a visual form of what it says aloud, a way to use it without a keyboard or speech where it needs them, as clauses 5.1.3 to 5.1.7 require.'
             ]
           : [
               'For each closed part, check that it offers speech output for what it shows, with the speech matching what is on screen at the time (5.1.3), enlarged text (5.1.4), a visual form of what it says aloud (5.1.5), a way to use it without a keyboard where it needs one (5.1.6), and without speech where it needs speech (5.1.7).',
-              'Where a closed part asks for the user’s own details, such as a name or card number, check that it says the purpose of each field in speech (5.1.8).'
+              "Where a closed part asks for the user's own details, such as a name or card number, check that it says the purpose of each field in speech (5.1.8)."
             ])
       ],
       passWhen:
@@ -932,7 +932,7 @@ const chapter6 = (v) => ({
               'Check whether the product offers voice or video calls, or conversation in real time, such as a call button, a meeting room, or a call to support from the page.',
               'If it does not, record chapter 6 as not applicable.',
               'Where it offers voice, check that it also offers real-time text, typed and shown character by character as it is written, at the same time as the voice, and that the two can be told apart (6.2).',
-              'Check that the caller’s identity and the status of a call are shown as text as well as by sound (6.3).',
+              "Check that the caller's identity and the status of a call are shown as text as well as by sound (6.3).",
               'Where it offers video, check that the picture is good enough for sign language and lip reading: its resolution, frame rate and synchronisation with the sound (6.5).',
               ...(v === V4
                 ? [
@@ -981,15 +981,15 @@ const chapter7 = (v) => ({
         'If it does not, record chapter 7 as not applicable.',
         v === V3
           ? `Play a video that has ${subtitles(v)} and check that the player can show them (7.1.1), in time with what is said (7.1.2).`
-          : 'Play a video that has subtitles and check that the player can show them (7.1.1), and that they appear within 100 ms of their timecode (7.1.2). Subtitles that visibly lag the speech are a sign that they don’t.',
+          : "Play a video that has subtitles and check that the player can show them (7.1.1), and that they appear within 100 ms of their timecode (7.1.2). Subtitles that visibly lag the speech are a sign that they don't.",
         `Check that the user can change how the ${subtitles(v)} look: size, colour, background (7.1.4).`,
         v === V3
           ? `Where the video has spoken ${subtitles(v)}, check that the player can play them (7.1.5).`
-          : 'Where the video comes with spoken subtitles, check that the player can play them (7.1.5). The player doesn’t have to create them.',
+          : "Where the video comes with spoken subtitles, check that the player can play them (7.1.5). The player doesn't have to create them.",
         `Where the product converts or passes video on, check that the ${subtitles(v)} are kept (7.1.3).`
       ],
       passWhen: `The product plays no video, or its player shows the ${subtitles(v)} a video has, in time, as the user wants them.`,
-      failWhen: `The player can not show a video’s ${subtitles(v)}, shows them out of time, or gives no way to change how they look, which fails the clause of EN 301 549 7.1 it falls under.`
+      failWhen: `The player can not show a video's ${subtitles(v)}, shows them out of time, or gives no way to change how they look, which fails the clause of EN 301 549 7.1 it falls under.`
     },
     {
       id: 'audio-description-played',
@@ -1004,15 +1004,15 @@ const chapter7 = (v) => ({
       passWhen:
         'The product plays no video, or its player plays the audio description a video has, in time.',
       failWhen:
-        'The player can not play a video’s audio description, or plays it out of time, which fails the clause of EN 301 549 7.2 it falls under.'
+        "The player can not play a video's audio description, or plays it out of time, which fails the clause of EN 301 549 7.2 it falls under."
     },
     {
       id: 'user-controls',
-      label: `${v === V3 ? 'Captions' : 'Subtitles'} and audio description are turned on with the player’s main controls`,
+      label: `${v === V3 ? 'Captions' : 'Subtitles'} and audio description are turned on with the player's main controls`,
       automation: 'manual',
       tools: ['keyboard', 'screen-reader'],
       steps: [
-        'Find how the player turns the video’s main features on and off: play, volume, full screen.',
+        "Find how the player turns the video's main features on and off: play, volume, full screen.",
         v === V3
           ? `Check that ${subtitles(v)} and audio description are turned on and off at the same level, as easily, not hidden in a settings page.`
           : 'Check that subtitles, audio description and spoken subtitles can each be turned on and off with a single operation, at the same level as the volume control, not in a settings page.',
@@ -1022,7 +1022,7 @@ const chapter7 = (v) => ({
         v === V3
           ? 'Captions and audio description are controlled as easily as play and volume.'
           : 'Subtitles, audio description and spoken subtitles can each be switched with one operation, at the same level as the volume control.',
-      failWhen: `Turning ${subtitles(v)} or audio description on takes more than the player’s main controls, such as a setting in another page, which fails EN 301 549 7.3.`
+      failWhen: `Turning ${subtitles(v)} or audio description on takes more than the player's main controls, such as a setting in another page, which fails EN 301 549 7.3.`
     }
   ]
 });
@@ -1036,7 +1036,7 @@ const chapter8 = (v) => ({
       automation: 'manual',
       steps: [
         'Check whether the product includes hardware: a device, a kiosk or terminal, a keypad, a card reader, headphones.',
-        'A website or an app used on the user’s own device includes none: if so, record chapter 8 as not applicable.',
+        "A website or an app used on the user's own device includes none: if so, record chapter 8 as not applicable.",
         v === V3
           ? 'For each piece of hardware, assess the clauses of chapter 8 that apply to it: speech output (8.2), the reach and space of stationary ICT (8.3), operable parts (8.4), and the rest the chapter lists.'
           : 'For each piece of hardware, assess the clauses of chapter 8 that apply to it: speech output (8.2), reach and the position of displays and controls on stationary ICT (8.3), operable parts (8.4), and standard connections, colour and contrast (8.6 to 8.8). For stationary ICT, measure against the first set of dimensions in 8.3 unless the design has a functional reason to use the second set, and say which set you used.'
@@ -1146,7 +1146,7 @@ const chapter11 = (v) =>
               'List how the product reaches its users: in a browser, as a desktop or mobile app, as a browser extension, plug-in, installer or downloadable tool.',
               'Leave out web pages and what runs in them: chapter 9 assesses those.',
               'If nothing is left, record clauses 11.1 to 11.5 as not applicable.',
-              'For each piece of software left, assess clauses 11.1 to 11.5 with the WCAG criteria each restates, applied to software as the standard words them, using the platform’s own screen reader and keyboard.',
+              "For each piece of software left, assess clauses 11.1 to 11.5 with the WCAG criteria each restates, applied to software as the standard words them, using the platform's own screen reader and keyboard.",
               'For a platform, check that its documented accessibility features can be controlled by the user (11.6.1).'
             ],
             passWhen:
@@ -1157,16 +1157,16 @@ const chapter11 = (v) =>
           {
             id: 'platform-settings',
             label:
-              'The product follows the user’s settings in the browser and system, and does not disrupt their accessibility features',
+              "The product follows the user's settings in the browser and system, and does not disrupt their accessibility features",
             automation: 'manual',
             tools: ['zoom', 'contrast-theme', 'screen-reader'],
             steps: [
               'Set a larger default font size in the browser, turn on a high-contrast theme in the system, and set the system to reduce motion.',
               'Open the product and check that its text, colours and focus indicator follow those settings, unless it offers its own setting that the user has chosen.',
-              'Use the product with the system’s magnifier and screen reader running, and check that it does not turn them off, block them or take over their keys.'
+              "Use the product with the system's magnifier and screen reader running, and check that it does not turn them off, block them or take over their keys."
             ],
             passWhen:
-              'The product follows the browser’s and system’s font size, colours, contrast and focus settings, and leaves the platform’s accessibility features working.',
+              "The product follows the browser's and system's font size, colours, contrast and focus settings, and leaves the platform's accessibility features working.",
             failWhen:
               'The product ignores a user setting with no setting of its own to make up for it, or stops an accessibility feature from working, which fails EN 301 549 11.7 or 11.6.2.'
           },
@@ -1184,10 +1184,10 @@ const chapter11 = (v) =>
               'List how the product reaches its users: in a browser, as a desktop or mobile app, as a browser extension, plug-in, installer or downloadable tool.',
               'Leave out web pages, and what runs in them in a browser: chapter 9 assesses those. Keep a web view shown inside an app: it is part of non-web software, and chapter 11 assesses it instead of chapter 9.',
               'If nothing is left, record chapter 11 as not applicable.',
-              'For each piece of non-web software left, assess clauses 11.1 to 11.5 as the standard words them for software, with the platform’s own screen reader and keyboard: VoiceOver on iOS and macOS, TalkBack on Android, Narrator or NVDA on Windows. WCAG2ICT explains how each criterion applies to software.',
-              'Use the platform’s accessibility inspection tools to see what the software exposes. Check that each element gives its name, role, state, value and relationships to the platform’s accessibility services (11.5.2.5 to 11.5.2.17).',
+              "For each piece of non-web software left, assess clauses 11.1 to 11.5 as the standard words them for software, with the platform's own screen reader and keyboard: VoiceOver on iOS and macOS, TalkBack on Android, Narrator or NVDA on Windows. WCAG2ICT explains how each criterion applies to software.",
+              "Use the platform's accessibility inspection tools to see what the software exposes. Check that each element gives its name, role, state, value and relationships to the platform's accessibility services (11.5.2.5 to 11.5.2.17).",
               'Leave out the clauses that are void for software: 11.3.1.2 language of parts, 11.3.2.3 consistent navigation, 11.3.2.6 consistent help and 11.4.1.1 parsing. Note that 11.2.4.2 now applies: each window or screen needs a title that describes it, where the platform supports one.',
-              'Check that it does not turn off or block the platform’s documented accessibility features (11.6.2), and that it follows the user’s platform settings for them unless that is essential (11.7): text size, contrast, colour filters, pointer size and the text cursor.',
+              "Check that it does not turn off or block the platform's documented accessibility features (11.6.2), and that it follows the user's platform settings for them unless that is essential (11.7): text size, contrast, colour filters, pointer size and the text cursor.",
               'Where the product makes content, check it under clause 5.10 (authoring tools). Where part of it is closed to assistive technology, check that part under clause 5.1, not here.'
             ],
             passWhen:
@@ -1217,8 +1217,8 @@ const chapter13 = (v) => ({
               'Where the product offers two-way communication meant for use with relay or emergency services, check that it lets calls reach them and come from them, by voice, real-time text or video, as both sides support (13.2, 13.3).'
             ]
           : [
-              'For a relay service, assess 13.1.3: it relays in every form of communication it offers, passes through what it doesn’t convert, lets the user join conference calls, and accepts calls started by emergency services.',
-              'Where the product offers communication meant for use with relay services, assess 13.1.2: the user can reach the relay service with the usual numbers or addresses of the person they are calling, the caller’s identity is passed on, the user can bring in the relay service on outgoing and incoming calls, and can do so in an emergency call.',
+              "For a relay service, assess 13.1.3: it relays in every form of communication it offers, passes through what it doesn't convert, lets the user join conference calls, and accepts calls started by emergency services.",
+              "Where the product offers communication meant for use with relay services, assess 13.1.2: the user can reach the relay service with the usual numbers or addresses of the person they are calling, the caller's identity is passed on, the user can bring in the relay service on outgoing and incoming calls, and can do so in an emergency call.",
               'Clause 13.2 is void in V4.1.1, and 13.3 on access to emergency services is informative: it points to clause 6 and to ETSI EN 303 919. Test emergency calling under clause 6.'
             ])
       ],
@@ -1319,51 +1319,51 @@ const webPreferences = () => ({
   facets: [
     {
       id: 'forced-colours',
-      label: 'The page follows the user’s own colours where the browser applies them',
+      label: "The page follows the user's own colours where the browser applies them",
       automation: 'manual',
       tools: ['contrast-theme', 'devtools'],
       steps: [
-        'Turn on a high-contrast theme in the operating system, or the browser’s own colour setting, and reload the page.',
-        'Forced colours exist on Windows, with a contrast theme, in Chrome, Edge and Firefox. The increased contrast settings of macOS and iOS don’t force colours, so a page can’t be judged against them here. Firefox can also replace page colours on any system, in its colour settings.',
-        'Check that the page takes the theme’s colours, and that text, controls, focus and icons that carry meaning stay visible.',
-        'In the developer tools, look for forced-color-adjust: none in the page’s styles, and check that each element it applies to keeps its own colours because they are essential, such as a colour picker or a photograph.',
+        "Turn on a high-contrast theme in the operating system, or the browser's own colour setting, and reload the page.",
+        "Forced colours exist on Windows, with a contrast theme, in Chrome, Edge and Firefox. The increased contrast settings of macOS and iOS don't force colours, so a page can't be judged against them here. Firefox can also replace page colours on any system, in its colour settings.",
+        "Check that the page takes the theme's colours, and that text, controls, focus and icons that carry meaning stay visible.",
+        "In the developer tools, look for forced-color-adjust: none in the page's styles, and check that each element it applies to keeps its own colours because they are essential, such as a colour picker or a photograph.",
         'Check that icons drawn as background images, focus styles drawn with box-shadow, and borders that carry meaning are still visible: they are the parts most often lost in forced colours.'
       ],
       passWhen:
-        'The page shows in the user’s colours, and keeps its own only where they are essential to it.',
+        "The page shows in the user's colours, and keeps its own only where they are essential to it.",
       failWhen:
-        'The page keeps its own colours over the user’s theme where they are not essential, or stops the theme from applying, which fails EN 301 549 9.7.'
+        "The page keeps its own colours over the user's theme where they are not essential, or stops the theme from applying, which fails EN 301 549 9.7."
     },
     {
       id: 'text-size',
-      label: 'The page follows the user’s text size settings',
+      label: "The page follows the user's text size settings",
       automation: 'manual',
       tools: ['zoom', 'devtools'],
       steps: [
-        'Set a larger default text size, and a minimum font size, in the browser, and on a phone the system’s text size, then reload the page.',
-        'Check that the page’s text grows with the setting.',
+        "Set a larger default text size, and a minimum font size, in the browser, and on a phone the system's text size, then reload the page.",
+        "Check that the page's text grows with the setting.",
         'Where it does not, look in the developer tools for what holds it, such as text-size-adjust: none, or text set in fixed pixels inside a viewport that turns off zoom, and check that it is essential.',
-        'Text set in px doesn’t follow the browser’s default text size, while text in rem, em or % does. Phones differ too: browsers don’t all follow the system’s text size for web pages. Record what blocks the setting, and say in the finding whether the page overrides it or the browser doesn’t offer it.'
+        "Text set in px doesn't follow the browser's default text size, while text in rem, em or % does. Phones differ too: browsers don't all follow the system's text size for web pages. Record what blocks the setting, and say in the finding whether the page overrides it or the browser doesn't offer it."
       ],
-      passWhen: 'The page’s text follows the user’s text size settings.',
+      passWhen: "The page's text follows the user's text size settings.",
       failWhen:
-        'The page keeps its text from following the user’s text size settings where it is not essential, which fails EN 301 549 9.7.'
+        "The page keeps its text from following the user's text size settings where it is not essential, which fails EN 301 549 9.7."
     },
     {
       id: 'pointer-and-cursor',
-      label: 'The page keeps the user’s pointer and text cursor',
+      label: "The page keeps the user's pointer and text cursor",
       automation: 'manual',
       tools: ['pointer', 'devtools'],
       steps: [
         'Set a larger pointer in the operating system, and a thicker or more visible text cursor where it offers one.',
         'Move the pointer over the page, and type in its fields.',
-        'Check that the pointer keeps the user’s size, and that the text cursor stays visible, where the page draws its own pointer (cursor: url(...)) or hides the cursor (caret-color: transparent).',
-        'Look also for a pointer hidden with cursor: none outside games or full-screen media, and for a custom text cursor that ignores the system’s width setting.'
+        "Check that the pointer keeps the user's size, and that the text cursor stays visible, where the page draws its own pointer (cursor: url(...)) or hides the cursor (caret-color: transparent).",
+        "Look also for a pointer hidden with cursor: none outside games or full-screen media, and for a custom text cursor that ignores the system's width setting."
       ],
       passWhen:
-        'The pointer and the text cursor keep the user’s settings everywhere on the page, but where the page’s own is essential.',
+        "The pointer and the text cursor keep the user's settings everywhere on the page, but where the page's own is essential.",
       failWhen:
-        'The page replaces the user’s pointer with a smaller one, or hides the text cursor, where it is not essential, which fails EN 301 549 9.7.'
+        "The page replaces the user's pointer with a smaller one, or hides the text cursor, where it is not essential, which fails EN 301 549 9.7."
     }
   ]
 });
@@ -1372,7 +1372,7 @@ const webPreferences = () => ({
 // why, so a tester coming from V3.2.1 doesn't look for it or report it.
 const VOID_PARSING = {
   title: 'Parsing',
-  note: 'This clause is void in V4.1.1, because WCAG 2.2 removed success criterion 4.1.1. Don’t test or report it. Problems it used to catch, such as duplicate ids that break a name or a relationship, are checked under 1.3.1 and 4.1.2.'
+  note: "This clause is void in V4.1.1, because WCAG 2.2 removed success criterion 4.1.1. Don't test or report it. Problems it used to catch, such as duplicate ids that break a name or a relationship, are checked under 1.3.1 and 4.1.2."
 };
 
 const forVersion = (v) => ({
