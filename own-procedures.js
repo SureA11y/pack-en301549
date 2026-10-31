@@ -30,8 +30,9 @@
  *   clauses bear on web content.
  *
  * OWN_PROCEDURES: { 'V4.1.1': { '4.2.1': { title, relatesTo, facets: [{ id,
- *   label, automation, tools, steps, passWhen, failWhen }] } } }, in English: core
- * reads a requirement's own facets in English only, whatever the locale.
+ *   label, automation, tools, steps, passWhen, failWhen }] } } }, in English:
+ * i18n/standard.<locale>.json translates them, keyed by that English, so a
+ * text changed here is shown in English until it is translated again.
  *
  * A chapter 4 statement also names, in relatesTo, the WCAG criteria it
  * relates to: in V4.1.1, those the chapter 9 clauses Table B.2 marks P for it

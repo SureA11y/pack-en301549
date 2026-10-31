@@ -199,7 +199,7 @@ How to read them:
 - **Chapter 12** is about the product's documentation and support, not its pages; a documentation facet has the person assess each document against chapter 9 or 10 by its format.
 - **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
 
-Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English in every locale, as core gives a pack's own procedures, and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
+Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English, French, German, Spanish and Japanese (`i18n/standard.<locale>.json`, see [Languages](#languages)), and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
 
 ### The whole standard, in its chapters
 
@@ -234,6 +234,17 @@ relatedRequirements('4.2.2', { packs: [en301549], standard: 'en301549' });
   - **V4.1.1**: every chapter 9 clause Table B.2 marks primary for the criterion, as [`annex-b.js`](annex-b.js) records the table ([`docs/annex-b-v4.1.1.md`](docs/annex-b-v4.1.1.md) gives it with its pages). 9.6 and 9.7 restate no criterion, so they add none. Secondary marks are left out on purpose: Annex B defines them as partial support ("some users may use the feature in specific situations"). The procedure still sends the person to every clause marked primary or secondary, as Annex C's first check asks.
   - **V3.2.1**, whose Annex B is not recorded: the chapter 9 clauses its `related-clauses` facet names, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
 
+### Languages
+
+The standard is written in English and translated into French, German, Spanish and Japanese, with core 1.15 and later: its own procedures, the titles of its clauses, chapters and groups, and the note at the top of a version's procedures (`i18n/standard.<locale>.json`, keyed by the English they translate, as core's `standard.translations` reads them). Read in one of those languages, the standard is in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it. In another language (Portuguese, say), it is all in English, core's procedures too, rather than English beside Portuguese.
+
+```js
+const { listProcedures } = require('@surea11y/core');
+listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1', locale: 'es' });
+```
+
+The clause titles follow each language's published text where there is one: in Spanish, UNE-EN 301549; in German, DIN EN 301549 (the chapters of V3.2.1); chapter 9's, which restate WCAG's criteria, as core names those criteria in each language. A clause that only V4.1.1 has is translated in the same style. `packTranslationCoverage(en301549)` from `@surea11y/core/pack` says what each translation leaves out; a test holds every language to every text.
+
 ### The clause table
 
 `@surea11y/pack-en301549/public` publishes the table, with the exports `@surea11y/core/en301549` had up to core 1.12, for tools that ask the reverse question, such as which criteria a version requires that a scan did not cover:
@@ -254,7 +265,7 @@ A clause on a result is a correspondence between two published documents, not a 
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
 - **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
-- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English.
+- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English, French, German, Spanish and Japanese.
 - **The standard's chapters** (`groups.js`), which core's lists of procedures show the requirements in, and the WCAG criteria each chapter 4 statement relates to, with core 1.15 and later.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 

@@ -78,6 +78,15 @@ const NOTES = {
   ]
 };
 
+// The standard's own text in French, German, Spanish and Japanese, keyed by
+// the English it translates: its procedures, its clauses' and chapters'
+// titles and its notes (i18n/standard.<locale>.json). Core 1.15 reads the
+// standard in one of its languages, its procedures of the clauses that
+// restate WCAG included; an older core ignores them.
+const TRANSLATIONS = Object.fromEntries(
+  ['de', 'es', 'fr', 'ja'].map((locale) => [locale, require(`./i18n/standard.${locale}.json`)])
+);
+
 // Each version's procedures: chapter 9's, then the standard's own
 // requirements' (own-procedures.js).
 const withOwnProcedures = (procedures) =>
@@ -138,7 +147,9 @@ module.exports = definePack({
           notes: NOTES
         }
       : {}),
-    report: { noteKey: 'en301549_report_note' }
+    report: { noteKey: 'en301549_report_note' },
+    lang: 'en',
+    translations: TRANSLATIONS
   },
   // The note above the standard's results in the HTML report, per locale.
   dictionaries: Object.fromEntries(
