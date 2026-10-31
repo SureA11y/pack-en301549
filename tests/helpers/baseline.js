@@ -95,8 +95,18 @@ function scan(html, engineOptions) {
   }
 }
 
+// The key core 1.15 makes for a clause's title from the standard's
+// translations (standard.translations), so a result can be read again in
+// another language: the title itself is the one the result had.
+const TITLE_KEY = /^en301549_title_[0-9a-f]{8}$/;
+const withoutTitleKey = (r) =>
+  r && r.i18n && TITLE_KEY.test(r.i18n.titleKey) && !r.i18n.descriptionKey
+    ? { ...r, i18n: null }
+    : r;
+
 function resultHash(result) {
   const { timestamp, perfStats, ...rest } = result;
+  if (Array.isArray(rest.rulesResults)) rest.rulesResults = rest.rulesResults.map(withoutTitleKey);
   return hash(rest);
 }
 
@@ -179,9 +189,11 @@ function packFacts() {
       report: standard.report,
       composites: standard.composites,
       // groups and notes, from core 1.15, are read only by core's procedure
-      // calls, as procedures is: tests/procedures.test.js holds them.
+      // calls, as procedures is: tests/procedures.test.js holds them. lang
+      // and translations, from core 1.15, give the standard's text in other
+      // languages: tests/languages.test.js holds them.
       fields: Object.keys(standard)
-        .filter((k) => k !== 'groups' && k !== 'notes')
+        .filter((k) => !['groups', 'notes', 'lang', 'translations'].includes(k))
         .sort()
     },
     dictionaries: pack.dictionaries,
