@@ -84,8 +84,8 @@ test('core reads every clause with its criterion’s procedures, complete', { sk
 });
 
 // The standard's own requirements, by version, with their titles as each
-// version gives them: chapter 4, chapter 12 and, by number, the chapters
-// besides 9.
+// version gives them: chapter 4, chapter 9's own (9.6 and, in V4.1.1, 9.7),
+// chapter 12 and, by number, the chapters besides 9.
 const CHAPTER_4 = {
   '4.2.1': 'Usage without vision',
   '4.2.2': 'Usage with limited vision',
@@ -106,6 +106,7 @@ const OWN = {
     6: 'ICT with two-way voice communication',
     7: 'ICT with video capabilities',
     8: 'Hardware',
+    9.6: 'WCAG conformance requirements',
     10: 'Non-web documents',
     11: 'Software',
     '12.1.1': 'Accessibility and compatibility features',
@@ -121,6 +122,8 @@ const OWN = {
     6: 'ICT supporting real-time bidirectional communication',
     7: 'ICT with video capabilities',
     8: 'Hardware',
+    9.6: 'WCAG conformance requirements',
+    9.7: 'User preferences for web pages',
     10: 'Non-web documents',
     11: 'Non-web software',
     12.1: 'Accessible information about products',
@@ -132,7 +135,7 @@ const OWN = {
   }
 };
 
-test('the own requirements are chapters 4 and 12 and the other chapters, in both versions', () => {
+test('the own requirements are chapters 4 and 12, 9’s own and the other chapters, in both versions', () => {
   assert.deepEqual(Object.keys(OWN_PROCEDURES).sort(), Object.keys(EN301549_CLAUSES).sort());
   for (const [version, rows] of Object.entries(OWN)) {
     const own = OWN_PROCEDURES[version];

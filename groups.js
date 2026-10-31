@@ -11,7 +11,8 @@
  *
  * groupsOf(procedures) builds them from the requirements the procedures
  * give, by number, so every requirement is in exactly one group. A chapter
- * the pack gives as one requirement ('5') is a group of that one, titled as
+ * the pack gives as one requirement ('5'), and chapter 9's own requirements
+ * after its principles (9.6, 9.7), are each a group of that one, titled as
  * the requirement is.
  *
  * SOURCE: ETSI EN 301 549 V3.2.1 (2021-03) and V4.1.1 (2026-09), chapter and
@@ -69,21 +70,28 @@ function titleOf(id) {
   return WEB[id];
 }
 
-// Chapter 9's clauses under their principle and guideline.
-function webGroups(clauses) {
+// Chapter 9's clauses under their principle and guideline, then its own
+// requirements (9.6, 9.7), each a group of that one, titled as it is.
+function webGroups(ids, requirements) {
+  const clauses = ids.filter((id) => id.split('.').length === 4);
+  const own = ids
+    .filter((id) => id.split('.').length === 2)
+    .map((id) => ({ id, title: requirements[id].title, requirements: [id] }));
   const principles = [...new Set(clauses.map((id) => head(id, 2)))].sort(byNumber);
-  return principles.map((p) => {
-    const guidelines = [
-      ...new Set(clauses.filter((id) => head(id, 2) === p).map((id) => head(id, 3)))
-    ]
-      .sort(byNumber)
-      .map((g) => ({
-        id: g,
-        title: titleOf(g),
-        requirements: clauses.filter((id) => head(id, 3) === g)
-      }));
-    return { id: p, title: titleOf(p), groups: guidelines };
-  });
+  return principles
+    .map((p) => {
+      const guidelines = [
+        ...new Set(clauses.filter((id) => head(id, 2) === p).map((id) => head(id, 3)))
+      ]
+        .sort(byNumber)
+        .map((g) => ({
+          id: g,
+          title: titleOf(g),
+          requirements: clauses.filter((id) => head(id, 3) === g)
+        }));
+      return { id: p, title: titleOf(p), groups: guidelines };
+    })
+    .concat(own);
 }
 
 // One version's groups, from its procedures: { requirement: entry }.
@@ -93,7 +101,7 @@ function versionGroups(version, requirements) {
   return chapters.map((chapter) => {
     const own = ids.filter((id) => head(id, 1) === chapter);
     if (chapter === '9') {
-      return { id: chapter, title: CHAPTERS[9](version), groups: webGroups(own) };
+      return { id: chapter, title: CHAPTERS[9](version), groups: webGroups(own, requirements) };
     }
     if (Object.prototype.hasOwnProperty.call(CHAPTERS, chapter)) {
       return { id: chapter, title: CHAPTERS[chapter](version), requirements: own };

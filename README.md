@@ -182,6 +182,7 @@ EN 301 549 asks more than chapter 9, and no scan answers it: how the product wor
 |---|---|---|
 | Chapter 4, functional performance (statements in V3.2.1, criteria in V4.1.1) | `4.2.1` to `4.2.11` | `4.2.1` to `4.2.11` |
 | Chapter 12 | `12.1.1`, `12.1.2`, `12.2.2`, `12.2.3`, `12.2.4` (Documentation and support services) | `12.1` to `12.5` (Information about products and services) |
+| Chapter 9's own, beside its clauses | `9.6` (WCAG conformance requirements) | `9.6`, `9.7` (User preferences for web pages) |
 | The other chapters, one requirement each | `5`, `6`, `7`, `8`, `10`, `11`, `13` | `5`, `6`, `7`, `8`, `10`, `11`, `13` |
 
 ```js
@@ -194,6 +195,7 @@ proceduresFor('12.1.2', { packs: [en301549], standard: 'en301549', version: 'V4.
 How to read them:
 
 - **A chapter 4 statement** is about whole tasks done the way a person with that need does them: with a screen reader and the screen off, enlarged, in greyscale, with the sound off. Its `related-clauses` facet sends the person to the chapter 9 clauses Annex B (Table B.2) relates to it, which are assessed with their own procedures and results, rather than repeating them; its other facets are what only using the product shows.
+- **Chapter 9's own requirements** are about the page as a whole. 9.6 is WCAG's five conformance requirements at Level AA: the clauses met or a conforming alternate version, the full page with nothing left out, every page of a process, ways of using technologies that assistive technologies support, and no content that gets in the way of the rest. 9.7, new in V4.1.1, keeps a page from blocking or overriding the user's own colours, text size, pointer and text cursor, unless that is essential.
 - **Chapter 12** is about the product's documentation and support, not its pages; a documentation facet has the person assess each document against chapter 9 or 10 by its format.
 - **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
 
@@ -225,7 +227,8 @@ relatedRequirements('4.2.2', { packs: [en301549], standard: 'en301549' });
 // the WCAG criteria of the chapter 9 clauses 4.2.2's procedure names: 1.4.3, 1.4.4, 1.4.10, …
 ```
 
-- **The chapters** are the groups, in number order: chapter 4's statements, chapter 12's requirements, and each other chapter, which the pack gives as one requirement, as a group of that one. Chapter 9's clauses are under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives). Every requirement of a version is in exactly one group.
+- **The chapters** are the groups, in number order: chapter 4's statements, chapter 12's requirements, and each other chapter, which the pack gives as one requirement, as a group of that one. Chapter 9's clauses are under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives), and its own requirements, 9.6 and 9.7, follow them, each a group of that one. Every requirement of a version is in exactly one group.
+- **9.6 relates to WCAG** through the clauses its fifth conformance requirement asks of all content on the page, 9.1.4.2, 9.2.1.2, 9.2.2.2 and 9.2.3.1: `relatedRequirements('2.1.2', …)` gives 9.6 next to 9.2.1.2.
 - **A chapter 4 statement relates to WCAG** through the chapter 9 clauses its `related-clauses` facet names from Annex B (Table B.2): `relatesTo` lists their criteria, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
 
 ### The clause table
@@ -248,7 +251,7 @@ A clause on a result is a correspondence between two published documents, not a 
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
 - **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
-- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English.
+- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English.
 - **The standard's chapters** (`groups.js`), which core's lists of procedures show the requirements in, and the WCAG criteria each chapter 4 statement relates to, with core 1.15 and later.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 

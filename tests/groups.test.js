@@ -54,19 +54,22 @@ test('the groups are the chapters, and chapter 9’s principles and guidelines',
     }
     const web = groups.find((g) => g.id === '9');
     assert.equal(web.title, 'Web');
+    // Its principles, then its own requirements, each a group of that one.
     assert.deepEqual(
-      web.groups.map((p) => [p.id, p.title]),
+      web.groups.map((p) => [p.id, p.title, p.requirements || []]),
       [
-        ['9.1', 'Perceivable'],
-        ['9.2', 'Operable'],
-        ['9.3', 'Understandable'],
-        ['9.4', 'Robust']
+        ['9.1', 'Perceivable', []],
+        ['9.2', 'Operable', []],
+        ['9.3', 'Understandable', []],
+        ['9.4', 'Robust', []],
+        ['9.6', 'WCAG conformance requirements', ['9.6']],
+        ...(version === 'V4.1.1' ? [['9.7', 'User preferences for web pages', ['9.7']]] : [])
       ]
     );
     const keyboard = web.groups[1].groups[0];
     assert.deepEqual([keyboard.id, keyboard.title], ['9.2.1', 'Keyboard accessible']);
     // Each clause under the guideline its number says.
-    for (const p of web.groups) {
+    for (const p of web.groups.slice(0, 4)) {
       for (const g of p.groups) {
         for (const id of g.requirements) assert.ok(id.startsWith(`${g.id}.`), `${version} ${id}`);
       }
@@ -86,10 +89,22 @@ test('the groups are the chapters, and chapter 9’s principles and guidelines',
   assert.ok(!robust('V4.1.1').includes('9.4.1.1'));
 });
 
+test('9.6 relates to the criteria its non-interference names', () => {
+  for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
+    const entry = rows['9.6'];
+    const steps = entry.facets.find((f) => f.id === 'non-interference').steps.join(' ');
+    assert.deepEqual(entry.relatesTo, ['1.4.2', '2.1.2', '2.2.2', '2.3.1'], version);
+    for (const sc of entry.relatesTo) {
+      assert.ok(steps.includes(EN301549_CLAUSES[version][sc].clause), `${version} ${sc}`);
+    }
+  }
+});
+
 test('a chapter 4 statement relates to the criteria of the clauses its procedure names', () => {
   for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
     for (const [id, entry] of Object.entries(rows)) {
       const at = `${version} ${id}`;
+      if (id === '9.6') continue;
       const related = entry.facets.find((f) => f.id === 'related-clauses');
       if (!related) {
         assert.equal(entry.relatesTo, undefined, at);

@@ -14,6 +14,11 @@
  *   them. Single elements are the chapter 9 clauses' to check, and a
  *   procedure sends the person to the ones Annex B (Table B.2) relates to the
  *   statement rather than repeating them.
+ * - Chapter 9's own requirements, beside the clauses that restate WCAG's
+ *   criteria: 9.6, WCAG's five conformance requirements at Level AA (the
+ *   WCAG version the standard's version is built on), and, in V4.1.1 only,
+ *   9.7, which keeps a page from blocking or overriding the user's
+ *   preferences. 9.5, WCAG's AAA criteria, is informative.
  * - Chapter 12, about the product's documentation and support, not its
  *   pages: 12.1.1, 12.1.2, 12.2.2, 12.2.3 and 12.2.4 in V3.2.1 (12.2.1 is
  *   informative), 12.1 to 12.5 in V4.1.1, which renumbered the chapter.
@@ -29,7 +34,8 @@
  * reads a requirement's own facets in English only, whatever the locale.
  *
  * A chapter 4 statement also names, in relatesTo, the WCAG criteria of the
- * chapter 9 clauses its procedure sends the person to.
+ * chapter 9 clauses its procedure sends the person to, and 9.6 those of the
+ * clauses its fifth conformance requirement asks of all content.
  *
  * Titles are the standard's own, per version; the procedures are not its
  * text. A procedure is guidance, and its wording may improve in any release.
@@ -1017,12 +1023,148 @@ const chapter13 = (v) => ({
   ]
 });
 
+// Chapter 9's own requirements, beside the clauses that restate WCAG's
+// criteria: 9.6, WCAG's five conformance requirements at Level AA, and, in
+// V4.1.1, 9.7, the user's preferences.
+const wcag = (v) => (v === V3 ? 'WCAG 2.1' : 'WCAG 2.2');
+
+const webConformance = (v) => ({
+  title: 'WCAG conformance requirements',
+  // Conformance requirement 5 asks clauses 9.1.4.2, 9.2.1.2, 9.2.2.2 and
+  // 9.2.3.1 of all content on the page, as the standard's note says.
+  relatesTo: ['1.4.2', '2.1.2', '2.2.2', '2.3.1'],
+  facets: [
+    {
+      id: 'conformance-level',
+      label:
+        'The page meets every Level A and AA clause of 9.1 to 9.4, or has a conforming alternate version',
+      automation: 'manual',
+      steps: [
+        `Take the page's result for each clause of 9.1 to 9.4: scan it with the en301549 profile of ${v}, and assess by its procedure each clause the scan leaves open.`,
+        `Where a clause fails, look for a conforming alternate version, as ${wcag(v)} defines it: a version of the same content and function that meets every clause, reachable from the page by a link or control that itself meets them.`
+      ],
+      passWhen:
+        'The page meets every clause of 9.1 to 9.4, or a conforming alternate version of it does and can be reached from it.',
+      failWhen:
+        'A clause of 9.1 to 9.4 fails and the page has no conforming alternate version, which fails EN 301 549 9.6 (conformance requirement 1).'
+    },
+    {
+      id: 'full-pages',
+      label: 'The whole page is assessed, with nothing left out',
+      automation: 'manual',
+      tools: ['devtools'],
+      steps: [
+        'List everything the page shows, in each of its states: content from other services, such as a chat window, a map, a video player, adverts, a consent banner, a payment form; menus, dialogs and messages that appear on use.',
+        'Check that each of them was assessed against 9.1 to 9.4, and not excluded because someone else provides it.'
+      ],
+      passWhen: 'Every part of the page, whoever provides it, was assessed and meets the clauses.',
+      failWhen:
+        'A part of the page was left out of the assessment, or fails a clause, such as a third-party chat window, which fails EN 301 549 9.6 (conformance requirement 2).'
+    },
+    {
+      id: 'complete-processes',
+      label: 'Every page of a process the page is part of meets the clauses',
+      automation: 'manual',
+      steps: [
+        'Find each process the page is a step of: signing up, buying, booking, applying, paying.',
+        'Go through each from its first step to its last, and list every page and state on the way, including confirmation and error pages.',
+        'Check that each of them meets 9.1 to 9.4.'
+      ],
+      passWhen: 'Every page of every process the page is part of meets the clauses of 9.1 to 9.4.',
+      failWhen:
+        'A page of a process fails a clause, such as an inaccessible payment step, so the process can not be completed, which fails EN 301 549 9.6 (conformance requirement 3) for every page of it.'
+    },
+    {
+      id: 'accessibility-supported',
+      label:
+        'The page relies only on ways of using its technologies that assistive technologies support',
+      automation: 'manual',
+      tools: ['screen-reader', 'keyboard'],
+      steps: [
+        'Note what the page relies on to meet the clauses: HTML and ARIA, scripts, canvas or SVG, embedded media, plug-ins.',
+        'Use its main functions with a screen reader in two common browser and screen reader pairs, and with the keyboard alone.',
+        'Note any information or function that is only available through something they do not support, and check whether it is also available in a way they do.'
+      ],
+      passWhen:
+        'Every information and function the page relies on works with common assistive technologies, or is also given in a way that does.',
+      failWhen:
+        'The page relies on a technology, or a way of using it, that assistive technologies do not support, with no supported alternative, which fails EN 301 549 9.6 (conformance requirement 4).'
+    },
+    {
+      id: 'non-interference',
+      label: 'Content the page does not rely on does not get in the way of the rest',
+      automation: 'manual',
+      tools: ['keyboard'],
+      steps: [
+        'Check all the content of the page, including what it does not rely on to meet the clauses, against 9.1.4.2 (audio control), 9.2.1.2 (no keyboard trap), 9.2.2.2 (pause, stop, hide) and 9.2.3.1 (three flashes).',
+        'Turn off, or use a browser without, each technology the page does not rely on, such as scripts for a part that has an alternative, and check that the rest of the page still meets the clauses.'
+      ],
+      passWhen:
+        'No content on the page traps the keyboard, plays sound that can not be stopped, moves without a way to stop it or flashes, and the rest of the page meets the clauses whatever the technologies it does not rely on do.',
+      failWhen:
+        'Content on the page, even content the page does not rely on, traps the keyboard, plays sound or moves with no way to stop it, flashes, or keeps the rest of the page from being used, which fails EN 301 549 9.6 (conformance requirement 5).'
+    }
+  ]
+});
+
+const webPreferences = () => ({
+  title: 'User preferences for web pages',
+  facets: [
+    {
+      id: 'forced-colours',
+      label: 'The page follows the user’s own colours where the browser applies them',
+      automation: 'manual',
+      tools: ['contrast-theme', 'devtools'],
+      steps: [
+        'Turn on a high-contrast theme in the operating system, or the browser’s own colour setting, and reload the page.',
+        'Check that the page takes the theme’s colours, and that text, controls, focus and icons that carry meaning stay visible.',
+        'In the developer tools, look for forced-color-adjust: none in the page’s styles, and check that each element it applies to keeps its own colours because they are essential, such as a colour picker or a photograph.'
+      ],
+      passWhen:
+        'The page shows in the user’s colours, and keeps its own only where they are essential to it.',
+      failWhen:
+        'The page keeps its own colours over the user’s theme where they are not essential, or stops the theme from applying, which fails EN 301 549 9.7.'
+    },
+    {
+      id: 'text-size',
+      label: 'The page follows the user’s text size settings',
+      automation: 'manual',
+      tools: ['zoom', 'devtools'],
+      steps: [
+        'Set a larger default text size, and a minimum font size, in the browser, and on a phone the system’s text size, then reload the page.',
+        'Check that the page’s text grows with the setting.',
+        'Where it does not, look in the developer tools for what holds it, such as text-size-adjust: none, or text set in fixed pixels inside a viewport that turns off zoom, and check that it is essential.'
+      ],
+      passWhen: 'The page’s text follows the user’s text size settings.',
+      failWhen:
+        'The page keeps its text from following the user’s text size settings where it is not essential, which fails EN 301 549 9.7.'
+    },
+    {
+      id: 'pointer-and-cursor',
+      label: 'The page keeps the user’s pointer and text cursor',
+      automation: 'manual',
+      tools: ['pointer', 'devtools'],
+      steps: [
+        'Set a larger pointer in the operating system, and a thicker or more visible text cursor where it offers one.',
+        'Move the pointer over the page, and type in its fields.',
+        'Check that the pointer keeps the user’s size, and that the text cursor stays visible, where the page draws its own pointer (cursor: url(...)) or hides the cursor (caret-color: transparent).'
+      ],
+      passWhen:
+        'The pointer and the text cursor keep the user’s settings everywhere on the page, but where the page’s own is essential.',
+      failWhen:
+        'The page replaces the user’s pointer with a smaller one, or hides the text cursor, where it is not essential, which fails EN 301 549 9.7.'
+    }
+  ]
+});
+
 const forVersion = (v) => ({
   ...chapter4(v),
   5: chapter5(v),
   6: chapter6(v),
   7: chapter7(v),
   8: chapter8(v),
+  9.6: webConformance(v),
+  ...(v === V4 ? { 9.7: webPreferences() } : {}),
   10: chapter10(v),
   11: chapter11(v),
   ...chapter12(v),
