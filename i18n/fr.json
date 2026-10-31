@@ -1,3 +1,3 @@
 {
-  "en301549_report_note": "Une ligne par clause du chapitre 9 de l’EN 301 549 qu’une règle vérifie, regroupant ces règles. Chaque clause reprend un critère des WCAG, et une ligne réussie ne signifie jamais que la clause est respectée : la plupart des critères demandent aussi une vérification humaine."
+  "en301549_report_note": "Une ligne par article du chapitre 9 de l’EN 301 549 qu’une règle vérifie, regroupant ces règles. Chaque article reprend un critère des WCAG, et une ligne réussie ne signifie jamais que l’article est respecté : la plupart des critères demandent aussi une vérification humaine."
 }
