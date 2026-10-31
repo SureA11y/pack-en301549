@@ -83,10 +83,14 @@ test('the groups are the chapters, and chapter 9’s principles and guidelines',
     GROUPS['V4.1.1'].find((g) => g.id === '12').title,
     'Information about products and services'
   );
-  // 9.4.1.1 Parsing is in V3.2.1 only.
+  // 9.4.1.1 Parsing restates 4.1.1 in V3.2.1, and is listed as void in
+  // V4.1.1, where it is before 9.4.1.2 too.
   const robust = (v) => GROUPS[v].find((g) => g.id === '9').groups[3].groups[0].requirements;
-  assert.ok(robust('V3.2.1').includes('9.4.1.1'));
-  assert.ok(!robust('V4.1.1').includes('9.4.1.1'));
+  assert.equal(robust('V3.2.1')[0], '9.4.1.1');
+  assert.equal(robust('V4.1.1')[0], '9.4.1.1');
+  // V4.1.1 made chapter 4's statements criteria.
+  assert.equal(GROUPS['V3.2.1'][0].title, 'Functional performance');
+  assert.equal(GROUPS['V4.1.1'][0].title, 'Functional performance criteria');
 });
 
 test('9.6 relates to the criteria its non-interference names', () => {
@@ -104,7 +108,7 @@ test('a chapter 4 statement relates to the criteria of the clauses its procedure
   for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
     for (const [id, entry] of Object.entries(rows)) {
       const at = `${version} ${id}`;
-      if (id === '9.6') continue;
+      if (id === '9.6' || !entry.facets) continue;
       const related = entry.facets.find((f) => f.id === 'related-clauses');
       if (!related) {
         assert.equal(entry.relatesTo, undefined, at);

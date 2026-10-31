@@ -77,10 +77,12 @@ test('core reads every clause with its criterion’s procedures, complete', { sk
     core.proceduresFor('9.2.5.8', { packs: [pack], standard: 'EN 301 549' }).version,
     'V4.1.1'
   );
-  assert.equal(
-    core.proceduresFor('9.4.1.1', { packs: [pack], standard: 'en301549' }).version,
-    'V3.2.1'
-  );
+  // 9.4.1.1 is void in V4.1.1, the latest: listed with why, and nothing to
+  // assess.
+  const parsing = core.proceduresFor('9.4.1.1', { packs: [pack], standard: 'en301549' });
+  assert.equal(parsing.version, 'V4.1.1');
+  assert.match(parsing.note, /void in V4\.1\.1/);
+  assert.deepEqual(parsing.facets, []);
 });
 
 // The standard's own requirements, by version, with their titles as each
@@ -123,6 +125,7 @@ const OWN = {
     7: 'ICT with video capabilities',
     8: 'Hardware',
     9.6: 'WCAG conformance requirements',
+    '9.4.1.1': 'Parsing',
     9.7: 'User preferences for web pages',
     10: 'Non-web documents',
     11: 'Non-web software',
@@ -150,8 +153,13 @@ test('every facet of an own requirement is well formed', () => {
   const TOOLS = ['keyboard', 'pointer', 'screen-reader', 'zoom', 'contrast-theme', 'devtools'];
   const text = (v) => typeof v === 'string' && v.trim() !== '' && v === v.trim();
   for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
-    for (const [id, { facets }] of Object.entries(rows)) {
+    for (const [id, { facets, note }] of Object.entries(rows)) {
       const at = `${version} ${id}`;
+      // A requirement with nothing to assess says why, in its note.
+      if (facets === undefined) {
+        assert.ok(text(note), at);
+        continue;
+      }
       assert.ok(Array.isArray(facets) && facets.length > 0, at);
       const ids = facets.map((f) => f.id);
       assert.equal(new Set(ids).size, ids.length, `${at}: facet ids repeat`);
@@ -173,13 +181,14 @@ test('every facet of an own requirement is well formed', () => {
 
 test('core reads each of the standard’s own requirements with its own facets', { skip }, () => {
   for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
-    for (const [id, { title, facets }] of Object.entries(rows)) {
+    for (const [id, { title, facets = [], note }] of Object.entries(rows)) {
       const r = core.proceduresFor(id, { packs: [pack], standard: 'en301549', version });
       assert.equal(r.standard, 'EN 301 549', id);
       assert.equal(r.version, version);
       assert.equal(r.title, title);
       assert.equal(r.wcag, undefined);
       assert.equal(r.complete, true);
+      assert.equal(r.note, note);
       assert.deepEqual(r.rules, []);
       assert.deepEqual(
         r.facets.map((f) => [f.id, f.label, f.procedure, f.tools.map((t) => t.id), f.rules]),

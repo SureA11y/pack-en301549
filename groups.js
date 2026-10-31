@@ -21,7 +21,7 @@
 
 // The chapters that hold several requirements, by version where it differs.
 const CHAPTERS = {
-  4: () => 'Functional performance',
+  4: (v) => (v === 'V3.2.1' ? 'Functional performance' : 'Functional performance criteria'),
   9: () => 'Web',
   12: (v) =>
     v === 'V3.2.1'

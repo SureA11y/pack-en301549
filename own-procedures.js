@@ -59,19 +59,37 @@ const NAMED = new WeakMap();
 
 // Chapter 4: the chapter 9 clauses Table B.2 marks as the primary support of
 // a statement, in its column, with a few of them named.
-function relatedClauses(id, column, need, clauses, example) {
-  const facet = {
-    id: 'related-clauses',
-    label: `The chapter 9 clauses that serve ${need} are met`,
-    automation: 'manual',
-    steps: [
-      `Open Table B.2 in Annex B of the standard and list the chapter 9 clauses it marks P (primary) in column ${column}, for ${id}.`,
-      `Assess each with its own procedure, or take its result from a review already done: among them are ${clauses.join(', ')}.`,
-      'Note each clause that fails, and the task it gets in the way of.'
-    ],
-    passWhen: `Every chapter 9 clause that Table B.2 relates to ${id} is met, or does not apply.`,
-    failWhen: `A clause that serves ${need} fails, such as ${example}, which fails EN 301 549 ${id} as well as that clause.`
-  };
+//
+// V4.1.1 makes each statement a criterion whose test (Annex C) has two
+// routes: every clause Annex B relates to it, primary or secondary, is met,
+// or there is evidence that its outcome is achieved.
+function relatedClauses(v, id, column, need, clauses, example) {
+  const facet =
+    v === V3
+      ? {
+          id: 'related-clauses',
+          label: `The chapter 9 clauses that serve ${need} are met`,
+          automation: 'manual',
+          steps: [
+            `Open Table B.2 in Annex B of the standard and list the chapter 9 clauses it marks P (primary) in column ${column}, for ${id}.`,
+            `Assess each with its own procedure, or take its result from a review already done: among them are ${clauses.join(', ')}.`,
+            'Note each clause that fails, and the task it gets in the way of.'
+          ],
+          passWhen: `Every chapter 9 clause that Table B.2 relates to ${id} is met, or does not apply.`,
+          failWhen: `A clause that serves ${need} fails, such as ${example}, which fails EN 301 549 ${id} as well as that clause.`
+        }
+      : {
+          id: 'related-clauses',
+          label: `The clauses that serve ${need} are met`,
+          automation: 'manual',
+          steps: [
+            `Open Annex B of the standard and list the clauses it relates to ${id}, both those marked primary and those marked secondary. For a web page most are in chapter 9; add those of chapters 5, 6, 7, 10, 11 and 12 that apply to the product.`,
+            `Assess each with its own procedure, or take its result from a review already done: among them are ${clauses.join(', ')}.`,
+            'Note each clause that fails, and the task it gets in the way of.'
+          ],
+          passWhen: `Every clause that Annex B relates to ${id}, as primary or secondary, is met or does not apply. Where one is not met, ${id} can still pass if there is clear evidence that the outcome it describes is achieved, for example through the task-based checks of this requirement.`,
+          failWhen: `A clause that serves ${need} fails, such as ${example}, which fails EN 301 549 ${id} as well as that clause.`
+        };
   NAMED.set(facet, clauses);
   return facet;
 }
@@ -108,6 +126,7 @@ const statements = (v) => ({
     title: 'Usage without vision',
     facets: [
       relatedClauses(
+        v,
         '4.2.1',
         'WV',
         'usage without vision',
@@ -164,6 +183,7 @@ const statements = (v) => ({
     title: 'Usage with limited vision',
     facets: [
       relatedClauses(
+        v,
         '4.2.2',
         'LV',
         'usage with limited vision',
@@ -198,6 +218,7 @@ const statements = (v) => ({
     title: 'Usage without perception of colour',
     facets: [
       relatedClauses(
+        v,
         '4.2.3',
         'WPC',
         'usage without perception of colour',
@@ -226,6 +247,7 @@ const statements = (v) => ({
     title: 'Usage without hearing',
     facets: [
       relatedClauses(
+        v,
         '4.2.4',
         'WH',
         'usage without hearing',
@@ -254,6 +276,7 @@ const statements = (v) => ({
     title: 'Usage with limited hearing',
     facets: [
       relatedClauses(
+        v,
         '4.2.5',
         'LH',
         'usage with limited hearing',
@@ -303,6 +326,7 @@ const statements = (v) => ({
     title: 'Usage with limited manipulation or strength',
     facets: [
       relatedClauses(
+        v,
         '4.2.7',
         'LMS',
         'usage with limited manipulation or strength',
@@ -353,6 +377,7 @@ const statements = (v) => ({
     title: 'Minimize photosensitive seizure triggers',
     facets: [
       relatedClauses(
+        v,
         '4.2.9',
         'PST',
         'users with photosensitive seizure triggers',
@@ -386,6 +411,7 @@ const statements = (v) => ({
     title: 'Usage with limited cognition, language or learning',
     facets: [
       relatedClauses(
+        v,
         '4.2.10',
         'LC',
         'usage with limited cognition, language or learning',
@@ -425,7 +451,9 @@ const statements = (v) => ({
         automation: 'manual',
         tools: ['screen-reader'],
         steps: [
-          `Look at Table B.2 in Annex B, column ${privacyColumn(v)}, for the clauses the standard relates to privacy.`,
+          v === V3
+            ? `Look at Table B.2 in Annex B, column ${privacyColumn(v)}, for the clauses the standard relates to privacy.`
+            : 'Look in Annex B of the standard for the clauses it relates to 4.2.11, and assess each that applies.',
           'Type a password, a PIN and other masked entries with a screen reader running, and check that it does not read the characters aloud, unless the user chooses so.',
           'Check that using an accessible alternative, such as an audio check, a text-only mode or a relay service, does not ask for more personal data, or share it more widely, than the standard way.',
           'Check that the user is not asked to state a disability to get an accessibility feature, unless the feature can not work otherwise.',
@@ -668,17 +696,24 @@ const chapter12 = (v) =>
       };
 
 // Chapters 5 to 8, 10, 11 and 13.
+
+// The chapters whose requirements authoring tools' content is to meet: V4.1.1
+// adds chapter 11.
+const chapters = (v) => (v === V3 ? 'chapter 9 or 10' : 'chapter 9, 10 or 11');
+
 const AUTHORING_TOOL = (v) => ({
   id: 'authoring-tool',
   label: 'Where the product is an authoring tool, it supports and guides accessible content',
   automation: 'manual',
   tools: ['keyboard'],
   steps: [
-    'Check whether the product lets its users make content that others will read: pages, posts, documents, forms, emails, a site.',
+    v === V3
+      ? 'Check whether the product lets its users make content that others will read: pages, posts, documents, forms, emails, a site.'
+      : 'Check whether the product lets its users make content that others will read: pages, posts, documents, forms, emails, a site. Web-based editors count, such as a content management system or a form builder.',
     `If it does not, record clause ${authoring(v)} as not applicable.`,
-    'If it does, create content with it that has a heading, an image, a table, a link and a form field, and check that the tool lets you give each what chapter 9 or 10 needs: heading levels, a text alternative, table headers, link text and labels.',
+    `If it does, create content with it that has a heading, an image, a table, a link and a form field, and check that the tool lets you give each what ${chapters(v)} needs${v === V3 ? '' : ', depending on what it produces'}: heading levels, a text alternative, table headers, link text and labels.`,
     `Check that the tool says when something is missing or wrong, and helps fix it (${authoring(v)}.4).`,
-    `Check that templates it offers produce content that meets chapter 9 or 10 (${authoring(v)}.5), and that converting content to another format keeps the accessibility information the new format can hold (${authoring(v)}.3).`
+    `Check that templates it offers produce content that meets ${chapters(v)} (${authoring(v)}.5), and that converting content to another format keeps the accessibility information the new format can hold (${authoring(v)}.3).`
   ],
   passWhen:
     'The product is not an authoring tool, or it lets and helps its users make content that meets chapter 9 or 10, and keeps accessibility information when it converts.',
@@ -697,12 +732,14 @@ const chapter5 = (v) => ({
       steps: [
         'Check whether any part of the product keeps the user from using their own assistive technology: a kiosk, a locked-down device, a player or app that blocks screen readers or magnifiers.',
         'A website used in the user’s own browser is not closed: if nothing else is, record clause 5.1 as not applicable.',
-        'For each closed part, check that it offers speech output for what it shows, enlarged text, a visual form of what it says aloud, a way to use it without a keyboard or speech where it needs them, as clauses 5.1.3 to 5.1.7 require.',
-        ...(v === V4
+        ...(v === V3
           ? [
-              'Check that its forms say the purpose of fields that ask for the user’s own details (5.1.8).'
+              'For each closed part, check that it offers speech output for what it shows, enlarged text, a visual form of what it says aloud, a way to use it without a keyboard or speech where it needs them, as clauses 5.1.3 to 5.1.7 require.'
             ]
-          : [])
+          : [
+              'For each closed part, check that it offers speech output for what it shows, with the speech matching what is on screen at the time (5.1.3), enlarged text (5.1.4), a visual form of what it says aloud (5.1.5), a way to use it without a keyboard where it needs one (5.1.6), and without speech where it needs speech (5.1.7).',
+              'Where a closed part asks for the user’s own details, such as a name or card number, check that it says the purpose of each field in speech (5.1.8).'
+            ])
       ],
       passWhen:
         'Nothing in the product is closed to assistive technology, or what is closed is usable without it.',
@@ -765,7 +802,9 @@ const chapter5 = (v) => ({
         'Check that the state of each locking or toggle control can be told without seeing it, and also by sight where it is shown (5.6).',
         'Where a key repeats when held, check that the delay before it repeats can be set to at least 2 seconds, or repeat turned off (5.7).',
         'Where a key is pressed twice by accident, check that the time in which a second press is ignored can be set (5.8).',
-        'For physical operable parts, check that they can be told apart by touch without being activated (5.5).'
+        v === V3
+          ? 'For physical operable parts, check that they can be told apart by touch without being activated (5.5).'
+          : 'For operable parts, check that they can be found and told apart by touch without being activated (5.5). On a touch screen, an edge, a corner or a tactile marker can serve as the part that is found by touch.'
       ],
       passWhen:
         'The product has no keys or controls of its own, or each meets clauses 5.5 to 5.8 as it applies.',
@@ -789,36 +828,126 @@ const chapter5 = (v) => ({
   ]
 });
 
+// Chapter 6 in V4.1.1, which rebuilt it around real-time text and total
+// conversation, with numeric limits: one facet per clause that a product
+// with calls is tested against.
+const CHAPTER6_V4 = [
+  {
+    id: 'voice',
+    label: 'Where the product carries voice, the sound is wide enough to understand speech',
+    automation: 'manual',
+    steps: [
+      'Check whether the product offers voice in real time, such as a call button, a meeting room or a call to support. If it does not, record chapter 6 as not applicable.',
+      'Note the situations the product is used in, as clause 6.0 describes them: a client on its own, a system with its own clients, a system connected to another, a roaming client, and calls to emergency services. Test the rest of chapter 6 in each that applies.',
+      'Ask the supplier for the documentation of the voice quality, and check that the product captures and plays speech from 250 Hz to 7 000 Hz (6.1.2), and documents how its voice works with other systems, from 100 Hz to 7 000 Hz or with ITU-T G.722 (6.1.1).'
+    ],
+    passWhen:
+      'The product offers no real-time voice, or its voice covers the range the clause sets and its interoperation is documented.',
+    failWhen:
+      'The voice is narrower than 250 Hz to 7 000 Hz, or how it works with other systems is not documented, which fails the clause of EN 301 549 6.1 it falls under.'
+  },
+  {
+    id: 'real-time-text',
+    label: 'Where the product offers voice, it also offers real-time text that works with it',
+    automation: 'manual',
+    tools: ['keyboard', 'screen-reader'],
+    steps: [
+      'If the product offers no real-time voice, record clause 6.2 as not applicable. V4.1.1 no longer excuses products where adding real-time text would need a redesign.',
+      'Start a call and check that real-time text is available in the same call, at the same time as voice (6.2.1.1, 6.2.1.2), that one action starts, answers or ends voice and text together (6.2.1.3), and that real-time text can be requested or added to a call already under way, whatever the settings (6.2.9).',
+      'Type at one end and watch the other: each character should appear as it is typed, no later than 500 ms after it is entered (6.2.4). Check that you can erase text you have just typed (6.2.5).',
+      'Check the display: who wrote each part is clear, all active participants are shown, text appears in the order it was written, a sign shows when someone is speaking, and the whole conversation can be read back during the call (6.2.2.1 to 6.2.2.5).',
+      'Check that touch-tone digits can be sent in a way other than typing them as text (6.2.3).',
+      "Check that text can be entered with every input method the platform offers, including a screen reader, an on-screen keyboard and speech input (6.2.8), and that it can show the characters of the user's language and emoji (6.2.7).",
+      'In a call with several people, check that text from three of them at once keeps up (6.2.6).',
+      "Ask the supplier how the product's real-time text works with other systems (6.2.10). ITU-T T.140 with IETF RFC 4103 always meets it."
+    ],
+    passWhen:
+      'The product offers no real-time voice, or real-time text works alongside voice in every way clause 6.2 sets out.',
+    failWhen:
+      "The product offers voice without real-time text, or its real-time text is late, can't be added during a call, can't be read back or doesn't work with an input method, which fails the clause of EN 301 549 6.2 it falls under."
+  },
+  {
+    id: 'caller-id',
+    label:
+      "The caller's identity and the state of a call are given as text, and can be read by assistive technology",
+    automation: 'manual',
+    tools: ['screen-reader'],
+    steps: [
+      'Receive a call, and make one, with a screen reader running.',
+      "Check that the caller's identity and the state of the call (ringing, connected, on hold, ended) are shown as text, not only by sound or an icon, and that the screen reader reads them (6.3)."
+    ],
+    passWhen: 'Caller identity and call state are given as text that assistive technology reads.',
+    failWhen:
+      "Who is calling, or the state of the call, is given only by sound or a picture, or can't be read by a screen reader, which fails EN 301 549 6.3."
+  },
+  {
+    id: 'video',
+    label:
+      'Where the product offers video calls, the picture is good enough for sign language and lip reading',
+    automation: 'manual',
+    steps: [
+      'If the product offers no video in real time, record clause 6.5 as not applicable.',
+      'Ask the supplier for the video specification, and confirm it in a call: at least QVGA resolution, 320 by 240 pixels (6.5.2), and at least 20 frames per second (6.5.3).',
+      "Check that sound and picture stay within 100 ms of each other (6.5.4). Lip movements that visibly lead or lag the voice are a sign that they don't.",
+      'Check that the product shows when there is sound, and which participants are active, including those who are signing (6.5.5, 6.5.6).'
+    ],
+    passWhen:
+      'The product offers no real-time video, or its video meets the resolution, frame rate and synchronisation the clause sets, and shows who is active.',
+    failWhen:
+      "The video is smaller than QVGA, runs under 20 frames per second, drifts more than 100 ms from the sound, or doesn't show who is active, which fails the clause of EN 301 549 6.5 it falls under."
+  },
+  {
+    id: 'total-conversation',
+    label:
+      'Where the product offers voice and video, it offers voice, video and real-time text together',
+    automation: 'manual',
+    tools: ['keyboard'],
+    steps: [
+      'If the product does not offer both real-time voice and video, record clause 6.7 as not applicable.',
+      'In a video call, check that real-time text meeting clause 6.2 can be used at the same time as voice and video (6.7.1).',
+      "Ask the supplier how the product's video works with other systems (6.7.2). ITU-T H.264 constrained baseline is the fallback that always meets it."
+    ],
+    passWhen:
+      'The product offers voice, video and real-time text together in the same call, and documents how its video interoperates.',
+    failWhen:
+      "A product with voice and video calls offers no real-time text in them, or doesn't document how its video interoperates, which fails the clause of EN 301 549 6.7 it falls under."
+  }
+];
+
 const chapter6 = (v) => ({
   title:
     v === V3
       ? 'ICT with two-way voice communication'
       : 'ICT supporting real-time bidirectional communication',
   facets: [
-    {
-      id: 'real-time-communication',
-      label:
-        'Where the product offers calls or real-time conversation, people who can not hear or speak can take part',
-      automation: 'manual',
-      tools: ['keyboard', 'screen-reader'],
-      steps: [
-        'Check whether the product offers voice or video calls, or conversation in real time, such as a call button, a meeting room, or a call to support from the page.',
-        'If it does not, record chapter 6 as not applicable.',
-        'Where it offers voice, check that it also offers real-time text, typed and shown character by character as it is written, at the same time as the voice, and that the two can be told apart (6.2).',
-        'Check that the caller’s identity and the status of a call are shown as text as well as by sound (6.3).',
-        'Where it offers video, check that the picture is good enough for sign language and lip reading: its resolution, frame rate and synchronisation with the sound (6.5).',
-        ...(v === V4
-          ? [
-              'Check that voice, video and real-time text can be used together in one call, where the product offers all three (6.7, total conversation).'
-            ]
-          : []),
-        'Check that the call controls work with the keyboard and a screen reader, as chapter 9 requires.'
-      ],
-      passWhen:
-        'The product offers no real-time communication, or it meets each clause of chapter 6 that applies to what it offers.',
-      failWhen:
-        'The product offers voice calls with no real-time text, or video too poor for sign language, which fails the clause of EN 301 549 chapter 6 it falls under.'
-    },
+    ...(v === V3
+      ? [
+          {
+            id: 'real-time-communication',
+            label:
+              'Where the product offers calls or real-time conversation, people who can not hear or speak can take part',
+            automation: 'manual',
+            tools: ['keyboard', 'screen-reader'],
+            steps: [
+              'Check whether the product offers voice or video calls, or conversation in real time, such as a call button, a meeting room, or a call to support from the page.',
+              'If it does not, record chapter 6 as not applicable.',
+              'Where it offers voice, check that it also offers real-time text, typed and shown character by character as it is written, at the same time as the voice, and that the two can be told apart (6.2).',
+              'Check that the caller’s identity and the status of a call are shown as text as well as by sound (6.3).',
+              'Where it offers video, check that the picture is good enough for sign language and lip reading: its resolution, frame rate and synchronisation with the sound (6.5).',
+              ...(v === V4
+                ? [
+                    'Check that voice, video and real-time text can be used together in one call, where the product offers all three (6.7, total conversation).'
+                  ]
+                : []),
+              'Check that the call controls work with the keyboard and a screen reader, as chapter 9 requires.'
+            ],
+            passWhen:
+              'The product offers no real-time communication, or it meets each clause of chapter 6 that applies to what it offers.',
+            failWhen:
+              'The product offers voice calls with no real-time text, or video too poor for sign language, which fails the clause of EN 301 549 chapter 6 it falls under.'
+          }
+        ]
+      : CHAPTER6_V4),
     {
       id: 'alternatives-to-voice',
       label: 'Services the product offers by voice can also be used without hearing or speaking',
@@ -826,7 +955,12 @@ const chapter6 = (v) => ({
       steps: [
         'Look for services the product offers by voice: an automated phone line, voice mail, a voice assistant.',
         'If there are none, record clause 6.4 as not applicable.',
-        'Check that each can also be used without hearing or speaking, such as by text, or that real-time text reaches it.'
+        'Check that each can also be used without hearing or speaking, such as by text, or that real-time text reaches it.',
+        ...(v === V4
+          ? [
+              'Where the product offers services only by video, such as sign language support, the standard recommends a way to use them without seeing or without signing (6.6). It is a recommendation, so record it as advisory.'
+            ]
+          : [])
       ],
       passWhen: 'Every voice-based service can also be used without hearing or speaking.',
       failWhen: 'A service can only be used by listening and speaking, which fails EN 301 549 6.4.'
@@ -845,9 +979,13 @@ const chapter7 = (v) => ({
       steps: [
         'Check whether the product plays video with sound itself, with its own player or one it embeds.',
         'If it does not, record chapter 7 as not applicable.',
-        `Play a video that has ${subtitles(v)} and check that the player can show them (7.1.1), in time with what is said (7.1.2).`,
+        v === V3
+          ? `Play a video that has ${subtitles(v)} and check that the player can show them (7.1.1), in time with what is said (7.1.2).`
+          : 'Play a video that has subtitles and check that the player can show them (7.1.1), and that they appear within 100 ms of their timecode (7.1.2). Subtitles that visibly lag the speech are a sign that they don’t.',
         `Check that the user can change how the ${subtitles(v)} look: size, colour, background (7.1.4).`,
-        `Where the video has spoken ${subtitles(v)}, check that the player can play them (7.1.5).`,
+        v === V3
+          ? `Where the video has spoken ${subtitles(v)}, check that the player can play them (7.1.5).`
+          : 'Where the video comes with spoken subtitles, check that the player can play them (7.1.5). The player doesn’t have to create them.',
         `Where the product converts or passes video on, check that the ${subtitles(v)} are kept (7.1.3).`
       ],
       passWhen: `The product plays no video, or its player shows the ${subtitles(v)} a video has, in time, as the user wants them.`,
@@ -875,16 +1013,21 @@ const chapter7 = (v) => ({
       tools: ['keyboard', 'screen-reader'],
       steps: [
         'Find how the player turns the video’s main features on and off: play, volume, full screen.',
-        `Check that ${subtitles(v)} and audio description are turned on and off at the same level, as easily, not hidden in a settings page.`,
+        v === V3
+          ? `Check that ${subtitles(v)} and audio description are turned on and off at the same level, as easily, not hidden in a settings page.`
+          : 'Check that subtitles, audio description and spoken subtitles can each be turned on and off with a single operation, at the same level as the volume control, not in a settings page.',
         'Check those controls with the keyboard and a screen reader.'
       ],
-      passWhen: `${v === V3 ? 'Captions' : 'Subtitles'} and audio description are controlled as easily as play and volume.`,
+      passWhen:
+        v === V3
+          ? 'Captions and audio description are controlled as easily as play and volume.'
+          : 'Subtitles, audio description and spoken subtitles can each be switched with one operation, at the same level as the volume control.',
       failWhen: `Turning ${subtitles(v)} or audio description on takes more than the player’s main controls, such as a setting in another page, which fails EN 301 549 7.3.`
     }
   ]
 });
 
-const chapter8 = () => ({
+const chapter8 = (v) => ({
   title: 'Hardware',
   facets: [
     {
@@ -894,7 +1037,9 @@ const chapter8 = () => ({
       steps: [
         'Check whether the product includes hardware: a device, a kiosk or terminal, a keypad, a card reader, headphones.',
         'A website or an app used on the user’s own device includes none: if so, record chapter 8 as not applicable.',
-        'For each piece of hardware, assess the clauses of chapter 8 that apply to it: speech output (8.2), the reach and space of stationary ICT (8.3), operable parts (8.4), and the rest the chapter lists.'
+        v === V3
+          ? 'For each piece of hardware, assess the clauses of chapter 8 that apply to it: speech output (8.2), the reach and space of stationary ICT (8.3), operable parts (8.4), and the rest the chapter lists.'
+          : 'For each piece of hardware, assess the clauses of chapter 8 that apply to it: speech output (8.2), reach and the position of displays and controls on stationary ICT (8.3), operable parts (8.4), and standard connections, colour and contrast (8.6 to 8.8). For stationary ICT, measure against the first set of dimensions in 8.3 unless the design has a functional reason to use the second set, and say which set you used.'
       ],
       passWhen:
         'The product includes no hardware, or each piece meets the clauses of chapter 8 that apply.',
@@ -904,7 +1049,7 @@ const chapter8 = () => ({
   ]
 });
 
-const chapter10 = (v) => ({
+const CHAPTER10_V3 = {
   title: 'Non-web documents',
   facets: [
     {
@@ -917,12 +1062,7 @@ const chapter10 = (v) => ({
         'Leave out a document that is part of a web page, and documentation, which chapter 12 also covers.',
         'If nothing is left, record chapter 10 as not applicable.',
         'Open each in a common reader for its format, and assess clauses 10.1 to 10.4, the WCAG criteria applied to documents: text alternatives, headings and tags, reading order, contrast, language, link text, form fields.',
-        'Read each with a screen reader, start to end, and move through it by headings.',
-        ...(v === V4
-          ? [
-              'Check that the document can be shown with the user’s preferences in the reader, such as a larger text size and their own colours, where its format allows (10.7).'
-            ]
-          : [])
+        'Read each with a screen reader, start to end, and move through it by headings.'
       ],
       passWhen:
         'The product provides no non-web documents, or each meets the clauses of chapter 10 that apply.',
@@ -930,7 +1070,67 @@ const chapter10 = (v) => ({
         'A document the product provides fails a clause of chapter 10, such as an untagged PDF a screen reader reads out of order, which fails the clause of EN 301 549 chapter 10 it falls under.'
     }
   ]
-});
+};
+
+// Chapter 10 in V4.1.1: documents as clause 10 applies the criteria to
+// them, the clauses that apply to a set of documents (void in V3.2.1), and
+// the reader's display settings (10.7).
+const CHAPTER10_V4 = {
+  title: 'Non-web documents',
+  facets: [
+    {
+      id: 'documents',
+      label: 'Documents the product provides meet the WCAG criteria as clause 10 applies them',
+      automation: 'manual',
+      tools: ['screen-reader', 'keyboard'],
+      steps: [
+        'List the documents the product provides that are not web pages: downloads in PDF, word-processing, spreadsheet, presentation or e-book formats, and attachments to messages.',
+        'Leave out a document that is part of a web page, and documentation, which chapter 12 also covers. If nothing is left, record chapter 10 as not applicable.',
+        "Open each in the reader most of its users have, such as a desktop PDF reader for a PDF. Browser PDF viewers expose less of a document's structure to screen readers, so a result there may not hold in a desktop reader, or the reverse.",
+        "For a PDF, run a PDF/UA checker, then check by hand what it can't judge: whether tags match what is shown, the reading order, and the quality of text alternatives. The standard names PDF/UA-1 and PDF/UA-2 as helpful technical references.",
+        'Assess clauses 10.1 to 10.4. Where clause 10 restates a criterion in its own words for documents, follow that wording, not the web one. Focus not obscured (10.2.4.11) applies only to a document that takes keyboard input, such as a form.',
+        'Read each document with a screen reader from start to end, and move through it by headings.',
+        'Where the document has subtitles or audio description, check their position and timing (10.5, 10.6). These are recommendations: record them as advisory.',
+        "Check that the document's security settings don't stop assistive technology from reading it, for example a PDF whose permissions forbid copying content for accessibility."
+      ],
+      passWhen:
+        'The product provides no non-web documents, or each meets the clauses of 10.1 to 10.4 that apply.',
+      failWhen:
+        'A document fails a clause of chapter 10, such as an untagged PDF that a screen reader reads out of order, which fails the clause of EN 301 549 chapter 10 it falls under.'
+    },
+    {
+      id: 'sets-of-documents',
+      label: 'Documents that belong to a set are consistent with each other',
+      automation: 'manual',
+      steps: [
+        'Check whether the documents form a set: a manual split into several files, a series of statements, a group of related forms.',
+        'If not, record 10.3.2.3, 10.3.2.4 and 10.3.2.6 as not applicable.',
+        'Open three or four documents of the set and check that repeated navigation comes in the same relative order (10.3.2.3), that parts with the same function are identified the same way (10.3.2.4), and that help, where offered, is in the same relative place (10.3.2.6).'
+      ],
+      passWhen:
+        'The documents form no set, or the documents of a set are consistent in navigation, identification and help.',
+      failWhen:
+        'Documents of one set order their navigation differently, label the same function differently, or move their help, which fails the clause of EN 301 549 10.3.2 it falls under.'
+    },
+    {
+      id: 'user-preferences',
+      label: "The document doesn't block the reader's own display settings",
+      automation: 'manual',
+      tools: ['contrast-theme', 'zoom'],
+      steps: [
+        "Open the document in its usual reader and turn on the settings the reader offers for display: replacing the document's colours, a larger text size or zoom, and a reflow or reading mode.",
+        "Check that the document follows each, or that the reader's own limits, not the document, stop it.",
+        'Where the document blocks a setting, check whether that is essential to it, such as a form that must keep an exact layout.'
+      ],
+      passWhen:
+        "The document follows the reader's display settings, or blocks them only where that is essential.",
+      failWhen:
+        "The document blocks the reader's colour, text size or reflow settings where it is not essential, which fails EN 301 549 10.7."
+    }
+  ]
+};
+
+const chapter10 = (v) => (v === V3 ? CHAPTER10_V3 : CHAPTER10_V4);
 
 const chapter11 = (v) =>
   v === V3
@@ -982,12 +1182,13 @@ const chapter11 = (v) =>
             automation: 'manual',
             steps: [
               'List how the product reaches its users: in a browser, as a desktop or mobile app, as a browser extension, plug-in, installer or downloadable tool.',
-              'Leave out web pages, and what runs in them in a browser: chapter 9 assesses those.',
-              'Keep a web view shown inside an app: it is part of non-web software, and chapter 11 assesses it instead of chapter 9.',
+              'Leave out web pages, and what runs in them in a browser: chapter 9 assesses those. Keep a web view shown inside an app: it is part of non-web software, and chapter 11 assesses it instead of chapter 9.',
               'If nothing is left, record chapter 11 as not applicable.',
-              'For each piece of non-web software left, assess clauses 11.1 to 11.5 with the WCAG criteria each restates, applied to software as the standard words them, using the platform’s own screen reader and keyboard.',
-              'Check that it does not turn off or block the platform’s documented accessibility features (11.6.2), and that it follows the user’s platform settings for them, such as text size and contrast (11.7).',
-              'Where the product makes content, check it under clause 5.10 (authoring tools), where V4.1.1 places them.'
+              'For each piece of non-web software left, assess clauses 11.1 to 11.5 as the standard words them for software, with the platform’s own screen reader and keyboard: VoiceOver on iOS and macOS, TalkBack on Android, Narrator or NVDA on Windows. WCAG2ICT explains how each criterion applies to software.',
+              'Use the platform’s accessibility inspection tools to see what the software exposes. Check that each element gives its name, role, state, value and relationships to the platform’s accessibility services (11.5.2.5 to 11.5.2.17).',
+              'Leave out the clauses that are void for software: 11.3.1.2 language of parts, 11.3.2.3 consistent navigation, 11.3.2.6 consistent help and 11.4.1.1 parsing. Note that 11.2.4.2 now applies: each window or screen needs a title that describes it, where the platform supports one.',
+              'Check that it does not turn off or block the platform’s documented accessibility features (11.6.2), and that it follows the user’s platform settings for them unless that is essential (11.7): text size, contrast, colour filters, pointer size and the text cursor.',
+              'Where the product makes content, check it under clause 5.10 (authoring tools). Where part of it is closed to assistive technology, check that part under clause 5.1, not here.'
             ],
             passWhen:
               'The product includes no non-web software, or each piece it includes meets clauses 11.1 to 11.7.',
@@ -1010,10 +1211,16 @@ const chapter13 = (v) => ({
       steps: [
         'Check whether the product is a relay service, such as text, sign language, lip-reading, captioned telephony or speech-to-speech relay, or a means of reaching one or of calling emergency services.',
         'If it is none of these, record chapter 13 as not applicable.',
-        'For a relay service, assess the clauses of 13.1 for its kind, such as real-time text or video good enough for sign language.',
-        v === V3
-          ? 'Where the product offers two-way communication meant for use with relay or emergency services, check that it lets calls reach them and come from them, by voice, real-time text or video, as both sides support (13.2, 13.3).'
-          : 'Where the product offers communication meant for use with relay services, check that it lets calls reach them and come from them, in the media both sides support (13.1.2).'
+        ...(v === V3
+          ? [
+              'For a relay service, assess the clauses of 13.1 for its kind, such as real-time text or video good enough for sign language.',
+              'Where the product offers two-way communication meant for use with relay or emergency services, check that it lets calls reach them and come from them, by voice, real-time text or video, as both sides support (13.2, 13.3).'
+            ]
+          : [
+              'For a relay service, assess 13.1.3: it relays in every form of communication it offers, passes through what it doesn’t convert, lets the user join conference calls, and accepts calls started by emergency services.',
+              'Where the product offers communication meant for use with relay services, assess 13.1.2: the user can reach the relay service with the usual numbers or addresses of the person they are calling, the caller’s identity is passed on, the user can bring in the relay service on outgoing and incoming calls, and can do so in an emergency call.',
+              'Clause 13.2 is void in V4.1.1, and 13.3 on access to emergency services is informative: it points to clause 6 and to ETSI EN 303 919. Test emergency calling under clause 6.'
+            ])
       ],
       passWhen:
         'The product provides no relay or emergency access, or meets each clause of chapter 13 that applies.',
@@ -1117,8 +1324,10 @@ const webPreferences = () => ({
       tools: ['contrast-theme', 'devtools'],
       steps: [
         'Turn on a high-contrast theme in the operating system, or the browser’s own colour setting, and reload the page.',
+        'Forced colours exist on Windows, with a contrast theme, in Chrome, Edge and Firefox. The increased contrast settings of macOS and iOS don’t force colours, so a page can’t be judged against them here. Firefox can also replace page colours on any system, in its colour settings.',
         'Check that the page takes the theme’s colours, and that text, controls, focus and icons that carry meaning stay visible.',
-        'In the developer tools, look for forced-color-adjust: none in the page’s styles, and check that each element it applies to keeps its own colours because they are essential, such as a colour picker or a photograph.'
+        'In the developer tools, look for forced-color-adjust: none in the page’s styles, and check that each element it applies to keeps its own colours because they are essential, such as a colour picker or a photograph.',
+        'Check that icons drawn as background images, focus styles drawn with box-shadow, and borders that carry meaning are still visible: they are the parts most often lost in forced colours.'
       ],
       passWhen:
         'The page shows in the user’s colours, and keeps its own only where they are essential to it.',
@@ -1133,7 +1342,8 @@ const webPreferences = () => ({
       steps: [
         'Set a larger default text size, and a minimum font size, in the browser, and on a phone the system’s text size, then reload the page.',
         'Check that the page’s text grows with the setting.',
-        'Where it does not, look in the developer tools for what holds it, such as text-size-adjust: none, or text set in fixed pixels inside a viewport that turns off zoom, and check that it is essential.'
+        'Where it does not, look in the developer tools for what holds it, such as text-size-adjust: none, or text set in fixed pixels inside a viewport that turns off zoom, and check that it is essential.',
+        'Text set in px doesn’t follow the browser’s default text size, while text in rem, em or % does. Phones differ too: browsers don’t all follow the system’s text size for web pages. Record what blocks the setting, and say in the finding whether the page overrides it or the browser doesn’t offer it.'
       ],
       passWhen: 'The page’s text follows the user’s text size settings.',
       failWhen:
@@ -1147,7 +1357,8 @@ const webPreferences = () => ({
       steps: [
         'Set a larger pointer in the operating system, and a thicker or more visible text cursor where it offers one.',
         'Move the pointer over the page, and type in its fields.',
-        'Check that the pointer keeps the user’s size, and that the text cursor stays visible, where the page draws its own pointer (cursor: url(...)) or hides the cursor (caret-color: transparent).'
+        'Check that the pointer keeps the user’s size, and that the text cursor stays visible, where the page draws its own pointer (cursor: url(...)) or hides the cursor (caret-color: transparent).',
+        'Look also for a pointer hidden with cursor: none outside games or full-screen media, and for a custom text cursor that ignores the system’s width setting.'
       ],
       passWhen:
         'The pointer and the text cursor keep the user’s settings everywhere on the page, but where the page’s own is essential.',
@@ -1157,6 +1368,13 @@ const webPreferences = () => ({
   ]
 });
 
+// 9.4.1.1 Parsing, void in V4.1.1 as WCAG 2.2 removed 4.1.1: listed with
+// why, so a tester coming from V3.2.1 doesn't look for it or report it.
+const VOID_PARSING = {
+  title: 'Parsing',
+  note: 'This clause is void in V4.1.1, because WCAG 2.2 removed success criterion 4.1.1. Don’t test or report it. Problems it used to catch, such as duplicate ids that break a name or a relationship, are checked under 1.3.1 and 4.1.2.'
+};
+
 const forVersion = (v) => ({
   ...chapter4(v),
   5: chapter5(v),
@@ -1164,7 +1382,7 @@ const forVersion = (v) => ({
   7: chapter7(v),
   8: chapter8(v),
   9.6: webConformance(v),
-  ...(v === V4 ? { 9.7: webPreferences() } : {}),
+  ...(v === V4 ? { '9.4.1.1': VOID_PARSING, 9.7: webPreferences() } : {}),
   10: chapter10(v),
   11: chapter11(v),
   ...chapter12(v),
