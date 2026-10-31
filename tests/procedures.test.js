@@ -214,3 +214,33 @@ test('core reads each of the standard’s own requirements with its own facets',
     null
   );
 });
+
+test('chapter 4 sends the person to the clauses Annex B relates, in V4.1.1 for every criterion', () => {
+  const facetIds = (version) =>
+    Object.fromEntries(
+      Object.keys(CHAPTER_4).map((id) => [id, OWN_PROCEDURES[version][id].facets.map((f) => f.id)])
+    );
+  // V3.2.1, whose Annex B is not recorded, keeps the facets it had.
+  const v3 = facetIds('V3.2.1');
+  const without = ['4.2.6', '4.2.8', '4.2.11'];
+  for (const id of Object.keys(CHAPTER_4)) {
+    if (without.includes(id)) assert.ok(!v3[id].includes('related-clauses'), `V3.2.1 ${id}`);
+    else assert.equal(v3[id][0], 'related-clauses', `V3.2.1 ${id}`);
+  }
+  assert.match(
+    OWN_PROCEDURES['V3.2.1']['4.2.11'].facets[0].steps[0],
+    /Table B\.2 in Annex B, column P,/
+  );
+  // V4.1.1: the related clauses first, for each criterion, and Annex B
+  // named once for 4.2.11.
+  const v4 = facetIds('V4.1.1');
+  assert.deepEqual(v4['4.2.6'], ['related-clauses', 'tasks-without-voice']);
+  assert.deepEqual(v4['4.2.8'], ['related-clauses', 'elements-within-reach']);
+  assert.deepEqual(v4['4.2.11'], ['related-clauses', 'privacy-with-features']);
+  for (const id of Object.keys(CHAPTER_4)) {
+    assert.equal(v4[id][0], 'related-clauses', `V4.1.1 ${id}`);
+    assert.equal(v4[id].filter((f) => f === 'related-clauses').length, 1, `V4.1.1 ${id}`);
+  }
+  const privacy = OWN_PROCEDURES['V4.1.1']['4.2.11'].facets[1];
+  assert.ok(!privacy.steps.some((s) => /Annex B/.test(s)), 'V4.1.1 4.2.11 repeats Annex B');
+});

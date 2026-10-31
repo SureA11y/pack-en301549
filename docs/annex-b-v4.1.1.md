@@ -164,7 +164,13 @@ Annex C, C.4.2.5 "Usage with limited hearing" (p. 142): precondition "The ICT pr
 
 **Secondary (19)**: p. 132: 6.5.2, 6.5.3, 6.5.4, 6.5.5, 6.5.6; p. 135: 9.3.3.1, 9.3.3.2, 9.3.3.3, 9.3.3.4, 9.6, 9.7; p. 136: 10.3.3.1, 10.3.3.2, 10.3.3.3, 10.3.3.4; p. 137: 11.3.3.1, 11.3.3.2, 11.3.3.3, 11.3.3.4
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (6): 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.3.3.8 (p. 135), 9.4.1.3 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.2.4.6 (p. 134), 9.3.3.8 (p. 135)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (4): 9.2.4.5 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.4.1.3 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: 9.3.3.1 (p. 135), 9.3.3.2 (p. 135), 9.3.3.3 (p. 135), 9.3.3.4 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
 
@@ -196,7 +202,13 @@ Annex C, C.4.2.7 "Usage with limited manipulation or strength" (p. 142): precond
 
 **Unclear**: 9.4.1.3 (p. 135), 10.4.1.3 (p. 136) and 11.4.1.3 (p. 137) print "-P" in this column, so they are in neither list. See "Cells that can not be read reliably".
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (26): 9.1.3.4 (p. 134), 9.2.1.1 (p. 134), 9.2.1.2 (p. 134), 9.2.1.4 (p. 134), 9.2.2.1 (p. 134), 9.2.4.1 (p. 134), 9.2.4.2 (p. 134), 9.2.4.3 (p. 134), 9.2.4.4 (p. 134), 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.2.5.1 (p. 134), 9.2.5.2 (p. 134), 9.2.5.3 (p. 134), 9.2.5.4 (p. 134), 9.2.5.7 (p. 134), 9.2.5.8 (p. 134), 9.3.2.1 (p. 134), 9.3.2.2 (p. 134), 9.3.3.7 (p. 135), 9.3.3.8 (p. 135), 9.4.1.2 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.1.3.4 (p. 134), 9.2.1.1 (p. 134), 9.2.5.1 (p. 134), 9.2.5.8 (p. 134)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (22): 9.2.1.2 (p. 134), 9.2.1.4 (p. 134), 9.2.2.1 (p. 134), 9.2.4.1 (p. 134), 9.2.4.2 (p. 134), 9.2.4.3 (p. 134), 9.2.4.4 (p. 134), 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.2.5.2 (p. 134), 9.2.5.3 (p. 134), 9.2.5.4 (p. 134), 9.2.5.7 (p. 134), 9.3.2.1 (p. 134), 9.3.2.2 (p. 134), 9.3.3.7 (p. 135), 9.3.3.8 (p. 135), 9.4.1.2 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: 9.1.1.1 (p. 133), 9.1.3.1 (p. 134), 9.1.3.5 (p. 134), 9.2.2.2 (p. 134), 9.3.1.1 (p. 134), 9.3.1.2 (p. 134), 9.3.2.3 (p. 134), 9.3.2.4 (p. 134), 9.3.2.6 (p. 134), 9.3.3.1 (p. 135), 9.3.3.2 (p. 135), 9.3.3.3 (p. 135), 9.3.3.4 (p. 135)
 
@@ -244,7 +256,13 @@ Annex C, C.4.2.10 "Usage with limited cognition, language, or learning" (p. 143)
 
 **Secondary (3)**: p. 137: 11.5.2.1, 11.5.2.3; p. 138: 11.5.2.5
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (4): 9.3.3.4 (p. 135), 9.3.3.8 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.3.3.4 (p. 135), 9.3.3.8 (p. 135)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (2): 9.6 (p. 135), 9.7 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: none
 
