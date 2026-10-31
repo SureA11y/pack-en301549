@@ -194,7 +194,7 @@ proceduresFor('12.1.2', { packs: [en301549], standard: 'en301549', version: 'V4.
 
 How to read them:
 
-- **A chapter 4 statement** is about whole tasks done the way a person with that need does them: with a screen reader and the screen off, enlarged, in greyscale, with the sound off. Its `related-clauses` facet sends the person to the clauses Annex B relates to it (in V3.2.1 the chapter 9 clauses Table B.2 marks primary, in V4.1.1 every clause it marks primary or secondary), which are assessed with their own procedures and results, rather than repeating them; its other facets are what only using the product shows.
+- **A chapter 4 statement** is about whole tasks done the way a person with that need does them: with a screen reader and the screen off, enlarged, in greyscale, with the sound off. Its `related-clauses` facet sends the person to the clauses Annex B relates to it (in V3.2.1 the chapter 9 clauses Table B.2 marks primary or secondary, in V4.1.1 every clause it marks primary or secondary, in any chapter), which are assessed with their own procedures and results, rather than repeating them; its other facets are what only using the product shows. In V4.1.1 every criterion has one, 4.2.6, 4.2.8 and 4.2.11 included, and the clauses it names as examples are ones Table B.2 marks primary, chapter 9's first ([`annex-b.js`](annex-b.js)); in V3.2.1, 4.2.6, 4.2.8 and 4.2.11 have none.
 - **Chapter 9's own requirements** are about the page as a whole. 9.6 is WCAG's five conformance requirements at Level AA: the clauses met or a conforming alternate version, the full page with nothing left out, every page of a process, ways of using technologies that assistive technologies support, and no content that gets in the way of the rest. 9.7, new in V4.1.1, keeps a page from blocking or overriding the user's own colours, text size, pointer and text cursor, unless that is essential.
 - **Chapter 12** is about the product's documentation and support, not its pages; a documentation facet has the person assess each document against chapter 9 or 10 by its format.
 - **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
@@ -222,14 +222,17 @@ procedureChecklist({ packs: [en301549], standard: 'en301549', automation: ['manu
 // what a person does once each, in the same chapters: what a scan leaves to them
 
 relatedRequirements('1.4.3', { packs: [en301549] });
-// [{ id: '4.2.2', relation: 'relatesTo', … }, { id: '9.1.4.3', relation: 'restates', … }]
+// [{ id: '4.2.2', relation: 'relatesTo', … }, { id: '4.2.10', relation: 'relatesTo', … },
+//  { id: '9.1.4.3', relation: 'restates', … }]
 relatedRequirements('4.2.2', { packs: [en301549], standard: 'en301549' });
-// the WCAG criteria of the chapter 9 clauses 4.2.2's procedure names: 1.4.3, 1.4.4, 1.4.10, …
+// the WCAG criteria of the chapter 9 clauses Table B.2 marks primary for 4.2.2: 1.1.1, 1.2.1, 1.3.3, …
 ```
 
 - **The chapters** are the groups, in number order: chapter 4's statements, chapter 12's requirements, and each other chapter, which the pack gives as one requirement, as a group of that one. Chapter 9's clauses are under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives), and its own requirements, 9.6 and 9.7, follow them, each a group of that one. Every requirement of a version is in exactly one group.
 - **9.6 relates to WCAG** through the clauses its fifth conformance requirement asks of all content on the page, 9.1.4.2, 9.2.1.2, 9.2.2.2 and 9.2.3.1: `relatedRequirements('2.1.2', …)` gives 9.6 next to 9.2.1.2.
-- **A chapter 4 statement relates to WCAG** through the chapter 9 clauses its `related-clauses` facet names from Annex B (Table B.2): `relatesTo` lists their criteria, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
+- **A chapter 4 statement relates to WCAG** through chapter 9 clauses Annex B (Table B.2) relates to it, and `relatesTo` lists the criteria they restate, in number order. How each version gets them:
+  - **V4.1.1**: every chapter 9 clause Table B.2 marks primary for the criterion, as [`annex-b.js`](annex-b.js) records the table ([`docs/annex-b-v4.1.1.md`](docs/annex-b-v4.1.1.md) gives it with its pages). 9.6 and 9.7 restate no criterion, so they add none. Secondary marks are left out on purpose: Annex B defines them as partial support ("some users may use the feature in specific situations"). The procedure still sends the person to every clause marked primary or secondary, as Annex C's first check asks.
+  - **V3.2.1**, whose Annex B is not recorded: the chapter 9 clauses its `related-clauses` facet names, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
 
 ### The clause table
 

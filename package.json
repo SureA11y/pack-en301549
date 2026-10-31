@@ -39,6 +39,7 @@
     "index.js",
     "clauses.js",
     "own-procedures.js",
+    "annex-b.js",
     "groups.js",
     "public.js",
     "requirements.js",

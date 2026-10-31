@@ -33,8 +33,10 @@
  *   label, automation, tools, steps, passWhen, failWhen }] } } }, in English: core
  * reads a requirement's own facets in English only, whatever the locale.
  *
- * A chapter 4 statement also names, in relatesTo, the WCAG criteria of the
- * chapter 9 clauses its procedure sends the person to, and 9.6 those of the
+ * A chapter 4 statement also names, in relatesTo, the WCAG criteria it
+ * relates to: in V4.1.1, those the chapter 9 clauses Table B.2 marks P for it
+ * restate (annex-b.js); in V3.2.1, whose Annex B is not recorded, those the
+ * chapter 9 clauses its procedure names restate. 9.6 names those of the
  * clauses its fifth conformance requirement asks of all content.
  *
  * Titles are the standard's own, per version; the procedures are not its
@@ -42,6 +44,8 @@
  *
  * SOURCE: ETSI EN 301 549 V3.2.1 (2021-03) and V4.1.1 (2026-09).
  */
+
+const { ANNEX_B } = require('./annex-b');
 
 const V3 = 'V3.2.1';
 const V4 = 'V4.1.1';
@@ -53,9 +57,25 @@ const privacyColumn = (v) => (v === V3 ? 'P' : 'PR');
 // Where the requirements for authoring tools are.
 const authoring = (v) => (v === V3 ? '11.8' : '5.10');
 
-// The chapter 9 clauses each related-clauses facet names, so the statement
-// relates to the criteria they restate from the same list (relating).
+// The chapter 9 clauses each related-clauses facet names, so a V3.2.1
+// statement relates to the criteria they restate from the same list
+// (relating).
 const NAMED = new WeakMap();
+
+// In V4.1.1, the clauses a related-clauses facet names as examples are taken
+// from Table B.2: those of the picks it marks P for the criterion, chapter 9's
+// first, then the others in the table's order. A pick it does not mark P is
+// an error.
+const isWeb = (clause) => clause.startsWith('9.');
+function primaryExamples(v, id, picks) {
+  const { primary } = ANNEX_B[v][id];
+  const missing = picks.filter((c) => !primary.includes(c));
+  if (missing.length) {
+    throw new Error(`EN 301 549 ${v} Table B.2 does not mark ${missing.join(', ')} P for ${id}`);
+  }
+  const named = primary.filter((c) => picks.includes(c));
+  return named.filter(isWeb).concat(named.filter((c) => !isWeb(c)));
+}
 
 // Chapter 4: the chapter 9 clauses Table B.2 marks as the primary or
 // secondary support of a statement, in its column, with a few of them named.
@@ -63,7 +83,8 @@ const NAMED = new WeakMap();
 // V4.1.1 makes each statement a criterion whose test (Annex C) has two
 // routes: every clause Annex B relates to it, primary or secondary, is met,
 // or there is evidence that its outcome is achieved.
-function relatedClauses(v, id, column, need, clauses, example) {
+function relatedClauses(v, id, column, need, picks, example) {
+  const clauses = v === V3 ? picks : primaryExamples(v, id, picks);
   const facet =
     v === V3
       ? {
@@ -83,7 +104,7 @@ function relatedClauses(v, id, column, need, clauses, example) {
           label: `The clauses that serve ${need} are met`,
           automation: 'manual',
           steps: [
-            `Open Annex B of the standard and list the clauses it relates to ${id}, both those marked primary and those marked secondary. For a web page most are in chapter 9; add those of chapters 5, 6, 7, 10, 11 and 12 that apply to the product.`,
+            `Open Annex B of the standard and list the clauses it relates to ${id}, both those marked primary and those marked secondary. For a web page most are in chapter 9; add those of the other chapters, 5 to 13, that apply to the product.`,
             `Assess each with its own procedure, or take its result from a review already done: among them are ${clauses.join(', ')}.`,
             'Note each clause that fails, and the task it gets in the way of.'
           ],
@@ -94,10 +115,17 @@ function relatedClauses(v, id, column, need, clauses, example) {
   return facet;
 }
 
-// A chapter 4 statement relates to the WCAG criteria of the chapter 9
-// clauses its procedure names (relatesTo: core's relatedRequirements reads
-// it both ways): '9.1.4.3' restates 1.4.3. Those are the clauses Table B.2
-// relates to it that the procedure names, not every one it marks.
+// A chapter 4 statement relates to WCAG criteria (relatesTo: core's
+// relatedRequirements reads it both ways), those its chapter 9 clauses
+// restate: '9.1.4.3' restates 1.4.3.
+//
+// - V4.1.1: every chapter 9 clause Table B.2 marks P for it. 9.6 and 9.7
+//   restate no criterion. S marks are left out: Annex B gives them as
+//   partial support, "some users may use the feature in specific
+//   situations", and the procedure still sends the person to every clause
+//   marked P or S, as Annex C's first check asks.
+// - V3.2.1, whose Annex B is not recorded: the chapter 9 clauses its
+//   procedure names, not every one Table B.2 marks.
 const criterionOf = (clause) => clause.split('.').slice(1).join('.');
 const byNumber = (a, b) => {
   const pa = a.split('.').map(Number);
@@ -108,18 +136,23 @@ const byNumber = (a, b) => {
   }
   return 0;
 };
-const relating = (statements) =>
+const primaryWeb = (v, id) =>
+  ANNEX_B[v][id].primary.filter((c) => isWeb(c) && c !== '9.6' && c !== '9.7');
+const relating = (v, statements) =>
   Object.fromEntries(
     Object.entries(statements).map(([id, entry]) => {
       const named = entry.facets.flatMap((f) => NAMED.get(f) || []);
       if (!named.length) return [id, entry];
-      const relatesTo = [...new Set(named.map(criterionOf))].sort(byNumber);
+      const clauses = v === V3 ? named : primaryWeb(v, id);
+      const relatesTo = [...new Set(clauses.map(criterionOf))].sort(byNumber);
       return [id, { title: entry.title, relatesTo, facets: entry.facets }];
     })
   );
 
 // 'and, in V4.1.1, a and b' where a version adds clauses.
 const andInV4 = (v, base, added) => (v === V4 ? base.concat(added) : base);
+// What V3.2.1 alone has, spread into a list.
+const inV3 = (v, ...items) => (v === V3 ? items : []);
 
 const statements = (v) => ({
   '4.2.1': {
@@ -304,6 +337,18 @@ const statements = (v) => ({
   '4.2.6': {
     title: 'Usage with no or limited vocal capability',
     facets: [
+      ...(v === V4
+        ? [
+            relatedClauses(
+              v,
+              '4.2.6',
+              'WVC',
+              'usage with no or limited vocal capability',
+              ['9.2.4.6', '9.3.3.8', '5.1.7', '6.4'],
+              'a function the product only offers by voice, with no other way to reach it'
+            )
+          ]
+        : []),
       {
         id: 'tasks-without-voice',
         label: 'Each task that takes voice can also be done without speaking',
@@ -355,6 +400,18 @@ const statements = (v) => ({
   '4.2.8': {
     title: 'Usage with limited reach',
     facets: [
+      ...(v === V4
+        ? [
+            relatedClauses(
+              v,
+              '4.2.8',
+              'LR',
+              'usage with limited reach',
+              ['9.1.3.4', '9.2.1.1', '9.2.5.1', '9.2.5.8', '8.3.2', '8.3.5.1'],
+              'a target too small to hit or a control a seated user can not reach'
+            )
+          ]
+        : []),
       {
         id: 'elements-within-reach',
         label:
@@ -446,6 +503,18 @@ const statements = (v) => ({
   '4.2.11': {
     title: 'Privacy',
     facets: [
+      ...(v === V4
+        ? [
+            relatedClauses(
+              v,
+              '4.2.11',
+              'PR',
+              'the privacy of users of the accessibility features',
+              ['9.3.3.4', '9.3.3.8', '5.1.3.8', '5.1.3.9'],
+              'a PIN or other masked entry that the product reads aloud'
+            )
+          ]
+        : []),
       {
         id: 'privacy-with-features',
         label:
@@ -453,9 +522,11 @@ const statements = (v) => ({
         automation: 'manual',
         tools: ['screen-reader'],
         steps: [
-          v === V3
-            ? `Look at Table B.2 in Annex B, column ${privacyColumn(v)}, for the clauses the standard relates to privacy.`
-            : 'Look in Annex B of the standard for the clauses it relates to 4.2.11, and assess each that applies.',
+          // In V4.1.1 the related-clauses facet sends the person to Annex B.
+          ...inV3(
+            v,
+            `Look at Table B.2 in Annex B, column ${privacyColumn(v)}, for the clauses the standard relates to privacy.`
+          ),
           'Type a password, a PIN and other masked entries with a screen reader running, and check that it does not read the characters aloud, unless the user chooses so.',
           'Check that using an accessible alternative, such as an audio check, a text-only mode or a relay service, does not ask for more personal data, or share it more widely, than the standard way.',
           'Check that the user is not asked to state a disability to get an accessibility feature, unless the feature can not work otherwise.',
@@ -470,7 +541,7 @@ const statements = (v) => ({
   }
 });
 
-const chapter4 = (v) => relating(statements(v));
+const chapter4 = (v) => relating(v, statements(v));
 
 // Chapter 12 and the documentation of the product.
 const docsSteps = (what) => [

@@ -4,7 +4,8 @@
  * The standard's groups (groups.js), which put its requirements in its
  * chapters, and chapter 9's under WCAG's principles and guidelines; and the
  * WCAG criteria each chapter 4 statement relates to (relatesTo, in
- * own-procedures.js). Core 1.15 lists the procedures in these groups and
+ * own-procedures.js): in V4.1.1 those of the chapter 9 clauses Table B.2
+ * marks P (annex-b.js), in V3.2.1 those of the clauses its procedure names. Core 1.15 lists the procedures in these groups and
  * reads relatesTo both ways; with an older core the pack gives neither, and
  * the tests that read them through core say so and stop.
  */
@@ -13,6 +14,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const core = require('@surea11y/core');
+const { ANNEX_B } = require('../annex-b');
 const { EN301549_CLAUSES } = require('../clauses');
 const { OWN_PROCEDURES } = require('../own-procedures');
 const { REQUIREMENTS } = require('../requirements');
@@ -104,8 +106,9 @@ test('9.6 relates to the criteria its non-interference names', () => {
   }
 });
 
-test('a chapter 4 statement relates to the criteria of the clauses its procedure names', () => {
+test('a V3.2.1 chapter 4 statement relates to the criteria of the clauses its procedure names', () => {
   for (const [version, rows] of Object.entries(OWN_PROCEDURES)) {
+    if (version === 'V4.1.1') continue;
     for (const [id, entry] of Object.entries(rows)) {
       const at = `${version} ${id}`;
       if (id === '9.6' || !entry.facets) continue;
@@ -126,6 +129,46 @@ test('a chapter 4 statement relates to the criteria of the clauses its procedure
         assert.ok(steps.includes(clause.clause), `${at}: ${clause.clause} not named`);
       }
     }
+  }
+});
+
+// The clause numbers a facet's steps name, but the criterion's own.
+const namedIn = (facet, id) =>
+  [...facet.steps.join(' ').matchAll(/\b\d+(?:\.\d+)+\b/g)]
+    .map((m) => m[0])
+    .filter((c) => c !== id);
+
+test('a V4.1.1 criterion relates to the criteria of the chapter 9 clauses Table B.2 marks P', () => {
+  const version = 'V4.1.1';
+  const restated = Object.fromEntries(
+    Object.entries(EN301549_CLAUSES[version]).map(([sc, { clause }]) => [clause, sc])
+  );
+  for (const [id, row] of Object.entries(ANNEX_B[version])) {
+    const entry = OWN_PROCEDURES[version][id];
+    // 9.6 and 9.7 restate no criterion; every other chapter 9 clause does.
+    const web = row.primary.filter((c) => c.startsWith('9.') && c !== '9.6' && c !== '9.7');
+    const expected = web.map((c) => restated[c]);
+    assert.ok(expected.every(Boolean), id);
+    expected.sort((a, b) => {
+      const [pa, pb] = [a, b].map((x) => x.split('.').map(Number));
+      return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2];
+    });
+    assert.deepEqual(entry.relatesTo, expected, id);
+    // Every clause its related-clauses facet names is one Table B.2 marks P
+    // or S for it, chapter 9's first.
+    const related = entry.facets.find((f) => f.id === 'related-clauses');
+    assert.ok(related, `${id}: no related-clauses facet`);
+    const named = namedIn(related, id);
+    assert.ok(named.length > 0, id);
+    for (const c of named) {
+      assert.ok(row.primary.includes(c) || row.secondary.includes(c), `${id}: ${c}`);
+    }
+    const first = named.map((c) => c.startsWith('9.'));
+    assert.deepEqual(
+      first,
+      first.slice().sort((x, y) => y - x),
+      `${id}: chapter 9 first`
+    );
   }
 });
 
@@ -154,6 +197,7 @@ test('core relates the clauses and the statements to WCAG, both ways', { skip },
     .map((r) => [r.id, r.version, r.relation]);
   assert.deepEqual(to143, [
     ['4.2.2', 'V4.1.1', 'relatesTo'],
+    ['4.2.10', 'V4.1.1', 'relatesTo'],
     ['9.1.4.3', 'V4.1.1', 'restates']
   ]);
   assert.deepEqual(

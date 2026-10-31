@@ -2,7 +2,7 @@
 
 Source: ETSI CEN CENELEC EN 301 549 V4.1.1 (2026-09), the PDF only. Page numbers are the printed page numbers, which match the PDF page numbers in this file.
 
-How it was read: Table B.2 (pp. 129 to 139) was extracted with a PDF table reader, row by row, and every row's clause number was matched against the text of the same page (308 rows, no mismatches). The extracted values for pp. 132 to 137 were also compared against images of those pages and agree. The cells that could not be read as a clean P, S or "-" are listed under "Cells that can not be read reliably".
+How it was read: Table B.2 (pp. 129 to 139) was extracted with a PDF table reader, row by row, and every row's clause number was matched against the text of the same page (308 rows, no mismatches). The extracted values for pp. 132 to 137 were also compared against images of those pages and agree. The cells that could not be read as a clean P, S or "-" are listed under "Cells that can not be read reliably". Each of those cells was then read by eye on images of its page, and the whole table was extracted a second time from the position of each word on pp. 129 to 139 (308 rows again). That second extraction agrees with every list in this file, including the chapter 9 lists derived from them.
 
 ## 1. Structure of Annex B
 
@@ -40,8 +40,31 @@ B.2.0 (p. 139): "Table B.2 illustrates the impact a specific accessibility issue
 
 ### Cells that can not be read reliably
 
-- **"-P"**: in the LR column (4.2.8), the rows 9.4.1.3 Status messages (p. 135), 10.4.1.3 Status messages (p. 136) and 11.4.1.3 Status messages (p. 137) print "-P" in the cell. It is not clear whether that means P or no relationship. These three are left out of the 4.2.8 lists below and named in its section.
-- **Empty cells** (no P, no S and no "-"): 8.3.3.1 (WV, LV, WPC, WH, LH, WVC, PST, LC, PR, p. 132); 8.3.3.2 (WV, LV, WPC, WH, LH, WVC, PST, LC, PR, p. 133); 9.3.2.6 (WVC, PR, p. 134); 10.1.4.11 (LH, p. 135); 10.2.5.8 (WV, p. 136); 10.3.2.6 (WVC, PR, p. 136); 10.3.3.7 (WPC, WH, LH, WVC, PST, PR, p. 136); 11.1.4.11 (LH, p. 137); 11.2.5.8 (WV, p. 137); 11.3.2.4 (WVC, PR, p. 137); 11.3.3.7 (WPC, WH, LH, WVC, PST, PR, p. 137). The images show these cells empty. They are treated as no relationship. 8.3.3.1 and 8.3.3.2 have P in LMS and LR and every other cell empty.
+Each cell below was read by eye on the page image. What the page shows is given cell by cell.
+
+**"-P"**, column LR (4.2.8), in three rows:
+
+- 9.4.1.3 Status messages (p. 135): the LR cell shows "-P".
+- 10.4.1.3 Status messages (p. 136): the LR cell shows "-P".
+- 11.4.1.3 Status messages (p. 137): the LR cell shows "-P".
+
+In all three the PDF's text holds "-" and "P" as one two-character string, in the same font and size as the rest of the row, centred in the cell as a single mark is. So the page really prints "-P"; it is not two marks drawn over each other or a reading error. The table never defines "-P", so it is not clear whether it means P or no relationship. For comparison only, V3.2.1's Table B.2 marks 9.4.1.3 and 10.4.1.3 P in the LR column (V3.2.1, pp. 109 and 110). These three cells stay out of the 4.2.8 lists below and are named in its section.
+
+**Empty cells** (no P, no S and no "-"):
+
+- 8.3.3.1 Presentation of information necessary for the operation of stationary ICT (no design restrictions) (p. 132): WV, LV, WPC, WH, LH, WVC, PST, LC and PR are empty; LMS and LR show P.
+- 8.3.3.2, with the same requirement text as 8.3.3.1 (p. 133): WV, LV, WPC, WH, LH, WVC, PST, LC and PR are empty; LMS and LR show P.
+- 9.3.2.6 Consistent help (p. 134): WVC and PR are empty.
+- 10.1.4.11 Non-text contrast (p. 135): LH is empty.
+- 10.2.5.8 Target size (minimum) (p. 136): WV is empty.
+- 10.3.2.6 Consistent help (p. 136): WVC and PR are empty.
+- 10.3.3.7 Redundant entry (p. 136): WPC, WH, LH, WVC, PST and PR are empty.
+- 11.1.4.11 Non-text contrast (p. 137): LH is empty.
+- 11.2.5.8 Target size (minimum) (p. 137): WV is empty.
+- 11.3.2.4 Consistent identification (p. 137): WVC and PR are empty.
+- 11.3.3.7 Redundant entry (p. 137): WPC, WH, LH, WVC, PST and PR are empty.
+
+These cells are empty on the page, with no mark of any kind. They are treated as no relationship.
 
 Everything else in Table B.2 reads as a clean P, S or "-".
 
@@ -141,7 +164,13 @@ Annex C, C.4.2.5 "Usage with limited hearing" (p. 142): precondition "The ICT pr
 
 **Secondary (19)**: p. 132: 6.5.2, 6.5.3, 6.5.4, 6.5.5, 6.5.6; p. 135: 9.3.3.1, 9.3.3.2, 9.3.3.3, 9.3.3.4, 9.6, 9.7; p. 136: 10.3.3.1, 10.3.3.2, 10.3.3.3, 10.3.3.4; p. 137: 11.3.3.1, 11.3.3.2, 11.3.3.3, 11.3.3.4
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (6): 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.3.3.8 (p. 135), 9.4.1.3 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.2.4.6 (p. 134), 9.3.3.8 (p. 135)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (4): 9.2.4.5 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.4.1.3 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: 9.3.3.1 (p. 135), 9.3.3.2 (p. 135), 9.3.3.3 (p. 135), 9.3.3.4 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
 
@@ -171,9 +200,15 @@ Annex C, C.4.2.7 "Usage with limited manipulation or strength" (p. 142): precond
 
 **Secondary (41)**: p. 130: 5.7, 5.8; p. 132: 6.2.8; p. 133: 8.4.2.1, 8.4.2.2, 9.1.1.1; p. 134: 9.1.3.1, 9.1.3.5, 9.2.2.2, 9.3.1.1, 9.3.1.2, 9.3.2.3, 9.3.2.4, 9.3.2.6; p. 135: 9.3.3.1, 9.3.3.2, 9.3.3.3, 9.3.3.4, 10.1.1.1, 10.1.3.1, 10.1.3.5, 10.2.2.2; p. 136: 10.3.1.1, 10.3.1.2, 10.3.2.3, 10.3.2.4, 10.3.2.6, 10.3.3.1, 10.3.3.2, 10.3.3.3, 10.3.3.4, 11.1.1.1, 11.1.3.1, 11.1.3.5; p. 137: 11.2.2.2, 11.3.1.1, 11.3.2.4, 11.3.3.1, 11.3.3.2, 11.3.3.3, 11.3.3.4
 
-**Unclear**: 9.4.1.3 (p. 135), 10.4.1.3 (p. 136) and 11.4.1.3 (p. 137) print "-P" in this column, so they are in neither list.
+**Unclear**: 9.4.1.3 (p. 135), 10.4.1.3 (p. 136) and 11.4.1.3 (p. 137) print "-P" in this column, so they are in neither list. See "Cells that can not be read reliably".
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (26): 9.1.3.4 (p. 134), 9.2.1.1 (p. 134), 9.2.1.2 (p. 134), 9.2.1.4 (p. 134), 9.2.2.1 (p. 134), 9.2.4.1 (p. 134), 9.2.4.2 (p. 134), 9.2.4.3 (p. 134), 9.2.4.4 (p. 134), 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.2.5.1 (p. 134), 9.2.5.2 (p. 134), 9.2.5.3 (p. 134), 9.2.5.4 (p. 134), 9.2.5.7 (p. 134), 9.2.5.8 (p. 134), 9.3.2.1 (p. 134), 9.3.2.2 (p. 134), 9.3.3.7 (p. 135), 9.3.3.8 (p. 135), 9.4.1.2 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.1.3.4 (p. 134), 9.2.1.1 (p. 134), 9.2.5.1 (p. 134), 9.2.5.8 (p. 134)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (22): 9.2.1.2 (p. 134), 9.2.1.4 (p. 134), 9.2.2.1 (p. 134), 9.2.4.1 (p. 134), 9.2.4.2 (p. 134), 9.2.4.3 (p. 134), 9.2.4.4 (p. 134), 9.2.4.5 (p. 134), 9.2.4.6 (p. 134), 9.2.4.7 (p. 134), 9.2.4.11 (p. 134), 9.2.5.2 (p. 134), 9.2.5.3 (p. 134), 9.2.5.4 (p. 134), 9.2.5.7 (p. 134), 9.3.2.1 (p. 134), 9.3.2.2 (p. 134), 9.3.3.7 (p. 135), 9.3.3.8 (p. 135), 9.4.1.2 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: 9.1.1.1 (p. 133), 9.1.3.1 (p. 134), 9.1.3.5 (p. 134), 9.2.2.2 (p. 134), 9.3.1.1 (p. 134), 9.3.1.2 (p. 134), 9.3.2.3 (p. 134), 9.3.2.4 (p. 134), 9.3.2.6 (p. 134), 9.3.3.1 (p. 135), 9.3.3.2 (p. 135), 9.3.3.3 (p. 135), 9.3.3.4 (p. 135)
 
@@ -221,7 +256,13 @@ Annex C, C.4.2.10 "Usage with limited cognition, language, or learning" (p. 143)
 
 **Secondary (3)**: p. 137: 11.5.2.1, 11.5.2.3; p. 138: 11.5.2.5
 
-We name no clauses for this criterion. The chapter 9 clauses Annex B marks primary (4): 9.3.3.4 (p. 135), 9.3.3.8 (p. 135), 9.6 (p. 135), 9.7 (p. 135)
+Our chapter 9 clauses for this criterion:
+
+- Primary: 9.3.3.4 (p. 135), 9.3.3.8 (p. 135)
+- Secondary: none
+- Not related: none
+
+Chapter 9 clauses Annex B marks primary that we do not name (2): 9.6 (p. 135), 9.7 (p. 135)
 
 Chapter 9 clauses Annex B marks secondary: none
 
