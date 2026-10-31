@@ -403,7 +403,9 @@ const statements = (v) => ({
             ? 'Nothing in the product flashes in a way that could trigger a seizure, or a mode without it is offered first.'
             : 'Nothing flashes in the default mode, or audiovisual material that does is announced by a warning before it plays.',
         failWhen:
-          'Content flashes in a way that could trigger a seizure, with no safe mode the user starts in or can choose first, which fails EN 301 549 4.2.9.'
+          v === V3
+            ? 'Content flashes in a way that could trigger a seizure, with no safe mode the user starts in or can choose first, which fails EN 301 549 4.2.9.'
+            : 'Content flashes in a way that could trigger a seizure in the mode the product starts in, and, for audiovisual material, with no warning before it plays, which fails EN 301 549 4.2.9.'
       }
     ]
   },
@@ -800,8 +802,12 @@ const chapter5 = (v) => ({
         'List the keys and controls the product provides itself, physical or on screen: a hardware keypad, an on-screen keyboard, toggle keys such as Caps Lock.',
         'If it provides none of its own, record clauses 5.5 to 5.8 as not applicable.',
         'Check that the state of each locking or toggle control can be told without seeing it, and also by sight where it is shown (5.6).',
-        'Where a key repeats when held, check that the delay before it repeats can be set to at least 2 seconds, or repeat turned off (5.7).',
-        'Where a key is pressed twice by accident, check that the time in which a second press is ignored can be set (5.8).',
+        v === V3
+          ? 'Where a key repeats when held, check that the delay before it repeats can be set to at least 2 seconds, or repeat turned off (5.7).'
+          : "Where a key repeats when held, repeat can't be turned off, and repeating enters the same character again into a field or document, check that the delay before it repeats can be set to at least 2 seconds, and the repeat rate slowed down to one character every 2 seconds (5.7).",
+        v === V3
+          ? 'Where a key is pressed twice by accident, check that the time in which a second press is ignored can be set (5.8).'
+          : 'Where the product lets the user set a time after a key press during which the same key is not accepted again, check that it can be set up to at least 0.5 seconds (5.8).',
         v === V3
           ? 'For physical operable parts, check that they can be told apart by touch without being activated (5.5).'
           : 'For operable parts, check that they can be found and told apart by touch without being activated (5.5). On a touch screen, an edge, a corner or a tactile marker can serve as the part that is found by touch.'
@@ -1086,8 +1092,8 @@ const CHAPTER10_V4 = {
       steps: [
         'List the documents the product provides that are not web pages: downloads in PDF, word-processing, spreadsheet, presentation or e-book formats, and attachments to messages.',
         'Leave out a document that is part of a web page, and documentation, which chapter 12 also covers. If nothing is left, record chapter 10 as not applicable.',
-        "Open each in the reader most of its users have, such as a desktop PDF reader for a PDF. Browser PDF viewers expose less of a document's structure to screen readers, so a result there may not hold in a desktop reader, or the reverse.",
-        "For a PDF, run a PDF/UA checker, then check by hand what it can't judge: whether tags match what is shown, the reading order, and the quality of text alternatives. The standard names PDF/UA-1 and PDF/UA-2 as helpful technical references.",
+        "Open each in the reader most of its users have, such as Adobe Acrobat Reader for PDF. Browser PDF viewers expose less of a document's structure to screen readers, so a result there may not hold in Acrobat Reader, or the reverse.",
+        "For a PDF, run a checker such as PAC (PDF Accessibility Checker) against PDF/UA, then check by hand what it can't judge: whether tags match what is shown, the reading order, and the quality of text alternatives. The standard names PDF/UA-1 and PDF/UA-2 as helpful technical references.",
         'Assess clauses 10.1 to 10.4. Where clause 10 restates a criterion in its own words for documents, follow that wording, not the web one. Focus not obscured (10.2.4.11) applies only to a document that takes keyboard input, such as a form.',
         'Read each document with a screen reader from start to end, and move through it by headings.',
         'Where the document has subtitles or audio description, check their position and timing (10.5, 10.6). These are recommendations: record them as advisory.',
@@ -1185,7 +1191,7 @@ const chapter11 = (v) =>
               'Leave out web pages, and what runs in them in a browser: chapter 9 assesses those. Keep a web view shown inside an app: it is part of non-web software, and chapter 11 assesses it instead of chapter 9.',
               'If nothing is left, record chapter 11 as not applicable.',
               "For each piece of non-web software left, assess clauses 11.1 to 11.5 as the standard words them for software, with the platform's own screen reader and keyboard: VoiceOver on iOS and macOS, TalkBack on Android, Narrator or NVDA on Windows. WCAG2ICT explains how each criterion applies to software.",
-              "Use the platform's accessibility inspection tools to see what the software exposes. Check that each element gives its name, role, state, value and relationships to the platform's accessibility services (11.5.2.5 to 11.5.2.17).",
+              "Use the platform's inspection tools to see what the software exposes: Accessibility Inspector in Xcode for iOS and macOS, Accessibility Scanner and the layout inspector for Android, Accessibility Insights for Windows. Check that each element gives its name, role, state, value and relationships to the platform's accessibility services (11.5.2.5 to 11.5.2.17).",
               'Leave out the clauses that are void for software: 11.3.1.2 language of parts, 11.3.2.3 consistent navigation, 11.3.2.6 consistent help and 11.4.1.1 parsing. Note that 11.2.4.2 now applies: each window or screen needs a title that describes it, where the platform supports one.',
               "Check that it does not turn off or block the platform's documented accessibility features (11.6.2), and that it follows the user's platform settings for them unless that is essential (11.7): text size, contrast, colour filters, pointer size and the text cursor.",
               'Where the product makes content, check it under clause 5.10 (authoring tools). Where part of it is closed to assistive technology, check that part under clause 5.1, not here.'
