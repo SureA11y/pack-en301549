@@ -31,8 +31,9 @@
  * @surea11y/core kept it as src/coverage/en301549-map.js.
  *
  * SOURCE: ETSI EN 301 549 V3.2.1 (2021-03) and V4.1.1 (2026-09), clause 9.
- * Chapters 10 (non-web documents) and 11 (software) are out of scope: the
- * engine tests web content.
+ * The table holds chapter 9 alone: the engine tests web content. The
+ * standard's other requirements have procedures for a person to assess
+ * them, and no rule (own-procedures.js).
  */
 
 const EN301549_VERSIONS = [

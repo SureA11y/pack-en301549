@@ -4,7 +4,7 @@ EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`
 
 Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
-It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. Chapters 10 (non-web documents) and 11 (software) are out of scope.
+It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. The scans cover chapter 9 alone; for the standard's other requirements, chapter 4's functional performance statements, chapter 12 and the other chapters, the pack says how a person assesses them by hand ([below](#the-standards-own-requirements)), with no rule or result.
 
 It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack. With core 1.14.0 or later, a clause is judged as core judges the criterion it restates, and V3.2.1 keeps 4.1.1 Parsing; with 1.13, the pack behaves as its 1.0 releases do (see the [changelog](./CHANGELOG.md)).
 
@@ -174,6 +174,31 @@ proceduresFor('9.1.4.3', { packs: [en301549], standard: 'en301549', version: 'V4
 
 Each facet has what a person checks, the steps, what passes and what fails, the tools it needs and the core rules that cover it (core's [`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md)). `version` defaults to the latest that has the clause. In code that runs in a browser, `proceduresFrom` from `@surea11y/core/procedures` does the same with the dictionaries it imports. An older core gives none.
 
+### The standard's own requirements
+
+EN 301 549 asks more than chapter 9, and no scan answers it: how the product works for people with each kind of need, its documentation and support, and its parts that are not web pages. With core 1.15 and later, `proceduresFor` reads how a person assesses these too, in the shape it gives a clause, with the facets the pack writes for each (`own-procedures.js`):
+
+| Requirements | V3.2.1 | V4.1.1 |
+|---|---|---|
+| Chapter 4, functional performance (statements in V3.2.1, criteria in V4.1.1) | `4.2.1` to `4.2.11` | `4.2.1` to `4.2.11` |
+| Chapter 12 | `12.1.1`, `12.1.2`, `12.2.2`, `12.2.3`, `12.2.4` (Documentation and support services) | `12.1` to `12.5` (Information about products and services) |
+| The other chapters, one requirement each | `5`, `6`, `7`, `8`, `10`, `11`, `13` | `5`, `6`, `7`, `8`, `10`, `11`, `13` |
+
+```js
+proceduresFor('4.2.1', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
+// { standard: 'EN 301 549', id: '4.2.1', version: 'V4.1.1', title: 'Usage without vision', complete: true, rules: [], facets: [...] }
+
+proceduresFor('12.1.2', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' }); // null: V4.1.1 has 12.1 instead
+```
+
+How to read them:
+
+- **A chapter 4 statement** is about whole tasks done the way a person with that need does them: with a screen reader and the screen off, enlarged, in greyscale, with the sound off. Its `related-clauses` facet sends the person to the chapter 9 clauses Annex B (Table B.2) relates to it, which are assessed with their own procedures and results, rather than repeating them; its other facets are what only using the product shows.
+- **Chapter 12** is about the product's documentation and support, not its pages; a documentation facet has the person assess each document against chapter 9 or 10 by its format.
+- **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
+
+Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English in every locale, as core gives a pack's own procedures, and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
+
 ### The clause table
 
 `@surea11y/pack-en301549/public` publishes the table, with the exports `@surea11y/core/en301549` had up to core 1.12, for tools that ask the reverse question, such as which criteria a version requires that a scan did not cover:
@@ -194,13 +219,16 @@ A clause on a result is a correspondence between two published documents, not a 
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
 - **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
+- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
-The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't.
+The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and the standard's own requirements are for a person to assess.
 
 ## Tests
 
-Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript` and with core's listener hook, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
+Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript` and with core's listener hook, the procedures of every clause and own requirement, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
+
+A baseline (`tests/baseline*.test.js`, `tests/fixtures/baseline/core-<version>.json`) holds what the pack gave with each core it was recorded with: its tables and standard, the entries it names for each criterion, every scan the tests make, the scans of core's scenario pages, and how core reads each chapter 9 clause's procedures in every locale. The tests compare the pack against it, and skip with a core no baseline was recorded with. A difference is a change in what the pack gives: look at it, never record it again. `node scripts/record-baseline.js` records one for a new core, from a pack that gives what it gave before; it never writes over one.
 
 ## Licence
 
