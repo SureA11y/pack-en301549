@@ -18,6 +18,24 @@ const { OWN_PROCEDURES } = require('../own-procedures');
 const pack = require('..');
 
 const reads = typeof core.proceduresFor === 'function' && !!pack.standard.procedures;
+
+// A core that lists the procedures (1.15) also names, in a general
+// procedure, the requirement it is read under: "which fails EN 301 549
+// 9.1.4.3", where the criterion read alone says "which fails WCAG 1.4.3". A
+// finding's steps (variants) keep naming WCAG.
+const namesRequirement = typeof core.listProcedures === 'function';
+const under = (facets, sc, clause) =>
+  facets.map((f) =>
+    f.procedure
+      ? {
+          ...f,
+          procedure: {
+            ...f.procedure,
+            failWhen: f.procedure.failWhen.replace(`WCAG ${sc}`, `EN 301 549 ${clause}`)
+          }
+        }
+      : f
+  );
 const skip = reads ? false : 'this core reads no procedures (core 1.15 does)';
 
 test('every clause of each version takes the procedures of its criterion', { skip }, () => {
@@ -45,7 +63,11 @@ test('core reads every clause with its criterion’s procedures, complete', { sk
       assert.equal(r.title, title);
       assert.equal(r.wcag, sc);
       assert.equal(r.complete, true, `${version} ${clause}`);
-      assert.deepEqual(r.facets, core.proceduresFor(sc).facets);
+      // The criterion's facets, whose procedures say the clause fails where
+      // core names the requirement it reads them under (1.15), and the
+      // criterion where it doesn't.
+      const facets = core.proceduresFor(sc).facets;
+      assert.deepEqual(r.facets, namesRequirement ? under(facets, sc, clause) : facets);
       n++;
     }
   }
