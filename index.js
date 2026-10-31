@@ -71,6 +71,13 @@ function mappingsFor({ wcagSc }) {
   return out;
 }
 
+// What a page of a version's procedures says first, in its header.
+const NOTES = {
+  'V4.1.1': [
+    "EN 301 549 V4.1.1 was published on 2 September 2026. Until it is cited in the Official Journal of the European Union, V3.2.1 remains the edition cited under the Web Accessibility Directive, and no edition is yet cited under the European Accessibility Act. Say which edition you tested against in every report. Annex C of the standard gives the formal test for each clause; these procedures expand on it and don't replace it."
+  ]
+};
+
 // Each version's procedures: chapter 9's, then the standard's own
 // requirements' (own-procedures.js).
 const withOwnProcedures = (procedures) =>
@@ -127,7 +134,8 @@ module.exports = definePack({
     ...(procedures
       ? {
           procedures: withOwnProcedures(procedures),
-          groups: groupsOf(withOwnProcedures(procedures))
+          groups: groupsOf(withOwnProcedures(procedures)),
+          notes: NOTES
         }
       : {}),
     report: { noteKey: 'en301549_report_note' }
