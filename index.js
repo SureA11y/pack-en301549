@@ -29,6 +29,7 @@ const { name, version } = require('./package.json');
 const { VERSIONS, REQUIREMENTS } = require('./requirements');
 const { RULE_REQUIREMENTS } = require('./rule-map');
 const { en301549ClausesForSc } = require('./clauses');
+const { OWN_PROCEDURES } = require('./own-procedures');
 
 const NAMESPACE = 'en301549';
 const STANDARD = 'EN 301 549';
@@ -69,6 +70,16 @@ function mappingsFor({ wcagSc }) {
   return out;
 }
 
+// Each version's procedures: chapter 9's, then the standard's own
+// requirements' (own-procedures.js).
+const withOwnProcedures = (procedures) =>
+  Object.fromEntries(
+    VERSIONS.map(({ version }) => [
+      version,
+      { ...procedures[version], ...(OWN_PROCEDURES[version] || {}) }
+    ])
+  );
+
 // EN 301 549 alone: the rules that check one of the version's clauses
 // (mappedRules), and nothing else, so results hold its clauses and no WCAG
 // criteria. With no WCAG tag to imply it, the profile names the WCAG version
@@ -106,10 +117,12 @@ module.exports = definePack({
     mappingsFor,
     composites,
     validate,
-    // How a person assesses each clause by hand: the procedures of the WCAG
-    // criterion it restates, from core 1.15 on (an older core gives none,
-    // and ignores the field).
-    ...(procedures ? { procedures } : {}),
+    // How a person assesses each requirement by hand, from core 1.15 on: a
+    // chapter 9 clause takes the procedures of the WCAG criterion it
+    // restates, and the standard's own requirements (chapters 4, 12 and the
+    // others) give theirs, with no rule or result. An older core gives none
+    // for chapter 9, and the pack gives it nothing, as before.
+    ...(procedures ? { procedures: withOwnProcedures(procedures) } : {}),
     report: { noteKey: 'en301549_report_note' }
   },
   // The note above the standard's results in the HTML report, per locale.
