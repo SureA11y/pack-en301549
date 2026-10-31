@@ -403,7 +403,9 @@ const statements = (v) => ({
             ? 'Nothing in the product flashes in a way that could trigger a seizure, or a mode without it is offered first.'
             : 'Nothing flashes in the default mode, or audiovisual material that does is announced by a warning before it plays.',
         failWhen:
-          'Content flashes in a way that could trigger a seizure, with no safe mode the user starts in or can choose first, which fails EN 301 549 4.2.9.'
+          v === V3
+            ? 'Content flashes in a way that could trigger a seizure, with no safe mode the user starts in or can choose first, which fails EN 301 549 4.2.9.'
+            : 'Content flashes in a way that could trigger a seizure in the mode the product starts in, and, for audiovisual material, with no warning before it plays, which fails EN 301 549 4.2.9.'
       }
     ]
   },
@@ -800,8 +802,12 @@ const chapter5 = (v) => ({
         'List the keys and controls the product provides itself, physical or on screen: a hardware keypad, an on-screen keyboard, toggle keys such as Caps Lock.',
         'If it provides none of its own, record clauses 5.5 to 5.8 as not applicable.',
         'Check that the state of each locking or toggle control can be told without seeing it, and also by sight where it is shown (5.6).',
-        'Where a key repeats when held, check that the delay before it repeats can be set to at least 2 seconds, or repeat turned off (5.7).',
-        'Where a key is pressed twice by accident, check that the time in which a second press is ignored can be set (5.8).',
+        v === V3
+          ? 'Where a key repeats when held, check that the delay before it repeats can be set to at least 2 seconds, or repeat turned off (5.7).'
+          : "Where a key repeats when held, repeat can't be turned off, and repeating enters the same character again into a field or document, check that the delay before it repeats can be set to at least 2 seconds, and the repeat rate slowed down to one character every 2 seconds (5.7).",
+        v === V3
+          ? 'Where a key is pressed twice by accident, check that the time in which a second press is ignored can be set (5.8).'
+          : 'Where the product lets the user set a time after a key press during which the same key is not accepted again, check that it can be set up to at least 0.5 seconds (5.8).',
         v === V3
           ? 'For physical operable parts, check that they can be told apart by touch without being activated (5.5).'
           : 'For operable parts, check that they can be found and told apart by touch without being activated (5.5). On a touch screen, an edge, a corner or a tactile marker can serve as the part that is found by touch.'
