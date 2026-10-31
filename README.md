@@ -199,6 +199,35 @@ How to read them:
 
 Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English in every locale, as core gives a pack's own procedures, and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
 
+### The whole standard, in its chapters
+
+With core 1.15 and later, core's `listProcedures` and `procedureChecklist` read every requirement of a version at once, in the standard's chapters (`groups.js`), and `relatedRequirements` goes between the clauses, the chapter 4 statements and WCAG ([`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md#listing-them) in core):
+
+```js
+const { listProcedures, procedureChecklist, relatedRequirements } = require('@surea11y/core');
+
+listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
+// { standard: 'EN 301 549', key: 'en301549', version: 'V4.1.1', requirements: [...], groups: [
+//   { id: '4', title: 'Functional performance', requirements: ['4.2.1', …, '4.2.11'], groups: [] },
+//   { id: '5', title: 'Generic requirements', requirements: ['5'], groups: [] },
+//   …
+//   { id: '9', title: 'Web', requirements: [], groups: [
+//     { id: '9.1', title: 'Perceivable', requirements: [], groups: [
+//       { id: '9.1.1', title: 'Text alternatives', requirements: ['9.1.1.1'], groups: [] }, … ] }, … ] },
+//   … ] }
+
+procedureChecklist({ packs: [en301549], standard: 'en301549', automation: ['manual', 'partial'] });
+// what a person does once each, in the same chapters: what a scan leaves to them
+
+relatedRequirements('1.4.3', { packs: [en301549] });
+// [{ id: '4.2.2', relation: 'relatesTo', … }, { id: '9.1.4.3', relation: 'restates', … }]
+relatedRequirements('4.2.2', { packs: [en301549], standard: 'en301549' });
+// the WCAG criteria of the chapter 9 clauses 4.2.2's procedure names: 1.4.3, 1.4.4, 1.4.10, …
+```
+
+- **The chapters** are the groups, in number order: chapter 4's statements, chapter 12's requirements, and each other chapter, which the pack gives as one requirement, as a group of that one. Chapter 9's clauses are under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives). Every requirement of a version is in exactly one group.
+- **A chapter 4 statement relates to WCAG** through the chapter 9 clauses its `related-clauses` facet names from Annex B (Table B.2): `relatesTo` lists their criteria, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
+
 ### The clause table
 
 `@surea11y/pack-en301549/public` publishes the table, with the exports `@surea11y/core/en301549` had up to core 1.12, for tools that ask the reverse question, such as which criteria a version requires that a scan did not cover:
@@ -220,6 +249,7 @@ A clause on a result is a correspondence between two published documents, not a 
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
 - **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
 - **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English.
+- **The standard's chapters** (`groups.js`), which core's lists of procedures show the requirements in, and the WCAG criteria each chapter 4 statement relates to, with core 1.15 and later.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
 The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and the standard's own requirements are for a person to assess.
@@ -228,7 +258,7 @@ The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and the s
 
 Install Chromium once with `npx playwright install chromium`. `npm test` checks the formatting, lints, checks the docs (`surea11y-pack docs --check`, `docs/RULE_CATALOG.md`), then runs `tests/`: the clause table against WCAG's criteria per version, what each profile runs and reports, the mappings option, a scan in Chromium with `packScript` and with core's listener hook, the procedures of every clause and own requirement, and every result on core's scenario pages against core 1.12.1's (installed as `core-1.12`; it reads the pages from a core checkout beside this one, `../core`, and is skipped without one). They scan with the pack through `@surea11y/core/testing` (`tests/helpers/run.js`).
 
-A baseline (`tests/baseline*.test.js`, `tests/fixtures/baseline/core-<version>.json`) holds what the pack gave with each core it was recorded with: its tables and standard, the entries it names for each criterion, every scan the tests make, the scans of core's scenario pages, and how core reads each chapter 9 clause's procedures in every locale. The tests compare the pack against it, and skip with a core no baseline was recorded with. A difference is a change in what the pack gives: look at it, never record it again. `node scripts/record-baseline.js` records one for a new core, from a pack that gives what it gave before; it never writes over one.
+A baseline (`tests/baseline*.test.js`, `tests/fixtures/baseline/core-<version>.json`) holds what the pack gave with each core it was recorded with: its tables and standard, the entries it names for each criterion, every scan the tests make, the scans of core's scenario pages, and how core reads each chapter 9 clause's procedures in every locale. The tests compare the pack against it, and skip with a core no baseline was recorded with or whose rules have changed since; the comparison of the clauses' procedures, which are core's text, also skips with a core whose own procedures have changed since. A difference is a change in what the pack gives: look at it, never record it again. `node scripts/record-baseline.js` records one for a new core, from a pack that gives what it gave before; it never writes over one.
 
 ## Licence
 

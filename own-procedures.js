@@ -24,9 +24,12 @@
  *   V4.1.1 Annex ZA, Table ZA.1 / A.1 "Web content") lists which of their
  *   clauses bear on web content.
  *
- * OWN_PROCEDURES: { 'V4.1.1': { '4.2.1': { title, facets: [{ id, label,
- *   automation, tools, steps, passWhen, failWhen }] } } }, in English: core
+ * OWN_PROCEDURES: { 'V4.1.1': { '4.2.1': { title, relatesTo, facets: [{ id,
+ *   label, automation, tools, steps, passWhen, failWhen }] } } }, in English: core
  * reads a requirement's own facets in English only, whatever the locale.
+ *
+ * A chapter 4 statement also names, in relatesTo, the WCAG criteria of the
+ * chapter 9 clauses its procedure sends the person to.
  *
  * Titles are the standard's own, per version; the procedures are not its
  * text. A procedure is guidance, and its wording may improve in any release.
@@ -44,10 +47,14 @@ const privacyColumn = (v) => (v === V3 ? 'P' : 'PR');
 // Where the requirements for authoring tools are.
 const authoring = (v) => (v === V3 ? '11.8' : '5.10');
 
+// The chapter 9 clauses each related-clauses facet names, so the statement
+// relates to the criteria they restate from the same list (relating).
+const NAMED = new WeakMap();
+
 // Chapter 4: the chapter 9 clauses Table B.2 marks as the primary support of
 // a statement, in its column, with a few of them named.
 function relatedClauses(id, column, need, clauses, example) {
-  return {
+  const facet = {
     id: 'related-clauses',
     label: `The chapter 9 clauses that serve ${need} are met`,
     automation: 'manual',
@@ -59,12 +66,38 @@ function relatedClauses(id, column, need, clauses, example) {
     passWhen: `Every chapter 9 clause that Table B.2 relates to ${id} is met, or does not apply.`,
     failWhen: `A clause that serves ${need} fails, such as ${example}, which fails EN 301 549 ${id} as well as that clause.`
   };
+  NAMED.set(facet, clauses);
+  return facet;
 }
+
+// A chapter 4 statement relates to the WCAG criteria of the chapter 9
+// clauses its procedure names (relatesTo: core's relatedRequirements reads
+// it both ways): '9.1.4.3' restates 1.4.3. Those are the clauses Table B.2
+// relates to it that the procedure names, not every one it marks.
+const criterionOf = (clause) => clause.split('.').slice(1).join('.');
+const byNumber = (a, b) => {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d;
+  }
+  return 0;
+};
+const relating = (statements) =>
+  Object.fromEntries(
+    Object.entries(statements).map(([id, entry]) => {
+      const named = entry.facets.flatMap((f) => NAMED.get(f) || []);
+      if (!named.length) return [id, entry];
+      const relatesTo = [...new Set(named.map(criterionOf))].sort(byNumber);
+      return [id, { title: entry.title, relatesTo, facets: entry.facets }];
+    })
+  );
 
 // 'and, in V4.1.1, a and b' where a version adds clauses.
 const andInV4 = (v, base, added) => (v === V4 ? base.concat(added) : base);
 
-const chapter4 = (v) => ({
+const statements = (v) => ({
   '4.2.1': {
     title: 'Usage without vision',
     facets: [
@@ -400,6 +433,8 @@ const chapter4 = (v) => ({
     ]
   }
 });
+
+const chapter4 = (v) => relating(statements(v));
 
 // Chapter 12 and the documentation of the product.
 const docsSteps = (what) => [

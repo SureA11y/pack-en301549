@@ -30,6 +30,7 @@ const { VERSIONS, REQUIREMENTS } = require('./requirements');
 const { RULE_REQUIREMENTS } = require('./rule-map');
 const { en301549ClausesForSc } = require('./clauses');
 const { OWN_PROCEDURES } = require('./own-procedures');
+const { groupsOf } = require('./groups');
 
 const NAMESPACE = 'en301549';
 const STANDARD = 'EN 301 549';
@@ -120,9 +121,15 @@ module.exports = definePack({
     // How a person assesses each requirement by hand, from core 1.15 on: a
     // chapter 9 clause takes the procedures of the WCAG criterion it
     // restates, and the standard's own requirements (chapters 4, 12 and the
-    // others) give theirs, with no rule or result. An older core gives none
-    // for chapter 9, and the pack gives it nothing, as before.
-    ...(procedures ? { procedures: withOwnProcedures(procedures) } : {}),
+    // others) give theirs, with no rule or result; groups puts them in the
+    // standard's chapters (groups.js). An older core gives none for chapter
+    // 9, and the pack gives it neither, as before.
+    ...(procedures
+      ? {
+          procedures: withOwnProcedures(procedures),
+          groups: groupsOf(withOwnProcedures(procedures))
+        }
+      : {}),
     report: { noteKey: 'en301549_report_note' }
   },
   // The note above the standard's results in the HTML report, per locale.

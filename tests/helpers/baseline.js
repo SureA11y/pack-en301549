@@ -178,7 +178,11 @@ function packFacts() {
       ruleTag: standard.ruleTag,
       report: standard.report,
       composites: standard.composites,
-      fields: Object.keys(standard).sort()
+      // groups, from core 1.15, is read only by core's procedure calls, as
+      // procedures is: tests/procedures.test.js holds both.
+      fields: Object.keys(standard)
+        .filter((k) => k !== 'groups')
+        .sort()
     },
     dictionaries: pack.dictionaries,
     tables: { EN301549_VERSIONS, EN301549_CLAUSES, VERSIONS, REQUIREMENTS, RULE_REQUIREMENTS },

@@ -39,6 +39,7 @@
     "index.js",
     "clauses.js",
     "own-procedures.js",
+    "groups.js",
     "public.js",
     "requirements.js",
     "rule-map.js",
