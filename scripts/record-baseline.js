@@ -32,6 +32,7 @@ pages.forEach((page, i) => {
 const baseline = {
   core: b.CORE_VERSION,
   catalog: b.catalogHash(),
+  coreProcedures: b.coreProcedures(),
   pack: b.packFacts(),
   pages: b.pageScans(),
   procedures: b.clauseProcedures(),

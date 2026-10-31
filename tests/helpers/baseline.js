@@ -188,6 +188,22 @@ function packFacts() {
   };
 }
 
+// Core's own procedures for the criteria the chapter 9 clauses restate, read
+// without the pack, in every locale, as one hash: null where this core reads
+// no procedures. A clause's procedures are core's, read under the clause, so
+// they are compared only while core's own are as they were recorded.
+function coreProcedures() {
+  if (typeof core.proceduresFor !== 'function') return null;
+  const out = {};
+  for (const rows of Object.values(EN301549_CLAUSES)) {
+    for (const sc of Object.keys(rows)) {
+      for (const locale of LOCALES)
+        out[`${sc} ${locale}`] = hash(core.proceduresFor(sc, { locale }));
+    }
+  }
+  return hash(out);
+}
+
 // How core reads each chapter 9 clause, by version and locale: null where
 // this core reads no procedures.
 function clauseProcedures() {
@@ -215,6 +231,7 @@ module.exports = {
   SCENARIOS,
   catalogHash,
   clauseProcedures,
+  coreProcedures,
   packFacts,
   pageScans,
   scenarioPages,

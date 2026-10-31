@@ -1,6 +1,7 @@
 {
  "core": "1.14.0",
  "catalog": "a22d76d6216be3bd56229c6918bd18f9b0050bfb95220a6d33b1e3a40fcdad06",
+ "coreProcedures": null,
  "pack": {
   "name": "@surea11y/pack-en301549",
   "version": "1.1.0",
