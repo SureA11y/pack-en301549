@@ -210,7 +210,15 @@ The text is data, in [`own-procedures.json`](own-procedures.json), so it can be 
 - A chapter 4 `related-clauses` facet takes its text from `templates`, filling in the requirement's number (`{id}`) and its own `column`, `need`, `clauses` and `example`. In V4.1.1 the clauses it names have to be ones Table B.2 marks primary for the criterion.
 - `notes` is what a version's list of procedures says first.
 
-`own-procedures.js` checks the file as it reads it: an unknown tool or version, a field missing in a version, an empty step list, two facets with one id or an unknown template field stops the pack loading, with the place named, and `npm test` fails. Changing an English text unpairs it from its translations, which are keyed by the English (`i18n/standard.<locale>.json`): update their keys and translations with it, or the text shows in English.
+`own-procedures.js` checks the file as it reads it: an unknown tool or version, a field missing in a version, an empty step list, two facets with one id or an unknown template field stops the pack loading, with the place named, and `npm test` fails. Changing an English text unpairs it from its translations, which are keyed by the English (`i18n/standard.<locale>.json`): move each translation to the new English, or the text shows in English, and record it in [`standard-to-review.json`](standard-to-review.json), under its locale and the new English, with the English it was made from:
+
+```json
+{
+  "fr": { "The English as it is now.": "The English as it was when the French was written." }
+}
+```
+
+A recorded translation still shows until it is updated. Once it is, remove its entry. `npm run translations:review` lists them, each with the English it was made from, the English now and the translation (`-- --json` for tools), and `npm test` fails on an entry no translation has or whose English is unchanged.
 
 ### The whole standard, in its chapters
 
