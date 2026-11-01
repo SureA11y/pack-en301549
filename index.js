@@ -29,7 +29,7 @@ const { name, version } = require('./package.json');
 const { VERSIONS, REQUIREMENTS } = require('./requirements');
 const { RULE_REQUIREMENTS } = require('./rule-map');
 const { en301549ClausesForSc } = require('./clauses');
-const { OWN_PROCEDURES } = require('./own-procedures');
+const { OWN_PROCEDURES, NOTES } = require('./own-procedures');
 const { groupsOf } = require('./groups');
 
 const NAMESPACE = 'en301549';
@@ -71,13 +71,6 @@ function mappingsFor({ wcagSc }) {
   return out;
 }
 
-// What a page of a version's procedures says first, in its header.
-const NOTES = {
-  'V4.1.1': [
-    "EN 301 549 V4.1.1 was published on 2 September 2026. Until it is cited in the Official Journal of the European Union, V3.2.1 remains the edition cited under the Web Accessibility Directive, and no edition is yet cited under the European Accessibility Act. Say which edition you tested against in every report. Annex C of the standard gives the formal test for each clause; these procedures expand on it and don't replace it."
-  ]
-};
-
 // The standard's own text in French, German, Spanish and Japanese, keyed by
 // the English it translates: its procedures, its clauses' and chapters'
 // titles and its notes (i18n/standard.<locale>.json). Core 1.15 reads the
@@ -88,7 +81,7 @@ const TRANSLATIONS = Object.fromEntries(
 );
 
 // Each version's procedures: chapter 9's, then the standard's own
-// requirements' (own-procedures.js).
+// requirements' (own-procedures.js, which reads own-procedures.json).
 const withOwnProcedures = (procedures) =>
   Object.fromEntries(
     VERSIONS.map(({ version }) => [
@@ -144,6 +137,7 @@ module.exports = definePack({
       ? {
           procedures: withOwnProcedures(procedures),
           groups: groupsOf(withOwnProcedures(procedures)),
+          // What a page of a version's procedures says first, in its header.
           notes: NOTES
         }
       : {}),
