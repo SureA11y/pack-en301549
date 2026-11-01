@@ -29,7 +29,6 @@ const { name, version } = require('./package.json');
 const { VERSIONS, REQUIREMENTS } = require('./requirements');
 const { RULE_REQUIREMENTS } = require('./rule-map');
 const { en301549ClausesForSc } = require('./clauses');
-const { OWN_PROCEDURES, NOTES } = require('./own-procedures');
 const { groupsOf } = require('./groups');
 
 const NAMESPACE = 'en301549';
@@ -72,23 +71,20 @@ function mappingsFor({ wcagSc }) {
 }
 
 // The standard's own text in French, German, Spanish and Japanese, keyed by
-// the English it translates: its procedures, its clauses' and chapters'
-// titles and its notes (i18n/standard.<locale>.json). Core 1.15 reads the
+// the English it translates: its clauses' and chapters' titles and its
+// notes (i18n/standard.<locale>.json). Core 1.15 reads the
 // standard in one of its languages, its procedures of the clauses that
 // restate WCAG included; an older core ignores them.
 const TRANSLATIONS = Object.fromEntries(
   ['de', 'es', 'fr', 'ja'].map((locale) => [locale, require(`./i18n/standard.${locale}.json`)])
 );
 
-// Each version's procedures: chapter 9's, then the standard's own
-// requirements' (own-procedures.js, which reads own-procedures.json).
-const withOwnProcedures = (procedures) =>
-  Object.fromEntries(
-    VERSIONS.map(({ version }) => [
-      version,
-      { ...procedures[version], ...(OWN_PROCEDURES[version] || {}) }
-    ])
-  );
+// What a page of a version's procedures says first, in its header.
+const NOTES = {
+  'V4.1.1': [
+    "EN 301 549 V4.1.1 was published on 2 September 2026. Until it is cited in the Official Journal of the European Union, V3.2.1 remains the edition cited under the Web Accessibility Directive, and no edition is yet cited under the European Accessibility Act. Say which edition you tested against in every report. Annex C of the standard gives the formal test for each clause; these procedures expand on it and don't replace it."
+  ]
+};
 
 // EN 301 549 alone: the rules that check one of the version's clauses
 // (mappedRules), and nothing else, so results hold its clauses and no WCAG
@@ -129,15 +125,14 @@ module.exports = definePack({
     validate,
     // How a person assesses each requirement by hand, from core 1.15 on: a
     // chapter 9 clause takes the procedures of the WCAG criterion it
-    // restates, and the standard's own requirements (chapters 4, 12 and the
-    // others) give theirs, with no rule or result; groups puts them in the
-    // standard's chapters (groups.js). An older core gives none for chapter
-    // 9, and the pack gives it neither, as before.
+    // restates, where a core rule evaluates it; groups puts the clauses
+    // under the standard's principles and guidelines (groups.js). The
+    // standard's own requirements, which no rule evaluates, have none here.
+    // An older core gives none, and the pack gives none, as before.
     ...(procedures
       ? {
-          procedures: withOwnProcedures(procedures),
-          groups: groupsOf(withOwnProcedures(procedures)),
-          // What a page of a version's procedures says first, in its header.
+          procedures,
+          groups: groupsOf(procedures),
           notes: NOTES
         }
       : {}),

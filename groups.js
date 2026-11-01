@@ -10,10 +10,13 @@
  * Perceivable, 9.1.1 Text alternatives, then 9.1.1.1).
  *
  * groupsOf(procedures) builds them from the requirements the procedures
- * give, by number, so every requirement is in exactly one group. A chapter
- * the pack gives as one requirement ('5'), and chapter 9's own requirements
- * after its principles (9.6, 9.7), are each a group of that one, titled as
- * the requirement is.
+ * give, by number, so every requirement is in exactly one group. Today they
+ * are chapter 9's clauses: the standard's own requirements, which no rule
+ * evaluates, have no procedures in the pack. Were one to gain a rule, a
+ * chapter the pack gives as one requirement ('5'), and chapter 9's own
+ * requirements after its principles (9.6, 9.7), would each be a group of
+ * that one, titled as the requirement is; a chapter of several needs its
+ * title in CHAPTERS.
  *
  * SOURCE: ETSI EN 301 549 V3.2.1 (2021-03) and V4.1.1 (2026-09), chapter and
  * clause headings.
@@ -21,12 +24,7 @@
 
 // The chapters that hold several requirements, by version where it differs.
 const CHAPTERS = {
-  4: (v) => (v === 'V3.2.1' ? 'Functional performance' : 'Functional performance criteria'),
-  9: () => 'Web',
-  12: (v) =>
-    v === 'V3.2.1'
-      ? 'Documentation and support services'
-      : 'Information about products and services'
+  9: () => 'Web'
 };
 
 // Chapter 9's headings: WCAG's principles and guidelines, as the standard
