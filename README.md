@@ -4,7 +4,7 @@ EN 301 549, the European accessibility standard, as a pack for [`@surea11y/core`
 
 Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0. It moves here, so core keeps WCAG alone and a scan names EN 301 549 only when it is given the pack. The pack gives every result the WCAG and EN 301 549 entries core 1.12.1 gave it, in the same order (`tests/core-1.12.test.js`).
 
-It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. The scans cover chapter 9 alone; for the standard's other requirements, chapter 4's functional performance statements, chapter 12 and the other chapters, the pack says how a person assesses them by hand ([below](#the-standards-own-requirements)), with no rule or result.
+It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. The scans cover chapter 9 alone; the standard's other requirements, chapter 4's functional performance statements, chapter 12 and the other chapters, have no rule, result or procedure in the pack ([below](#the-standards-own-requirements)).
 
 It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack. With core 1.14.0 or later, a clause is judged as core judges the criterion it restates, and V3.2.1 keeps 4.1.1 Parsing; with 1.13, the pack behaves as its 1.0 releases do (see the [changelog](./CHANGELOG.md)).
 
@@ -172,45 +172,48 @@ proceduresFor('9.1.4.3', { packs: [en301549], standard: 'en301549', version: 'V4
 // { standard: 'EN 301 549', id: '9.1.4.3', version: 'V4.1.1', title: 'Contrast (minimum)', wcag: '1.4.3', facets: [...] }
 ```
 
-Each facet has what a person checks, the steps, what passes and what fails, the tools it needs and the core rules that cover it (core's [`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md)). `version` defaults to the latest that has the clause. In code that runs in a browser, `proceduresFrom` from `@surea11y/core/procedures` does the same with the dictionaries it imports. An older core gives none.
+Each facet has what a person checks, the steps, what passes and what fails, the tools it needs and the core rules that cover it (core's [`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md)). Core gives procedures for the criteria its rules evaluate, so a clause has them where its criterion does: a clause whose criterion no core rule evaluates, such as 9.1.2.3, lists its facets with no procedure, and is not `complete`. `version` defaults to the latest that has the clause. In code that runs in a browser, `proceduresFrom` from `@surea11y/core/procedures` does the same with the dictionaries it imports. An older core gives none.
 
 ### The standard's own requirements
 
-EN 301 549 asks more than chapter 9, and no scan answers it: how the product works for people with each kind of need, its documentation and support, and its parts that are not web pages. With core 1.15 and later, `proceduresFor` reads how a person assesses these too, in the shape it gives a clause, with the facets the pack writes for each (`own-procedures.json`, read by `own-procedures.js`):
+EN 301 549 asks more than chapter 9: how the product works for people with each kind of need (chapter 4), its documentation and support (chapter 12), its parts that are not web pages (chapters 5 to 8, 10, 11 and 13), and, beside its clauses, WCAG's conformance requirements (9.6) and, in V4.1.1, the user's preferences (9.7). They restate no WCAG criterion, and no rule evaluates them, so the pack gives no procedures for them: `proceduresFor('4.2.1', …)` gives `null`. How to assess them by hand is outside the pack.
 
-| Requirements | V3.2.1 | V4.1.1 |
-|---|---|---|
-| Chapter 4, functional performance (statements in V3.2.1, criteria in V4.1.1) | `4.2.1` to `4.2.11` | `4.2.1` to `4.2.11` |
-| Chapter 12 | `12.1.1`, `12.1.2`, `12.2.2`, `12.2.3`, `12.2.4` (Documentation and support services) | `12.1` to `12.5` (Information about products and services) |
-| Chapter 9's own, beside its clauses | `9.6` (WCAG conformance requirements) | `9.6`, `9.7` (User preferences for web pages) |
-| The other chapters, one requirement each | `5`, `6`, `7`, `8`, `10`, `11`, `13` | `5`, `6`, `7`, `8`, `10`, `11`, `13` |
+A pack gives procedures for what its rules evaluate. Were a rule to check one of these requirements, its procedures would come with it, in `standard.procedures` (core's [`PACKS.md`](https://github.com/SureA11y/core/blob/main/docs/PACKS.md#how-a-person-assesses-it-procedures)).
+
+### The clauses, in the standard's order
+
+With core 1.15 and later, core's `listProcedures` and `procedureChecklist` read every clause of a version at once, under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives, then 9.1.1.1; `groups.js`), and `relatedRequirements` goes between each clause and the criterion it restates ([`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md#listing-them) in core):
 
 ```js
-proceduresFor('4.2.1', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
-// { standard: 'EN 301 549', id: '4.2.1', version: 'V4.1.1', title: 'Usage without vision', complete: true, rules: [], facets: [...] }
+const { listProcedures, procedureChecklist, relatedRequirements } = require('@surea11y/core');
 
-proceduresFor('12.1.2', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' }); // null: V4.1.1 has 12.1 instead
+listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
+// { standard: 'EN 301 549', key: 'en301549', version: 'V4.1.1', requirements: [...], groups: [
+//   { id: '9', title: 'Web', requirements: [], groups: [
+//     { id: '9.1', title: 'Perceivable', requirements: [], groups: [
+//       { id: '9.1.1', title: 'Text alternatives', requirements: ['9.1.1.1'], groups: [] }, … ] }, … ] } ] }
+
+procedureChecklist({ packs: [en301549], standard: 'en301549', automation: ['manual', 'partial'] });
+// what a person does once each, in the same groups: what a scan leaves to them
+
+relatedRequirements('1.4.3', { packs: [en301549] });
+// [{ id: '9.1.4.3', relation: 'restates', … }]
 ```
 
-How to read them:
+Every clause of a version is in exactly one group.
 
-- **A chapter 4 statement** is about whole tasks done the way a person with that need does them: with a screen reader and the screen off, enlarged, in greyscale, with the sound off. Its `related-clauses` facet sends the person to the clauses Annex B relates to it (in V3.2.1 the chapter 9 clauses Table B.2 marks primary or secondary, in V4.1.1 every clause it marks primary or secondary, in any chapter), which are assessed with their own procedures and results, rather than repeating them; its other facets are what only using the product shows. In V4.1.1 every criterion has one, 4.2.6, 4.2.8 and 4.2.11 included, and the clauses it names as examples are ones Table B.2 marks primary, chapter 9's first ([`annex-b.js`](annex-b.js)); in V3.2.1, 4.2.6, 4.2.8 and 4.2.11 have none.
-- **Chapter 9's own requirements** are about the page as a whole. 9.6 is WCAG's five conformance requirements at Level AA: the clauses met or a conforming alternate version, the full page with nothing left out, every page of a process, ways of using technologies that assistive technologies support, and no content that gets in the way of the rest. 9.7, new in V4.1.1, keeps a page from blocking or overriding the user's own colours, text size, pointer and text cursor, unless that is essential.
-- **Chapter 12** is about the product's documentation and support, not its pages; a documentation facet has the person assess each document against chapter 9 or 10 by its format.
-- **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
+### Languages
 
-Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English, French, German, Spanish and Japanese (`i18n/standard.<locale>.json`, see [Languages](#languages)), and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
+The standard is written in English and translated into French, German, Spanish and Japanese, with core 1.15 and later: the titles of its clauses and groups, and the note at the top of a version's procedures (`i18n/standard.<locale>.json`, keyed by the English they translate, as core's `standard.translations` reads them). Read in one of those languages, the standard is in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it. In another language (Portuguese, say), it is all in English, core's procedures too, rather than English beside Portuguese.
 
-#### Editing them
+```js
+const { listProcedures } = require('@surea11y/core');
+listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1', locale: 'es' });
+```
 
-The text is data, in [`own-procedures.json`](own-procedures.json), so it can be read and changed without touching code:
+The clause titles follow each language's published text where there is one: in Spanish, UNE-EN 301549; in German, DIN EN 301549 (the chapters of V3.2.1); chapter 9's, which restate WCAG's criteria, as core names those criteria in each language. A clause that only V4.1.1 has is translated in the same style. `packTranslationCoverage(en301549)` from `@surea11y/core/pack` says what each translation leaves out; a test holds every language to every text.
 
-- `requirements` lists each requirement in order, with its `id`, `title` and `facets`. A facet has its `label`, `automation`, `tools`, `steps`, `passWhen` and `failWhen`.
-- A value that differs between versions is an object keyed by version, `{ "V3.2.1": "…", "V4.1.1": "…" }`. In a list of steps, an item that names one version only is left out of the other. `versions`, on a requirement or a facet, lists the versions it is in, where it isn't in both.
-- A chapter 4 `related-clauses` facet takes its text from `templates`, filling in the requirement's number (`{id}`) and its own `column`, `need`, `clauses` and `example`. In V4.1.1 the clauses it names have to be ones Table B.2 marks primary for the criterion.
-- `notes` is what a version's list of procedures says first.
-
-`own-procedures.js` checks the file as it reads it: an unknown tool or version, a field missing in a version, an empty step list, two facets with one id or an unknown template field stops the pack loading, with the place named, and `npm test` fails. Changing an English text unpairs it from its translations, which are keyed by the English (`i18n/standard.<locale>.json`): move each translation to the new English, or the text shows in English, and record it in [`standard-to-review.json`](standard-to-review.json), under its locale and the new English, with the English it was made from:
+A translation is keyed by the English it translates, so a change to an English text unpairs it: move each translation to the new English, or the text shows in English, and record it in [`standard-to-review.json`](standard-to-review.json), under its locale and the new English, with the English it was made from:
 
 ```json
 {
@@ -219,50 +222,6 @@ The text is data, in [`own-procedures.json`](own-procedures.json), so it can be 
 ```
 
 A recorded translation still shows until it is updated. Once it is, remove its entry. `npm run translations:review` lists them, each with the English it was made from, the English now and the translation (`-- --json` for tools), and `npm test` fails on an entry no translation has or whose English is unchanged.
-
-### The whole standard, in its chapters
-
-With core 1.15 and later, core's `listProcedures` and `procedureChecklist` read every requirement of a version at once, in the standard's chapters (`groups.js`), and `relatedRequirements` goes between the clauses, the chapter 4 statements and WCAG ([`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md#listing-them) in core):
-
-```js
-const { listProcedures, procedureChecklist, relatedRequirements } = require('@surea11y/core');
-
-listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1' });
-// { standard: 'EN 301 549', key: 'en301549', version: 'V4.1.1', requirements: [...], groups: [
-//   { id: '4', title: 'Functional performance', requirements: ['4.2.1', …, '4.2.11'], groups: [] },
-//   { id: '5', title: 'Generic requirements', requirements: ['5'], groups: [] },
-//   …
-//   { id: '9', title: 'Web', requirements: [], groups: [
-//     { id: '9.1', title: 'Perceivable', requirements: [], groups: [
-//       { id: '9.1.1', title: 'Text alternatives', requirements: ['9.1.1.1'], groups: [] }, … ] }, … ] },
-//   … ] }
-
-procedureChecklist({ packs: [en301549], standard: 'en301549', automation: ['manual', 'partial'] });
-// what a person does once each, in the same chapters: what a scan leaves to them
-
-relatedRequirements('1.4.3', { packs: [en301549] });
-// [{ id: '4.2.2', relation: 'relatesTo', … }, { id: '4.2.10', relation: 'relatesTo', … },
-//  { id: '9.1.4.3', relation: 'restates', … }]
-relatedRequirements('4.2.2', { packs: [en301549], standard: 'en301549' });
-// the WCAG criteria of the chapter 9 clauses Table B.2 marks primary for 4.2.2: 1.1.1, 1.2.1, 1.3.3, …
-```
-
-- **The chapters** are the groups, in number order: chapter 4's statements, chapter 12's requirements, and each other chapter, which the pack gives as one requirement, as a group of that one. Chapter 9's clauses are under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives), and its own requirements, 9.6 and 9.7, follow them, each a group of that one. Every requirement of a version is in exactly one group.
-- **9.6 relates to WCAG** through the clauses its fifth conformance requirement asks of all content on the page, 9.1.4.2, 9.2.1.2, 9.2.2.2 and 9.2.3.1: `relatedRequirements('2.1.2', …)` gives 9.6 next to 9.2.1.2.
-- **A chapter 4 statement relates to WCAG** through chapter 9 clauses Annex B (Table B.2) relates to it, and `relatesTo` lists the criteria they restate, in number order. How each version gets them:
-  - **V4.1.1**: every chapter 9 clause Table B.2 marks primary for the criterion, as [`annex-b.js`](annex-b.js) records the table ([`docs/annex-b-v4.1.1.md`](docs/annex-b-v4.1.1.md) gives it with its pages). 9.6 and 9.7 restate no criterion, so they add none. Secondary marks are left out on purpose: Annex B defines them as partial support ("some users may use the feature in specific situations"). The procedure still sends the person to every clause marked primary or secondary, as Annex C's first check asks.
-  - **V3.2.1**, whose Annex B is not recorded: the chapter 9 clauses its `related-clauses` facet names, from the same list, so the two can't differ. They are the ones the procedure names, not every clause the table marks.
-
-### Languages
-
-The standard is written in English and translated into French, German, Spanish and Japanese, with core 1.15 and later: its own procedures, the titles of its clauses, chapters and groups, and the note at the top of a version's procedures (`i18n/standard.<locale>.json`, keyed by the English they translate, as core's `standard.translations` reads them). Read in one of those languages, the standard is in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it. In another language (Portuguese, say), it is all in English, core's procedures too, rather than English beside Portuguese.
-
-```js
-const { listProcedures } = require('@surea11y/core');
-listProcedures({ packs: [en301549], standard: 'en301549', version: 'V4.1.1', locale: 'es' });
-```
-
-The clause titles follow each language's published text where there is one: in Spanish, UNE-EN 301549; in German, DIN EN 301549 (the chapters of V3.2.1); chapter 9's, which restate WCAG's criteria, as core names those criteria in each language. A clause that only V4.1.1 has is translated in the same style. `packTranslationCoverage(en301549)` from `@surea11y/core/pack` says what each translation leaves out; a test holds every language to every text.
 
 ### The clause table
 
@@ -283,12 +242,12 @@ A clause on a result is a correspondence between two published documents, not a 
 - **The mapping** (`rule-map.js`): each core rule checks the clause of each WCAG criterion it maps to, in every version that has it. It is derived from the installed core's rule catalog, so a rule core adds is checked under the profiles with no change here.
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
-- **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
-- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.json`), in English, French, German, Spanish and Japanese.
-- **The standard's chapters** (`groups.js`), which core's lists of procedures show the requirements in, and the WCAG criteria each chapter 4 statement relates to, with core 1.15 and later.
+- **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates, where a core rule evaluates it.
+- **The standard's groups** (`groups.js`), chapter 9's principles and guidelines, which core's lists of procedures show the clauses in, with core 1.15 and later.
+- **The standard in French, German, Spanish and Japanese**: its clauses' and groups' titles and its note, with core 1.15 and later.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
-The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and the standard's own requirements are for a person to assess.
+The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and no rule evaluates the standard's own requirements, so the pack gives no procedures for them.
 
 ## Tests
 

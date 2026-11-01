@@ -32,8 +32,7 @@
  *
  * SOURCE: ETSI EN 301 549 V3.2.1 (2021-03) and V4.1.1 (2026-09), clause 9.
  * The table holds chapter 9 alone: the engine tests web content. The
- * standard's other requirements have procedures for a person to assess
- * them, and no rule (own-procedures.js).
+ * standard's other requirements have no rule here, and so no procedures.
  */
 
 const EN301549_VERSIONS = [

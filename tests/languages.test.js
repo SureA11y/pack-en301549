@@ -3,7 +3,7 @@
 /**
  * The standard in French, German, Spanish and Japanese as well as English
  * (core's standard.lang and standard.translations, docs/PACKS.md in core):
- * its own procedures, its clauses' and chapters' titles and its notes, keyed
+ * its clauses' and groups' titles and its notes, keyed
  * by the English they translate (i18n/standard.<locale>.json). Read in one
  * of them, the standard is in that language throughout, core's procedures
  * of the clauses that restate WCAG included. A core that reads no
@@ -34,7 +34,7 @@ test('every text of the standard has its translation in every language', { skip 
   assert.deepEqual(coverage.map((c) => c.locale).sort(), LOCALES);
   for (const c of coverage) {
     assert.deepEqual(c.missing, [], `${c.locale}: ${c.missing.length} texts not translated`);
-    assert.ok(c.total > 500, `${c.locale}: ${c.total} texts`);
+    assert.ok(c.total > 70, `${c.locale}: ${c.total} texts`);
   }
   assert.deepEqual(corePack.checkPack(pack), []);
 });
@@ -79,9 +79,9 @@ test('a clause that restates WCAG reads core’s procedures in the same language
 test('a language the standard lacks reads it in English, core’s procedures too', { skip }, () => {
   const pt = list('pt-BR');
   assert.equal(pt.locale, 'en');
-  const own = pt.requirements.find((r) => r.id === '4.2.1');
-  assert.equal(own.titleLang, 'en');
-  assert.equal(own.title, list('en').requirements.find((r) => r.id === '4.2.1').title);
+  const clause = pt.requirements.find((r) => r.id === '9.1.1.1');
+  assert.equal(clause.title, list('en').requirements.find((r) => r.id === '9.1.1.1').title);
+  assert.equal(pt.groups[0].title, 'Web');
 });
 
 test('a scan names the clauses in the scan’s language', { skip }, () => {
