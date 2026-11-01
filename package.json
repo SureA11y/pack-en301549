@@ -39,6 +39,7 @@
     "index.js",
     "clauses.js",
     "own-procedures.js",
+    "own-procedures.json",
     "annex-b.js",
     "groups.js",
     "public.js",
@@ -56,8 +57,8 @@
     "access": "public"
   },
   "scripts": {
-    "format": "prettier --write \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
-    "format:check": "prettier --check \"*.js\" \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "format": "prettier --write \"*.js\" own-procedures.json \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"*.js\" own-procedures.json \"scripts/**/*.js\" \"tests/**/*.js\"",
     "lint": "eslint .",
     "docs": "surea11y-pack docs",
     "docs:check": "surea11y-pack docs --check",

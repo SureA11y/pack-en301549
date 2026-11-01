@@ -176,7 +176,7 @@ Each facet has what a person checks, the steps, what passes and what fails, the 
 
 ### The standard's own requirements
 
-EN 301 549 asks more than chapter 9, and no scan answers it: how the product works for people with each kind of need, its documentation and support, and its parts that are not web pages. With core 1.15 and later, `proceduresFor` reads how a person assesses these too, in the shape it gives a clause, with the facets the pack writes for each (`own-procedures.js`):
+EN 301 549 asks more than chapter 9, and no scan answers it: how the product works for people with each kind of need, its documentation and support, and its parts that are not web pages. With core 1.15 and later, `proceduresFor` reads how a person assesses these too, in the shape it gives a clause, with the facets the pack writes for each (`own-procedures.json`, read by `own-procedures.js`):
 
 | Requirements | V3.2.1 | V4.1.1 |
 |---|---|---|
@@ -200,6 +200,17 @@ How to read them:
 - **A chapter** (`'5'`, `'11'`) is mostly a question of whether it applies to the product: each facet starts by deciding that, says to record it as not applicable where it isn't, and how to assess it where it is. For a web product, the parts that can apply have a facet of their own, such as activation of accessibility features (5.2) and simultaneous actions (5.9), video players (chapter 7) and, in V3.2.1, user preferences and authoring tools (11.7, 11.8). The pack's procedures for a chapter are by version: V4.1.1 moved authoring tools to 5.10, and puts a web view inside an app under chapter 11.
 
 Every facet is `manual`: no rule claims it, so `rules` is empty and no scan gives these requirements a result. Their text is in English, French, German, Spanish and Japanese (`i18n/standard.<locale>.json`, see [Languages](#languages)), and the tools' labels as core has them. A chapter is keyed by its number, so in `standard.procedures` the chapters come before the clauses, as JavaScript orders whole-number keys; ask for a requirement by its id. The clause numbers and titles are the standard's; the procedures are written for the pack, and their wording may improve in any release.
+
+#### Editing them
+
+The text is data, in [`own-procedures.json`](own-procedures.json), so it can be read and changed without touching code:
+
+- `requirements` lists each requirement in order, with its `id`, `title` and `facets`. A facet has its `label`, `automation`, `tools`, `steps`, `passWhen` and `failWhen`.
+- A value that differs between versions is an object keyed by version, `{ "V3.2.1": "…", "V4.1.1": "…" }`. In a list of steps, an item that names one version only is left out of the other. `versions`, on a requirement or a facet, lists the versions it is in, where it isn't in both.
+- A chapter 4 `related-clauses` facet takes its text from `templates`, filling in the requirement's number (`{id}`) and its own `column`, `need`, `clauses` and `example`. In V4.1.1 the clauses it names have to be ones Table B.2 marks primary for the criterion.
+- `notes` is what a version's list of procedures says first.
+
+`own-procedures.js` checks the file as it reads it: an unknown tool or version, a field missing in a version, an empty step list, two facets with one id or an unknown template field stops the pack loading, with the place named, and `npm test` fails. Changing an English text unpairs it from its translations, which are keyed by the English (`i18n/standard.<locale>.json`): update their keys and translations with it, or the text shows in English.
 
 ### The whole standard, in its chapters
 
@@ -265,7 +276,7 @@ A clause on a result is a correspondence between two published documents, not a 
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
 - **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates.
-- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.js`), in English, French, German, Spanish and Japanese.
+- **How to assess the standard's own requirements by hand**, with core 1.15 and later: chapter 4, chapter 9's own (9.6, 9.7), chapter 12 and the other chapters, in both versions (`own-procedures.json`), in English, French, German, Spanish and Japanese.
 - **The standard's chapters** (`groups.js`), which core's lists of procedures show the requirements in, and the WCAG criteria each chapter 4 statement relates to, with core 1.15 and later.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
