@@ -72,5 +72,8 @@
     "jsdom": "^29.1.1",
     "playwright": "^1.62.1",
     "prettier": "^3.9.6"
+  },
+  "overrides": {
+    "minimatch": "^11.0.3"
   }
 }
