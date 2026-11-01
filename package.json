@@ -57,11 +57,12 @@
     "access": "public"
   },
   "scripts": {
-    "format": "prettier --write \"*.js\" own-procedures.json \"scripts/**/*.js\" \"tests/**/*.js\"",
-    "format:check": "prettier --check \"*.js\" own-procedures.json \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "format": "prettier --write \"*.js\" own-procedures.json standard-to-review.json \"scripts/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"*.js\" own-procedures.json standard-to-review.json \"scripts/**/*.js\" \"tests/**/*.js\"",
     "lint": "eslint .",
     "docs": "surea11y-pack docs",
     "docs:check": "surea11y-pack docs --check",
+    "translations:review": "node scripts/translations-review.js",
     "test": "npm run format:check && npm run lint && npm run docs:check && node scripts/run-tests.js"
   },
   "peerDependencies": {
