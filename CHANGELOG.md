@@ -2,17 +2,18 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.0] - 2026-11-05
+
+Needs `@surea11y/core` 1.15.0 for the changes below; with an older core the pack behaves as 1.1.0 does.
 
 ### Added
 
-- How a person checks each clause by hand: with core 1.15 and later, `proceduresFor('9.1.4.3', { packs: [en301549], standard: 'en301549', version: 'V4.1.1' })` gives the procedures of the WCAG criterion the clause restates, in both versions and every language core has them. Core gives procedures for the criteria its rules evaluate, so a clause has them where its criterion does; one whose criterion no core rule evaluates lists its facets with no procedure. The pack gives them from its clause table through core's kit, with no text of its own; an older core gives none and ignores them.
-- The clauses in the standard's order, for reading it whole: with core 1.15 and later, `listProcedures({ packs: [en301549], standard: 'en301549' })` and `procedureChecklist` give every clause of a version under the principles and guidelines it is numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives). Every clause is in exactly one group (`groups.js`). `relatedRequirements('1.4.3', { packs: [en301549] })` gives the clause that restates the criterion, and the reverse.
-- With core 1.15 and later, a V4.1.1 list of procedures says in its header which edition is cited where, and that Annex C gives each clause's formal test (`standard.notes`).
-- The standard in French, German, Spanish and Japanese as well as English, with core 1.15 and later: its clauses' and groups' titles and V4.1.1's note, keyed by the English they translate (`standard.lang: 'en'` and `standard.translations`, from `i18n/standard.<locale>.json`). Read in one of them, `listProcedures`, `procedureChecklist`, `proceduresFor` and a page made from them are in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it; in a language the standard doesn't have, they are all in English. Clause titles follow UNE-EN 301549 in Spanish and DIN EN 301549 in German where those give them, and chapter 9's are WCAG's criteria as core names them. An older core ignores the translations. The HTML report's note above the clauses now names a clause as the translations do, « article » in French and 箇条 in Japanese, where it said « clause » and 条項.
-- `standard-to-review.json` records the translations to check again because their English changed after they were made, each under the English as it is now with the English it was made from, and `npm run translations:review` lists them with the translation (`-- --json` for tools). A test fails on an entry no translation has or whose English is unchanged. It is for maintaining the translations and is not published.
+- How a person checks each clause by hand: `proceduresFor`, `listProcedures` and `procedureChecklist` give each clause the procedures of the WCAG criterion it restates, listed under chapter 9's principles and guidelines (`groups.js`), with a note on V4.1.1's editions and Annex C; `relatedRequirements` goes from a criterion to its clause and back. The standard's own requirements, which no rule evaluates, have none.
+- The standard in French, German, Spanish and Japanese: clause and group titles and V4.1.1's note, following UNE-EN 301549 and DIN EN 301549 where those give them. Procedures, worksheets and a scan read in one of them are in that language throughout.
 
-The standard's own requirements (chapter 4, 9.6, 9.7, chapter 12, and chapters 5 to 8, 10, 11 and 13) restate no WCAG criterion and no rule evaluates them, so the pack gives no procedures for them: a pack gives procedures for what its rules evaluate.
+### Changed
+
+- With core 1.15, a clause follows core's WCAG grading: where only WAI-ARIA or the HTML content model is broken, its ARIA and HTML structure rules ask instead of failing, and `aria-owns-valid` no longer counts toward 9.4.1.2, as core maps it to 1.3.1 only.
 
 ## [1.1.0] - 2026-10-26
 
