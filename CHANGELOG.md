@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - Unreleased
+
+Needs `@surea11y/core` 1.16 (`~1.16.0`). For core 1.13 to 1.15, use 1.2.
+
+### Added
+
+- **The standard as data** (`standard-data.js`, core's format `surea11y-standard/1`): every version's clauses, the rule map from the installed core, the groups, the notes and the profiles. A pack built on EN 301 549 starts from it with core's `deriveStandard`, through `standardDataOf(require('@surea11y/pack-en301549').standard)`, rather than copying the pack's tables ([README](./README.md#building-a-standard-on-en-301-549)).
+
+### Changed
+
+- The standard is built from that data with core's `standardFromData`, in place of `ruleMappedStandard`. Every result, rollup, procedure, group, note and translation is as before: the baseline recorded with core 1.16 by 1.2.0's code is the same, scan for scan on core's 141 scenario pages, except for the two changes below.
+- The pack's `core` range is `~1.16.0`, and `describePacks` lists the experimental API it uses (`standard data`). `standardFromData` is experimental in core until 1.18.0, so a later minor may change it: the pack takes no later minor until then.
+
 ## [1.2.0] - 2026-11-05
 
 Needs `@surea11y/core` 1.15.0 for the changes below; with an older core the pack behaves as 1.1.0 does.

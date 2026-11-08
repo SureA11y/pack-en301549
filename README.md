@@ -6,7 +6,7 @@ Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0.
 
 It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. The scans cover chapter 9 alone; the standard's other requirements, chapter 4's functional performance statements, chapter 12 and the other chapters, have no rule, result or procedure in the pack ([below](#the-standards-own-requirements)).
 
-It needs `@surea11y/core` 1.13.0 or later. From 1.13, a scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice. Core 1.12 and earlier register the `en301549` key themselves, so a scan there skips the pack. With core 1.14.0 or later, a clause is judged as core judges the criterion it restates, and V3.2.1 keeps 4.1.1 Parsing; with 1.13, the pack behaves as its 1.0 releases do (see the [changelog](./CHANGELOG.md)). With core 1.15.0 or later, it also gives how to check each clause by hand, the clauses in the standard's order and the standard in French, German, Spanish and Japanese ([below](#checking-a-clause-by-hand)); an older core ignores them.
+It needs `@surea11y/core` 1.16 (`~1.16.0`). Its standard is built from data with core's `standardFromData`, which is experimental in core until 1.18.0 and may change in a minor, so the pack takes no later minor until then. For core 1.13 to 1.15, use the pack's 1.2 releases (see the [changelog](./CHANGELOG.md)). A scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice.
 
 ```sh
 npm install @surea11y/core @surea11y/pack-en301549
@@ -146,7 +146,7 @@ node -e "const fs = require('node:fs'); const { buildBrowserBundle } = require('
 </script>
 ```
 
-The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it: `require('@surea11y/pack-en301549').version` gives the installed version. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every one from 1.13.0.
+The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it: `require('@surea11y/pack-en301549').version` gives the installed version. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every 1.16 patch.
 
 Where core's bundle is already on the page (a tool that loads it for its own scans, a language side file after it), load `packScript([en301549])` from `@surea11y/core/pack` after the bundle instead, written to a file with the same core. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
 
@@ -163,7 +163,7 @@ Core's [`BUILDING_ON_CORE.md`](https://github.com/SureA11y/core/blob/main/docs/B
 
 ### Checking a clause by hand
 
-Most clauses come back `cantTell` or are not checked at all, for a person to finish. With a core that has test procedures (1.15 and later), each clause gives the steps for that, the procedures of the WCAG criterion it restates, in every language core has them:
+Most clauses come back `cantTell` or are not checked at all, for a person to finish. Each clause gives the steps for that, the procedures of the WCAG criterion it restates, in every language core has them:
 
 ```js
 const { proceduresFor } = require('@surea11y/core');
@@ -182,7 +182,7 @@ A pack gives procedures for what its rules evaluate. Were a rule to check one of
 
 ### The clauses, in the standard's order
 
-With core 1.15 and later, core's `listProcedures` and `procedureChecklist` read every clause of a version at once, under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives, then 9.1.1.1; `groups.js`), and `relatedRequirements` goes between each clause and the criterion it restates ([`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md#listing-them) in core):
+Core's `listProcedures` and `procedureChecklist` read every clause of a version at once, under the principles and guidelines they are numbered by, as WCAG's are (9.1 Perceivable, 9.1.1 Text alternatives, then 9.1.1.1; `groups.js`), and `relatedRequirements` goes between each clause and the criterion it restates ([`PROCEDURES.md`](https://github.com/SureA11y/core/blob/main/docs/PROCEDURES.md#listing-them) in core):
 
 ```js
 const { listProcedures, procedureChecklist, relatedRequirements } = require('@surea11y/core');
@@ -204,7 +204,7 @@ Every clause of a version is in exactly one group.
 
 ### Languages
 
-The standard is written in English and translated into French, German, Spanish and Japanese, with core 1.15 and later: the titles of its clauses and groups, and the note at the top of V4.1.1's procedures (`i18n/standard.<locale>.json`, keyed by the English they translate, as core's `standard.translations` reads them). Read in one of those languages, the standard is in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it. In another language (Portuguese, say), it is all in English, core's procedures too, rather than English beside Portuguese.
+The standard is written in English and translated into French, German, Spanish and Japanese: the titles of its clauses and groups, and the note at the top of V4.1.1's procedures (`i18n/standard.<locale>.json`, keyed by the English they translate, as core's `standard.translations` reads them). Read in one of those languages, the standard is in that language throughout, core's procedures of the chapter 9 clauses included, and a scan names the clauses in it. In another language (Portuguese, say), it is all in English, core's procedures too, rather than English beside Portuguese.
 
 ```js
 const { listProcedures } = require('@surea11y/core');
@@ -223,6 +223,24 @@ A translation is keyed by the English it translates, so a change to an English t
 
 A recorded translation still shows until it is updated. Once it is, remove its entry. `npm run translations:review` lists them, each with the English it was made from, the English now and the translation (`-- --json` for tools), and `npm test` fails on an entry no translation has or whose English is unchanged.
 
+### Building a standard on EN 301 549
+
+A pack whose standard is built on EN 301 549, splitting its clauses into steps or adding requirements of its own, starts from the pack's data rather than copying it: the standard as data (core's format `surea11y-standard/1`, `standard-data.js`), with every version's clauses, the rule map from the installed core, the groups, the notes and the profiles. Core's `deriveStandard` builds on it, and the derived standard's results name the clause each requirement is based on (`basedOn`):
+
+```js
+const { standardDataOf, deriveStandard, standardFromData } = require('@surea11y/core/pack');
+const base = standardDataOf(require('@surea11y/pack-en301549').standard);
+
+const standard = standardFromData(deriveStandard([base], {
+  format: 'surea11y-standard/1', key: 'mine', standard: 'Mine',
+  versions: [{ version: '1', wcagVersion: '2.2', basedOn: [{ standard: 'en301549', version: 'V4.1.1' }] }],
+  data: { 1: { requirements: { '9.1.1.1': { basedOn: [{ standard: 'en301549', id: '9.1.1.1' }] } }, ruleMap: {} } },
+  profiles: { 'mine-1': { version: '1', tags: ['mine'], mappedRules: true } }
+}));
+```
+
+The data is frozen. Both functions are experimental in core until 1.18.0 (core's [`PACKS.md`](https://github.com/SureA11y/core/blob/main/docs/PACKS.md)).
+
 ### The clause table
 
 `@surea11y/pack-en301549/public` publishes the table, with the exports `@surea11y/core/en301549` had up to core 1.12, for tools that ask the reverse question, such as which criteria a version requires that a scan did not cover:
@@ -238,13 +256,14 @@ A clause on a result is a correspondence between two published documents, not a 
 
 ## What it brings
 
+- **The standard as data** (`standard-data.js`): what the pack's standard is built from, and what a standard built on EN 301 549 starts from ([above](#building-a-standard-on-en-301-549)).
 - **The clause table** (`clauses.js`): for V3.2.1 (2021-03, WCAG 2.1, with 9.4.1.1 Parsing) and V4.1.1 (2026-09, WCAG 2.2, adding 2.4.11, 2.5.7, 2.5.8, 3.2.6, 3.3.7 and 3.3.8, with 9.4.1.1 void), each clause's number and the version's own title, from the ETSI text. The requirements (`requirements.js`) are built from it.
 - **The mapping** (`rule-map.js`): each core rule checks the clause of each WCAG criterion it maps to, in every version that has it. It is derived from the installed core's rule catalog, so a rule core adds is checked under the profiles with no change here.
 - **One result per clause** a rule checks, in its own section of the HTML report.
 - **Two profiles**, `en301549-v4.1.1` and `en301549-v3.2.1`: EN 301 549 alone, judged by the WCAG version each is built on.
-- **How to check each clause by hand**, with core 1.15 and later: the procedures of the criterion it restates, where a core rule evaluates it.
-- **The standard's groups** (`groups.js`), chapter 9's principles and guidelines, which core's lists of procedures show the clauses in, with core 1.15 and later.
-- **The standard in French, German, Spanish and Japanese**: its clauses' and groups' titles and V4.1.1's note, with core 1.15 and later.
+- **How to check each clause by hand**: the procedures of the criterion it restates, where a core rule evaluates it.
+- **The standard's groups** (`groups.js`), chapter 9's principles and guidelines, which core's lists of procedures show the clauses in.
+- **The standard in French, German, Spanish and Japanese**: its clauses' and groups' titles and V4.1.1's note.
 - **A note for the HTML report** above the clauses, in English, French, German, Spanish and Japanese.
 
 The pack has no rules of its own: chapter 9 asks nothing WCAG doesn't, and no rule evaluates the standard's own requirements, so the pack gives no procedures for them.
