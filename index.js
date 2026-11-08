@@ -24,30 +24,10 @@
  * decided the outcome: what core's built-in table gave.
  */
 
-const { definePack, ruleMappedStandard } = require('@surea11y/core/pack');
+const { definePack, standardFromData } = require('@surea11y/core/pack');
 const { name, version } = require('./package.json');
-const { VERSIONS, REQUIREMENTS } = require('./requirements');
-const { RULE_REQUIREMENTS } = require('./rule-map');
+const { STANDARD_DATA, NAMESPACE, STANDARD } = require('./standard-data');
 const { en301549ClausesForSc } = require('./clauses');
-const { groupsOf } = require('./groups');
-
-const NAMESPACE = 'en301549';
-const STANDARD = 'EN 301 549';
-
-const wcagVersionOf = (v) => VERSIONS.find((x) => x.version === v).wcagVersion;
-
-// A rollup per clause, grouping the rules that check it, the checks of the
-// two tables and, from core 1.15, the clauses' procedures, from core's kit. Each clause restates its WCAG criterion,
-// so it is notApplicable only where the criterion's WCAG rollup is (core
-// 1.14.0 and later; an older core ignores the option).
-const { composites, validate, procedures } = ruleMappedStandard({
-  standard: STANDARD,
-  tag: NAMESPACE,
-  versions: VERSIONS,
-  requirements: REQUIREMENTS,
-  ruleMap: RULE_REQUIREMENTS,
-  applicability: 'wcag'
-});
 
 // The entries for a rule or a WCAG rollup: the clause that restates each of
 // its WCAG criteria, in criterion order and oldest version first. A WCAG
@@ -72,74 +52,31 @@ function mappingsFor({ wcagSc }) {
 
 // The standard's own text in French, German, Spanish and Japanese, keyed by
 // the English it translates: its clauses' and chapters' titles and its
-// notes (i18n/standard.<locale>.json). Core 1.15 reads the
-// standard in one of its languages, its procedures of the clauses that
-// restate WCAG included; an older core ignores them.
+// notes (i18n/standard.<locale>.json). Core reads the standard in one of
+// its languages, its procedures of the clauses that restate WCAG included.
 const TRANSLATIONS = Object.fromEntries(
   ['de', 'es', 'fr', 'ja'].map((locale) => [locale, require(`./i18n/standard.${locale}.json`)])
 );
-
-// What a page of a version's procedures says first, in its header.
-const NOTES = {
-  'V4.1.1': [
-    "EN 301 549 V4.1.1 was published on 2 September 2026. Until it is cited in the Official Journal of the European Union, V3.2.1 remains the edition cited under the Web Accessibility Directive, and no edition is yet cited under the European Accessibility Act. Say which edition you tested against in every report. Annex C of the standard gives the formal test for each clause; these procedures expand on it and don't replace it."
-  ]
-};
-
-// EN 301 549 alone: the rules that check one of the version's clauses
-// (mappedRules), and nothing else, so results hold its clauses and no WCAG
-// criteria. With no WCAG tag to imply it, the profile names the WCAG version
-// the standard's version is built on, so 4.1.1 Parsing counts under V3.2.1
-// and not under V4.1.1. V3.2.1 keeps 4.1.1's text (clause 9.4.1.1), which
-// the 2023 errata to WCAG 2.1 don't amend, so it says keepsParsing: from core
-// 1.14 a duplicate id under it then still fails, where it would be asked
-// about. Core 1.13 and earlier ignore the key.
-const profile = (v) => ({
-  version: v,
-  tags: [NAMESPACE],
-  mappedRules: true,
-  wcagVersion: wcagVersionOf(v),
-  ...(wcagVersionOf(v) === '2.2' ? {} : { keepsParsing: true })
-});
 
 module.exports = definePack({
   name,
   version,
   namespace: NAMESPACE,
-  // Core 1.12 and earlier refuse a second en301549 key; from 1.13 the pack
-  // replaces core's deprecated built-in.
-  core: '>=1.13.0',
+  // The standard is built from data (core's standardFromData), experimental
+  // in core until 1.18.0: a later minor may change it, so the range takes
+  // none.
+  core: '~1.16.0',
   description:
     'EN 301 549 chapter 9 (Web), V3.2.1 and V4.1.1: a profile per version and a result per clause.',
-  standard: {
-    key: NAMESPACE,
-    standard: STANDARD,
-    versions: VERSIONS.map((v) => v.version),
-    profiles: {
-      'en301549-v4.1.1': profile('V4.1.1'),
-      'en301549-v3.2.1': profile('V3.2.1')
-    },
-    ruleTag: NAMESPACE,
+  // A rollup per clause, grouping the rules that check it, the clauses'
+  // procedures, groups and notes, all from the standard's data
+  // (standard-data.js), which a pack built on EN 301 549 starts from
+  // (standardDataOf(pack.standard)).
+  standard: standardFromData(STANDARD_DATA, {
     mappingsFor,
-    composites,
-    validate,
-    // How a person assesses each requirement by hand, from core 1.15 on: a
-    // chapter 9 clause takes the procedures of the WCAG criterion it
-    // restates, where a core rule evaluates it; groups puts the clauses
-    // under the standard's principles and guidelines (groups.js). The
-    // standard's own requirements, which no rule evaluates, have none here.
-    // An older core gives none, and the pack gives none, as before.
-    ...(procedures
-      ? {
-          procedures,
-          groups: groupsOf(procedures),
-          notes: NOTES
-        }
-      : {}),
     report: { noteKey: 'en301549_report_note' },
-    lang: 'en',
     translations: TRANSLATIONS
-  },
+  }),
   // The note above the standard's results in the HTML report, per locale.
   dictionaries: Object.fromEntries(
     ['de', 'en', 'es', 'fr', 'ja'].map((locale) => [locale, require(`./i18n/${locale}.json`)])
