@@ -6,7 +6,7 @@ Core has had EN 301 549 built in, deprecates it in 1.13 and removes it in 2.0.0.
 
 It automates what can be checked in the page, not an EN 301 549 audit: chapter 9 restates WCAG, so the pack judges each clause by core's rules for its criterion, and a scan gives results for the clauses one of those rules checks (30 of V4.1.1's 55 and 29 of V3.2.1's 50, with core 1.14's rules). Many rules ask (`cantTell`) where only a person can judge, and a conformance claim still needs a person to check every clause. With core 1.14, no clause passes: core's rules check only part of what each criterion asks, so where they all pass the clause is `cantTell` (`composite.rollup.cantTell.partialCheck`), as its WCAG criterion is. The scans cover chapter 9 alone; the standard's other requirements, chapter 4's functional performance statements, chapter 12 and the other chapters, have no rule, result or procedure in the pack ([below](#the-standards-own-requirements)).
 
-It needs `@surea11y/core` 1.16 (`~1.16.0`). Its standard is built from data with core's `standardFromData`, which is experimental in core until 1.18.0 and may change in a minor, so the pack takes no later minor until then. For core 1.13 to 1.15, use the pack's 1.2 releases (see the [changelog](./CHANGELOG.md)). A scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice.
+It needs `@surea11y/core` 1.17 (`~1.17.0`). Its standard is built from data with core's `standardFromData`, which is experimental in core until 1.18.0 and may change in a minor, so the pack takes no later minor until then. For core 1.16, use the pack's 1.3 releases, and for core 1.13 to 1.15 its 1.2 releases (see the [changelog](./CHANGELOG.md)). A scan given the pack uses the pack's EN 301 549 in place of core's deprecated built-in, with no deprecation notice.
 
 ```sh
 npm install @surea11y/core @surea11y/pack-en301549
@@ -146,7 +146,7 @@ node -e "const fs = require('node:fs'); const { buildBrowserBundle } = require('
 </script>
 ```
 
-The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it: `require('@surea11y/pack-en301549').version` gives the installed version. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every 1.16 patch.
+The pack's script runs only with the core it was prepared with, since it carries the catalog core and the pack make together: a page with another core's bundle runs the scan without the pack, and lists it in `skippedPacks` naming the two versions. One file can't fall out of step that way. Build it again when you update core or the pack, and update the `name@version` the page names with it: `require('@surea11y/pack-en301549').version` gives the installed version. For the same reason the pack ships no prebuilt file: it would fit one core release, and the pack supports every 1.17 patch.
 
 Where core's bundle is already on the page (a tool that loads it for its own scans, a language side file after it), load `packScript([en301549])` from `@surea11y/core/pack` after the bundle instead, written to a file with the same core. Either is plain functions, so it runs where a Content Security Policy forbids `eval`.
 
