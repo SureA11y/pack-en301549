@@ -2,6 +2,16 @@
 
 All notable changes to this package are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-14
+
+Needs `@surea11y/core` 1.17 (`~1.17.0`). For core 1.16, use 1.3; for core 1.13 to 1.15, use 1.2.
+
+### Changed
+
+- The pack's `core` range is `~1.17.0`. `standardFromData` is still experimental in core until 1.18.0, so the pack takes no later minor until then.
+- **Two more clauses are evaluated, from core 1.17's rules**, since the rule map follows the installed core's: 9.1.4.11 Non-text contrast, in both versions, by `css-focus-indicator-suppressed`, which core 1.17 maps to WCAG 1.4.11; and V4.1.1's 9.2.4.11 Focus not obscured (minimum), by core's new `focus-not-obscured-minimum`. No rule checked either before. Core's other new mappings (2.1.3, 2.4.13) and new rules (2.4.12, 2.5.5, a best practice) are AAA or outside WCAG, and have no clause.
+- Tested against core 1.17.0 with a baseline recorded with it, on core's 143 scenario pages.
+
 ## [1.3.0] - 2026-11-09
 
 Needs `@surea11y/core` 1.16 (`~1.16.0`). For core 1.13 to 1.15, use 1.2.
