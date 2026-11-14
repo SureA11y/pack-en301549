@@ -30,20 +30,30 @@ const skip =
   (!before && 'core-1.12 is not installed') ||
   (!fs.existsSync(FIXTURES) && 'no core checkout beside this one');
 
-// Rules whose WCAG entries core has changed since 1.12.1, on purpose: their
-// EN 301 549 entries are still compared.
-const WCAG_CHANGED = {
-  'mouse-only-event-handlers': 'core 1.14.0 maps it to WCAG 2.1.3 (AAA) too, which has no clause'
+// Criteria core has mapped rules to since 1.12.1, on purpose: the WCAG
+// entries for them, and the clauses restating them, are left out of the
+// comparison; every other entry of those rules is still compared.
+const ADDED_SINCE = {
+  'mouse-only-event-handlers': ['2.1.3'], // core 1.14.0: AAA, no clause
+  'css-focus-indicator-suppressed': ['1.4.11', '2.4.13'], // core 1.17.0: 1.4.11 is clause 9.1.4.11
+  'focus-not-removed-by-script': ['2.4.13'], // core 1.17.0: AAA, no clause
+  'iframe-focusable-content': ['2.1.3'], // core 1.17.0
+  'server-side-image-map-absent': ['2.1.3'], // core 1.17.0
+  'widget-keyboard-focusable': ['2.1.3'] // core 1.17.0
 };
 
-const entries = (r) =>
-  JSON.stringify(
+const entries = (r) => {
+  const added = ADDED_SINCE[r.ruleId] || [];
+  return JSON.stringify(
     ((r.meta && r.meta.normativeMappings) || [])
-      .filter(
-        (m) => m.standard === 'EN 301 549' || (m.standard === 'WCAG' && !WCAG_CHANGED[r.ruleId])
+      .filter((m) =>
+        m.standard === 'WCAG'
+          ? !added.includes(m.requirement)
+          : m.standard === 'EN 301 549' && !(m.wcagSc || []).some((sc) => added.includes(sc))
       )
       .map((m) => [m.standard, m.version || null, m.requirement, m.title || null, m.wcagSc || []])
   );
+};
 
 test('every result names the entries core 1.12.1 named', { skip }, () => {
   const pages = fs.readdirSync(FIXTURES).filter((f) => f.endsWith('-all-scenarios.html'));

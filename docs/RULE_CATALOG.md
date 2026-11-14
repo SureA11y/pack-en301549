@@ -33,7 +33,7 @@ What a scan runs under each profile (`engineOptions.profile`): the rules its tag
 | `en301549-v4.1.1` | `en301549` | version V4.1.1 | — | — | — | 2.2 |
 | `en301549-v3.2.1` | `en301549` | version V3.2.1 | — | — | — | 2.1 |
 
-## Rollups (59)
+## Rollups (62)
 
 Each groups rules into one result, as a WCAG rollup does; the standard's own report sections show them.
 
@@ -46,6 +46,7 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V3.2.1-9.1.3.4` | Orientation | `css-orientation-lock` |
 | `en301549-V3.2.1-9.1.3.5` | Identify input purpose | `autocomplete-valid` |
 | `en301549-V3.2.1-9.1.4.1` | Use of colour | `link-in-text-block` |
+| `en301549-V3.2.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed` |
 | `en301549-V3.2.1-9.1.4.12` | Text spacing | `avoid-inline-spacing`, `text-spacing-content-loss` |
 | `en301549-V3.2.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V3.2.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
@@ -75,6 +76,7 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V4.1.1-9.1.3.4` | Orientation | `css-orientation-lock` |
 | `en301549-V4.1.1-9.1.3.5` | Identify input purpose | `autocomplete-valid` |
 | `en301549-V4.1.1-9.1.4.1` | Use of colour | `link-in-text-block` |
+| `en301549-V4.1.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed` |
 | `en301549-V4.1.1-9.1.4.12` | Text spacing | `avoid-inline-spacing`, `text-spacing-content-loss` |
 | `en301549-V4.1.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V4.1.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
@@ -84,6 +86,7 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V4.1.1-9.2.2.1` | Timing adjustable | `meta-refresh-timing-absent` |
 | `en301549-V4.1.1-9.2.2.2` | Pause, stop, hide | `deprecated-elements-not-used`, `moving-content-pausable` |
 | `en301549-V4.1.1-9.2.4.1` | Bypass blocks | `bypass-blocks-present` |
+| `en301549-V4.1.1-9.2.4.11` | Focus not obscured (minimum) | `focus-not-obscured-minimum` |
 | `en301549-V4.1.1-9.2.4.2` | Page titled | `page-title-patterns`, `page-title-present` |
 | `en301549-V4.1.1-9.2.4.3` | Focus order | `manual-review` |
 | `en301549-V4.1.1-9.2.4.4` | Link purpose (in context) | `link-name-present`, `link-name-quality` |
