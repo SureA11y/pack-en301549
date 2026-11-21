@@ -62,10 +62,9 @@ module.exports = definePack({
   name,
   version,
   namespace: NAMESPACE,
-  // The standard is built from data (core's standardFromData), experimental
-  // in core until 1.18.0: a later minor may change it, so the range takes
-  // none.
-  core: '~1.17.0',
+  // The standard is built from data (core's standardFromData), stable since
+  // core 1.18.0: the range takes later minors.
+  core: '^1.18.0',
   description:
     'EN 301 549 chapter 9 (Web), V3.2.1 and V4.1.1: a profile per version and a result per clause.',
   // A rollup per clause, grouping the rules that check it, the clauses'
