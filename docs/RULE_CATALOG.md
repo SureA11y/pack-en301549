@@ -42,16 +42,16 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V3.2.1-9.1.1.1` | Non-text content | `area-alt-present`, `area-alt-quality`, `canvas-text-alternative-present`, `canvas-text-alternative-quality`, `embed-text-alternative-present`, `embed-text-alternative-quality`, `img-alt-decorative`, `img-alt-present`, `img-alt-quality`, `input-image-alt-decorative`, `input-image-alt-present`, `input-image-alt-quality`, `meter-name-present`, `object-text-alternative-present`, `object-text-alternative-quality`, `progressbar-name-present`, `role-img-text-alternative-present`, `svg-image-text-alternative-present`, `svg-text-alternative-present`, `svg-text-alternative-quality`, `video-poster-text-alternative-present` |
 | `en301549-V3.2.1-9.1.2.1` | Audio-only and video-only (pre-recorded) | `media-alternative-transcript-evidence` |
 | `en301549-V3.2.1-9.1.2.2` | Captions (pre-recorded) | `video-caption` |
-| `en301549-V3.2.1-9.1.3.1` | Info and relationships | `aria-hidden-body`, `aria-owns-valid`, `aria-prohibited-children`, `aria-required-children`, `aria-required-parent`, `aria-roles-valid`, `definition-list-children-valid`, `dlitem-parent-valid`, `form-control-programmatic-label-present`, `list-children-valid`, `listitem-parent-valid`, `p-as-heading`, `table-fake-caption`, `table-headers-attr-valid`, `table-th-has-data-cells`, `td-has-header` |
+| `en301549-V3.2.1-9.1.3.1` | Info and relationships | `aria-hidden-body`, `aria-owns-valid`, `aria-prohibited-children`, `aria-required-children`, `aria-required-parent`, `aria-roles-valid`, `definition-list-children-valid`, `dlitem-parent-valid`, `form-control-programmatic-label-present`, `form-group-name-present`, `list-children-valid`, `listitem-parent-valid`, `p-as-heading`, `table-fake-caption`, `table-headers-attr-valid`, `table-th-has-data-cells`, `td-has-header` |
 | `en301549-V3.2.1-9.1.3.4` | Orientation | `css-orientation-lock` |
 | `en301549-V3.2.1-9.1.3.5` | Identify input purpose | `autocomplete-valid` |
 | `en301549-V3.2.1-9.1.4.1` | Use of colour | `link-in-text-block` |
 | `en301549-V3.2.1-9.1.4.10` | Reflow | `reflow-horizontal-scroll` |
-| `en301549-V3.2.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed` |
+| `en301549-V3.2.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed`, `symbol-graphic-contrast` |
 | `en301549-V3.2.1-9.1.4.12` | Text spacing | `avoid-inline-spacing`, `text-spacing-content-loss` |
 | `en301549-V3.2.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V3.2.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
-| `en301549-V3.2.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled` |
+| `en301549-V3.2.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled`, `resize-text-content-loss` |
 | `en301549-V3.2.1-9.1.4.5` | Images of text | `image-of-text` |
 | `en301549-V3.2.1-9.2.1.1` | Keyboard | `click-handler-keyboard-operable`, `focus-not-removed-by-script`, `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent`, `widget-keyboard-focusable` |
 | `en301549-V3.2.1-9.2.2.1` | Timing adjustable | `meta-refresh-timing-absent` |
@@ -73,16 +73,16 @@ Each groups rules into one result, as a WCAG rollup does; the standard's own rep
 | `en301549-V4.1.1-9.1.1.1` | Non-text content | `area-alt-present`, `area-alt-quality`, `canvas-text-alternative-present`, `canvas-text-alternative-quality`, `embed-text-alternative-present`, `embed-text-alternative-quality`, `img-alt-decorative`, `img-alt-present`, `img-alt-quality`, `input-image-alt-decorative`, `input-image-alt-present`, `input-image-alt-quality`, `meter-name-present`, `object-text-alternative-present`, `object-text-alternative-quality`, `progressbar-name-present`, `role-img-text-alternative-present`, `svg-image-text-alternative-present`, `svg-text-alternative-present`, `svg-text-alternative-quality`, `video-poster-text-alternative-present` |
 | `en301549-V4.1.1-9.1.2.1` | Audio-only and video-only (pre-recorded) | `media-alternative-transcript-evidence` |
 | `en301549-V4.1.1-9.1.2.2` | Subtitles (pre-recorded) | `video-caption` |
-| `en301549-V4.1.1-9.1.3.1` | Info and relationships | `aria-hidden-body`, `aria-owns-valid`, `aria-prohibited-children`, `aria-required-children`, `aria-required-parent`, `aria-roles-valid`, `definition-list-children-valid`, `dlitem-parent-valid`, `form-control-programmatic-label-present`, `list-children-valid`, `listitem-parent-valid`, `p-as-heading`, `table-fake-caption`, `table-headers-attr-valid`, `table-th-has-data-cells`, `td-has-header` |
+| `en301549-V4.1.1-9.1.3.1` | Info and relationships | `aria-hidden-body`, `aria-owns-valid`, `aria-prohibited-children`, `aria-required-children`, `aria-required-parent`, `aria-roles-valid`, `definition-list-children-valid`, `dlitem-parent-valid`, `form-control-programmatic-label-present`, `form-group-name-present`, `list-children-valid`, `listitem-parent-valid`, `p-as-heading`, `table-fake-caption`, `table-headers-attr-valid`, `table-th-has-data-cells`, `td-has-header` |
 | `en301549-V4.1.1-9.1.3.4` | Orientation | `css-orientation-lock` |
 | `en301549-V4.1.1-9.1.3.5` | Identify input purpose | `autocomplete-valid` |
 | `en301549-V4.1.1-9.1.4.1` | Use of colour | `link-in-text-block` |
 | `en301549-V4.1.1-9.1.4.10` | Reflow | `reflow-horizontal-scroll` |
-| `en301549-V4.1.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed` |
+| `en301549-V4.1.1-9.1.4.11` | Non-text contrast | `css-focus-indicator-suppressed`, `symbol-graphic-contrast` |
 | `en301549-V4.1.1-9.1.4.12` | Text spacing | `avoid-inline-spacing`, `text-spacing-content-loss` |
 | `en301549-V4.1.1-9.1.4.2` | Audio control | `no-autoplay-audio` |
 | `en301549-V4.1.1-9.1.4.3` | Contrast (minimum) | `contrast-computable`, `contrast-minimum` |
-| `en301549-V4.1.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled` |
+| `en301549-V4.1.1-9.1.4.4` | Resize text | `meta-viewport-zoom-enabled`, `resize-text-content-loss` |
 | `en301549-V4.1.1-9.1.4.5` | Images of text | `image-of-text` |
 | `en301549-V4.1.1-9.2.1.1` | Keyboard | `click-handler-keyboard-operable`, `focus-not-removed-by-script`, `iframe-focusable-content`, `manual-review`, `mouse-only-event-handlers`, `scrollable-region-focusable`, `server-side-image-map-absent`, `widget-keyboard-focusable` |
 | `en301549-V4.1.1-9.2.2.1` | Timing adjustable | `meta-refresh-timing-absent` |
