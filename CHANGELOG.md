@@ -10,6 +10,7 @@ Needs `@surea11y/core` 1.18 or later (`^1.18.0`). For core 1.17, use 1.4; for co
 
 - The pack's `core` range is `^1.18.0`. `standardFromData`, which the standard is built with, is stable since core 1.18.0, so the pack takes later minors again, and uses no experimental API of core.
 - **One more clause is evaluated, from core 1.18's rules**, since the rule map follows the installed core's: 9.1.4.10 Reflow, in both versions, by core's new `reflow-horizontal-scroll`, a manual rule that measures reflow and asks a person about what it finds; it never fails. No rule checked the clause before. `docs/RULE_CATALOG.md` lists it.
+- **Core 1.18's other new rules count toward clauses that other rules already check**, in both versions, since core maps them to WCAG: `form-group-name-present` (1.3.1) toward 9.1.3.1 Info and relationships, `symbol-graphic-contrast` (1.4.11) toward 9.1.4.11 Non-text contrast, and `resize-text-content-loss` (1.4.4) toward 9.1.4.4 Resize text. All three are manual: they ask a person and never fail, so they can add questions to these clauses but no failures. `docs/RULE_CATALOG.md` lists them.
 
 ## [1.4.0] - 2026-11-14
 
